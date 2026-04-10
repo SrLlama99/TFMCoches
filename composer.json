@@ -41,7 +41,10 @@
         "symfony/validator": "7.4.*",
         "symfony/web-link": "7.4.*",
         "symfony/yaml": "7.4.*",
+<<<<<<< HEAD
         "symfonycasts/tailwind-bundle": "^0.12.0",
+=======
+>>>>>>> d7ccc74 (commit con todo symfony)
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"
     },

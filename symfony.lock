@@ -319,6 +319,7 @@
             "./config/packages/messenger.yaml"
         ]
     },
+<<<<<<< HEAD
     "symfonycasts/tailwind-bundle": {
         "version": "0.12",
         "recipe": {
@@ -331,6 +332,8 @@
             "./config/packages/symfonycasts_tailwind.yaml"
         ]
     },
+=======
+>>>>>>> d7ccc74 (commit con todo symfony)
     "twig/extra-bundle": {
         "version": "v3.24.0"
     }
