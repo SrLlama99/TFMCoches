@@ -1,0 +1,45 @@
+:root {
+    --backgroundGradient: linear-gradient(#FF0004, #721516, #280203);
+    --border: 3px white solid;
+    --shadow: 0px 3px 5px 2px rgba(0, 0, 0, 0.58);
+    --insetShadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.28) inset;
+    --garageColor: #BB00FF;
+    --logIOColor: #FF0004;
+}
+
+body {
+    background: var(--backgroundGradient);
+}
+
+/* NAVBAR */
+.customnav {
+    background-color: black;
+    border-radius: 3rem;
+    color: white;
+    border: var(--border);
+    box-shadow: var(--shadow);
+}
+.customNavBtn{
+    border: var(--border) !important;
+    border-radius: 3rem !important;
+    color: black !important;
+}
+.customNavBtn:hover{
+    box-shadow: var(--insetShadow);
+    transition: transform 50ms ease-in;
+}
+.customNavBtn:active{
+    transform: translateY(3px);
+}
+
+.logIOButton {
+    background-color: var(--logIOColor) !important;
+}
+
+.garageButton {
+    background-color: var(--garageColor) !important;
+}
+
+.bi{
+    font-size: 1.2rem !important;
+}

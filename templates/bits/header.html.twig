@@ -1,0 +1,36 @@
+<nav class="customnav navbar navbar-expand-md m-1 p-2" data-bs-theme="dark">
+    <div class="container-fluid">
+        <span class="navbar-brand">TFG</span>
+        <ul class="navbar-nav">
+            <!-- TODO: Add search bar -->
+            {% if not app.user %}
+            ANONYMOUS
+            <li class="nav-item">
+                <button class="logIOButton customNavBtn btn" title="Log in">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Login
+                </button>
+            </li>
+            {% else %}
+            LOGGED IN
+            <li class="nav-item">
+                <button class="garageButton customNavBtn btn" title="My garage">
+                    <i class="bi bi-car-front-fill"></i>
+                    Garage
+                </button>
+                <button class="logIOButton customNavBtn btn" title="Log out">
+                    <i class="bi bi-box-arrow-right"></i>
+                </button>
+            </li>
+            {% endif %}
+        </ul>
+
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarToggler">
+            <span class="navbar-toggler-icon"></span></button>
+        <div id="navbarToggler" class="collapse navbar-collapse">
+            <form action="https://google.com" method="get">
+
+            </form>
+        </div>
+    </div>
+</nav>
