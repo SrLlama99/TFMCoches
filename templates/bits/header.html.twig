@@ -1,18 +1,20 @@
-<nav class="customnav navbar navbar-expand-md m-1 p-2" data-bs-theme="dark">
-    <div class="container-fluid">
+<nav class="customnav navbar navbar-expand-lg m-1 p-2" data-bs-theme="dark">
+    <div class="container">
         <span class="navbar-brand">TFG</span>
-        <ul class="navbar-nav">
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbarCollapse" class="collapse navbar-collapse">
+           <ul class="navbar-nav"> 
             <!-- TODO: Add search bar -->
-            {% if not app.user %}
-            ANONYMOUS
+            {% if not app.user %} {# ANONYMOUS USER #}
             <li class="nav-item">
-                <button class="logIOButton customNavBtn btn" title="Log in">
+                <button class="nav-link logIOButton customNavBtn btn" title="Log in" href={{ path('home') }}>
                     <i class="bi bi-box-arrow-in-right"></i>
                     Login
                 </button>
             </li>
-            {% else %}
-            LOGGED IN
+            {% else %} {# USER IS LOGGED IN #}
             <li class="nav-item">
                 <button class="garageButton customNavBtn btn" title="My garage">
                     <i class="bi bi-car-front-fill"></i>
@@ -23,14 +25,7 @@
                 </button>
             </li>
             {% endif %}
-        </ul>
-
-        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarToggler">
-            <span class="navbar-toggler-icon"></span></button>
-        <div id="navbarToggler" class="collapse navbar-collapse">
-            <form action="https://google.com" method="get">
-
-            </form>
+            </ul>
         </div>
     </div>
 </nav>
