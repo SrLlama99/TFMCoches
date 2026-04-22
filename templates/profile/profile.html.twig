@@ -1,34 +1,603 @@
 {% extends "skeleton.html.twig" %}
-{% block body %}
-    <div class="container py-5">
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="card profile-card shadow mb-4 text-center p-4">
-                    <div class="card-body">
-                        <img src="" alt="Profile pic" class="profile-img mb-3 shadow-sn">
-                        <h3 class="fw-bold">@UserName</h3>
-                        <div class="d-flex justify-content-center mb-3">
-                        <button class="btn btn-primary me-2">Editar perfil</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-lg-8">
-            <div id="ctrlsCarrusel" class="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="card card-body">
-                            <img src="" alt="card1">
-                        </div>
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#ctrlsCarrusel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#ctrlsCarrusel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                </button>
-            </div>
-        </div>
+{% block stylesheets %}
+	<style>
+		.gallery-section {
+			max-width: 1000px;
+			margin: 0 auto;
+		}
+
+		.carousel-flex-layout {
+			display: flex;
+			align-items: center;
+			gap: 15px;
+		}
+
+		/* MOTOR DEL CARRUSEL */
+		.custom-scroll-container {
+			display: flex !important;
+			overflow: hidden;
+			scroll-behavior: smooth;
+			width: 100%;
+			padding: 20px 0;
+		}
+
+		.no-smooth {
+			scroll-behavior: auto !important;
+		}
+
+		.custom-item {
+			flex: 0 0 100%;
+			min-width: 100%;
+			padding: 0 10px;
+			box-sizing: border-box;
+		}
+
+		@media(min-width: 768px) {
+			.custom-item {
+				flex: 0 0 33.333%;
+				min-width: 33.333%;
+			}
+		}
+
+		/* PERFIL Y COMENTARIOS */
+		.profile-card-custom {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+		}
+
+		.comments-section {
+			background: #f8f9fa;
+			border-radius: 18px;
+			padding: 20px;
+			max-height: 400px;
+			overflow-y: auto;
+		}
+
+		.comment-bubble {
+			background: white;
+			padding: 12px 15px;
+			border-radius: 12px;
+			margin-bottom: 12px;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+			border-left: 4px solid #007bff;
+		}
+
+		.comment-author {
+			font-weight: bold;
+			font-size: 0.85rem;
+			display: block;
+			margin-bottom: 3px;
+		}
+
+		.comment-text {
+			font-size: 0.9rem;
+			color: #555;
+			margin: 0;
+		}
+
+		/* TARJETAS DE LA GALERÍA */
+		.card-gallery {
+			background: #fff;
+			border-radius: 18px;
+			overflow: hidden;
+			box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+			transition: transform 0.3s ease;
+		}
+
+		.img-container-rel {
+			position: relative;
+			width: 100%;
+			aspect-ratio: 1 / 1;
+		}
+
+		.img-square {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+		}
+
+		.texto-traslucido {
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+			background: rgba(0, 0, 0, 0.7);
+			color: white;
+			padding: 10px 15px;
+			backdrop-filter: blur(8px);
+			font-size: 0.85rem;
+			font-weight: 600;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.img-mini-overlay {
+			width: 22px;
+			height: 22px;
+			object-fit: contain;
+		}
+
+		.banda-inferior {
+			background: #ffffff;
+			color: #333;
+			padding: 15px;
+			border-top: 1px solid #eee;
+			text-align: center;
+		}
+
+		.texto-detalle {
+			font-size: 0.85rem;
+			line-height: 1.4;
+			margin: 0;
+		}
+
+		/* BOTONES NAVEGACIÓN */
+		.nav-btn {
+			background: #222;
+			color: white;
+			border: none;
+			width: 48px;
+			height: 48px;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			transition: all 0.2s;
+			flex-shrink: 0;
+		}
+
+		.nav-btn:hover {
+			background: #000;
+			transform: scale(1.1);
+		}
+
+		.arrow {
+			border: solid white;
+			border-width: 0 3px 3px 0;
+			display: inline-block;
+			padding: 4px;
+		}
+		.right {
+			transform: rotate(-45deg);
+		}
+		.left {
+			transform: rotate(135deg);
+		}
+
+		.comments-section {
+			background: #ffffff;
+			border-radius: 18px;
+			max-height: 450px;
+			overflow-y: auto;
+			padding-right: 5px;
+		}
+
+		/* Contenedor del comentario */
+		.comment-item {
+			display: flex;
+			align-items: flex-start;
+			gap: 12px;
+			padding: 15px;
+			margin-bottom: 15px;
+			background: #fdfdfd;
+			border-radius: 15px;
+			border: 1px solid #eee;
+			transition: all 0.3s ease;
+		}
+
+		.comment-item:hover {
+			transform: translateX(5px);
+			background: #f8f9ff;
+			border-color: #007bff;
+		}
+
+		/* Cuerpo del texto */
+		.comment-body {
+			flex-grow: 1;
+		}
+
+		.comment-author {
+			font-weight: 700;
+			font-size: 0.9rem;
+			color: #222;
+			margin-bottom: 2px;
+			display: block;
+		}
+
+		.comment-text {
+			font-size: 0.88rem;
+			color: #555;
+			margin: 0;
+			line-height: 1.4;
+		}
+
+		/* Personalización de la barra de scroll */
+		.comments-section::-webkit-scrollbar {
+			width: 6px;
+		}
+		.comments-section::-webkit-scrollbar-thumb {
+			background: #ccc;
+			border-radius: 10px;
+		}
+
+		/* Componente de Estrellas Solo Lectura */
+		.rating-static {
+			display: flex;
+			justify-content: center; /* Centrado en el carrusel */
+			gap: 0.2rem;
+			margin: 5px 0;
+		}
+
+		.rating-static svg {
+			width: 1.1rem;
+			height: 1.1rem;
+			fill: #e8e8e8; /* Gris para estrellas vacías */
+		}
+
+		.rating-static .gold {
+			fill: #ffca08; /* Dorado para estrellas llenas */
+			filter: drop-shadow(0 0 2px rgba(255, 202, 8, 0.3));
+		}
+
+		/* Ajuste de la banda inferior para que las estrellas luzcan mejor */
+		.banda-inferior {
+			background: #ffffff;
+			padding: 12px;
+			border-top: 1px solid #eee;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.comment-avatar {
+			width: 50px;
+			height: 50px;
+			object-fit: contain; /* Esto hace que la imagen se adapte sin cortarse */
+			background-color: #f8f9fa;
+			flex-shrink: 0;
+			border-radius: 8px;
+			border: 1px solid #eee;
+			padding: 4px; /* Un poco de margen interno para logos */
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	<div class="container py-5">
+		<div class="row">
+			<div class="col-lg-4 mb-4">
+				<div class="card shadow-sm border-0 profile-card-custom p-4 mb-4">
+					<div class="ratio ratio-1x1 mb-3" style="width: 120px;">
+						<img src="https://img.a.transfermarkt.technology/portrait/big/8198-1748102259.jpg?lm=1" class="rounded-circle object-fit-cover shadow-sm">
+					</div>
+					<h3 class="fw-bold">@UserName</h3>
+					<button class="btn btn-primary w-100 mt-2" style="max-width: 200px;">Editar perfil</button>
+				</div>
+
+				<div class="card shadow-sm border-0 p-4">
+					<h5 class="fw-bold mb-4 text-primary">Comentarios recibidos</h5>
+					<div class="comments-section">
+
+						<div class="comment-item">
+							<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/960px-Volkswagen_logo_2019.svg.png" class="comment-avatar" alt="Avatar">
+							<div class="comment-body">
+								<span class="comment-author">Golf</span>
+								<p class="comment-text">Coche práctico y barato perfecto para principiantes.</p>
+								<div class="rating-static">
+									<svg class="gold" viewbox="0 0 24 24">
+										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+									</svg>
+									<svg class="gold" viewbox="0 0 24 24">
+										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+									</svg>
+									<svg class="gold" viewbox="0 0 24 24">
+										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+									</svg>
+									<svg class="gold" viewbox="0 0 24 24">
+										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+									</svg>
+									<svg viewbox="0 0 24 24">
+										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+									</svg>
+								</div>
+							</div>
+						</div>
+
+						<div class="comment-item">
+							<img src="https://makerworld.bblmw.com/makerworld/model/US8ec7b571d2726d/design/2025-03-23_23aae48e33ffe.png?x-oss-process=image/resize,w_1000/format,webp" class="comment-avatar" alt="Avatar">
+							<div class="comment-body">
+								<span class="comment-author">A4</span>
+								<p class="comment-text">Buen coche con gran manejo, es precioso.</p>
+								<div class="rating-static">
+									<svg class="gold" viewbox="0 0 24 24">
+										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+									</svg>
+									<svg class="gold" viewbox="0 0 24 24">
+										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+									</svg>
+									<svg class="gold" viewbox="0 0 24 24">
+										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+									</svg>
+									<svg class="gold" viewbox="0 0 24 24">
+										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+									</svg>
+									<svg class="gold" viewbox="0 0 24 24">
+										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+									</svg>
+								</div>
+							</div>
+						</div>
+
+						<div class="comment-item">
+							<img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/SEAT_logo_%282012%29.png" class="comment-avatar" alt="Avatar">
+							<div class="comment-body">
+								<span class="comment-author">Ibiza</span>
+                                <div class="rating-static">
+									<svg class="gold" viewbox="0 0 24 24">
+										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+									</svg>
+									<svg class="gold" viewbox="0 0 24 24">
+										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+									</svg>
+									<svg class="gold" viewbox="0 0 24 24">
+										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+									</svg>
+									<svg viewbox="0 0 24 24">
+										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+									</svg>
+									<svg viewbox="0 0 24 24">
+										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+									</svg>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-8">
+				<div class="gallery-section mb-5">
+					<h2 class="mb-4 fw-bold text-center">Coches en el garaje</h2>
+					<div class="carousel-flex-layout gallery-wrapper">
+						<button class="nav-btn btn-atras">
+							<i class="arrow left"></i>
+						</button>
+
+						<div class="custom-scroll-container scroll-contenedor">
+							<div class="custom-item">
+								<div class="card-gallery">
+									<div class="img-container-rel">
+										<img src="https://res.cloudinary.com/unix-center/image/upload/c_limit,dpr_3.0,f_auto,fl_progressive,g_center,h_580,q_75,w_906/tnt1sdreuccr9iqjyewf.jpg" class="img-square">
+										<div class="texto-traslucido">
+											<span>Lamborghini Huracan</span>
+											<img src="https://upload.wikimedia.org/wikipedia/nah/5/5c/Lamborghini_logo.png" class="img-mini-overlay">
+										</div>
+									</div>
+									<div class="banda-inferior">
+										<div class="rating-static">
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="custom-item">
+								<div class="card-gallery">
+									<div class="img-container-rel">
+										<img src="https://hips.hearstapps.com/hmg-prod/images/p90615621-highres-the-new-bmw-ix3-50-x-68bab2f4cac27.jpg?crop=0.788xw:0.592xh;0,0.303xh&resize=1200:*" class="img-square">
+										<div class="texto-traslucido">
+											<span>BMW ix3</span>
+											<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/1280px-BMW.svg.png" class="img-mini-overlay">
+										</div>
+									</div>
+									<div class="banda-inferior">
+										<div class="rating-static">
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="custom-item">
+								<div class="card-gallery">
+									<div class="img-container-rel">
+										<img src="https://www.romacarabs.com/wp-content/uploads/2020/07/ford-kuga-caracteristicas.jpg" class="img-square">
+										<div class="texto-traslucido">
+											<span>Ford Kuga</span>
+											<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ford_logo_flat.svg/3840px-Ford_logo_flat.svg.png" class="img-mini-overlay">
+										</div>
+									</div>
+									<div class="banda-inferior">
+										<div class="rating-static">
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<button class="nav-btn btn-adelante">
+							<i class="arrow right"></i>
+						</button>
+					</div>
+				</div>
+
+				<div class="gallery-section mb-5">
+					<h2 class="mb-4 fw-bold text-center">Galería Pro 2</h2>
+					<div class="carousel-flex-layout gallery-wrapper">
+						<button class="nav-btn btn-atras">
+							<i class="arrow left"></i>
+						</button>
+
+						<div class="custom-scroll-container scroll-contenedor">
+							<div class="custom-item">
+								<div class="card-gallery">
+									<div class="img-container-rel">
+										<img src="https://images.ecestaticos.com/mXiaMzhISsDQH7Ki2YqTyi3XcCc=/0x0:0x0/1200x900/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F36a%2Fe15%2F4ac%2F36ae154acded8663e9bd0402a78ab17f.jpg" class="img-square">
+										<div class="texto-traslucido">
+											<span>CATEGORÍA X</span>
+											<img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" class="img-mini-overlay">
+										</div>
+									</div>
+									<div class="banda-inferior">
+										<div class="rating-static">
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="custom-item">
+								<div class="card-gallery">
+									<div class="img-container-rel">
+										<img src="https://images.ecestaticos.com/mXiaMzhISsDQH7Ki2YqTyi3XcCc=/0x0:0x0/1200x900/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F36a%2Fe15%2F4ac%2F36ae154acded8663e9bd0402a78ab17f.jpg" class="img-square">
+										<div class="texto-traslucido">
+											<span>CATEGORÍA Y</span>
+											<img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" class="img-mini-overlay">
+										</div>
+									</div>
+									<div class="banda-inferior">
+										<div class="rating-static">
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg class="gold" viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+											<svg viewbox="0 0 24 24">
+												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+											</svg>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<button class="nav-btn btn-adelante">
+							<i class="arrow right"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+const galerias = document.querySelectorAll('.gallery-wrapper');
+galerias.forEach(galeria => {
+const contenedor = galeria.querySelector('.scroll-contenedor');
+const btnAdelante = galeria.querySelector('.btn-adelante');
+const btnAtras = galeria.querySelector('.btn-atras');
+
+btnAdelante.addEventListener('click', () => {
+const item = contenedor.querySelector('.custom-item');
+if (! item) 
+return;
+
+
+
+const itemWidth = item.offsetWidth;
+contenedor.scrollBy({left: itemWidth, behavior: 'smooth'});
+setTimeout(() => {
+const primero = contenedor.firstElementChild;
+contenedor.appendChild(primero);
+contenedor.classList.add('no-smooth');
+contenedor.scrollLeft -= itemWidth;
+contenedor.classList.remove('no-smooth');
+}, 500);
+});
+
+btnAtras.addEventListener('click', () => {
+const item = contenedor.querySelector('.custom-item');
+if (! item) 
+return;
+
+
+
+const itemWidth = item.offsetWidth;
+const ultimo = contenedor.lastElementChild;
+contenedor.classList.add('no-smooth');
+contenedor.prepend(ultimo);
+contenedor.scrollLeft += itemWidth;
+contenedor.classList.remove('no-smooth');
+setTimeout(() => {
+contenedor.scrollBy({
+left: - itemWidth,
+behavior: 'smooth'
+});
+}, 10);
+});
+});
+});
+	</script>
 {% endblock %}
