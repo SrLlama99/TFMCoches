@@ -1,1 +1,0 @@
-a:2:{i:0;O:46:"Symfony\Component\Config\Resource\FileResource":1:{s:8:"resource";s:58:"C:\xampp\htdocs\TFM\TFMCoches\assets\stimulus_bootstrap.js";}i:1;O:55:"Symfony\Component\Config\Resource\FileExistenceResource":2:{s:8:"resource";s:82:"C:\xampp\htdocs\TFM\TFMCoches\vendor\symfony\stimulus-bundle\assets\dist\loader.js";s:6:"exists";b:1;}}
