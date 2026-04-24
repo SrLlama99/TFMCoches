@@ -4,31 +4,49 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Users;
+use App\Entity\Coche;
+use App\Entity\cocheGaraje;
 
 final class ProfileController extends AbstractController
 {
-    #[Route('/profile', name: 'profile')]
-    public function home(EntityManagerInterface $em, Request $request)
+    #[Route('/profile/{name}', name: 'profile')]
+    public function home(EntityManagerInterface $em, Request $request, string $name): Response
     {
-        // Repositorios
-        $users = $em->getRepository(Users::class);
-        $carsGarage = $em->getRepository(cocheGaraje::class);
-        $cars = $em->getRepository(Coche::class);
+        $usersRepo = $em->getRepository(Users::class);
+        $carsGarageRepo = $em->getRepository(cocheGaraje::class);
+        $carsRepo = $em->getRepository(Coche::class);
 
-        // Sacar el usuario
-        $usuario = $users->findOneBy(['userName' => $name]);
+        $usuario = $usersRepo->findOneBy(['UserName' => $name]);
 
-        // Sacar Id del Usuario
-        if($usuario){
-            $idUsuario = $usuario->getId();
+        $cochesDelUsuario = [];
+        $registrosGaraje = $carsGarageRepo->findBy(['usuario' => $usuario]);
+
+        foreach ($registrosGaraje as $registro) {
+            $cochesDelUsuario[] = $registro->getCoche();
         }
 
-        // Sacar los coches en el garaje del usuario
-        $cochesUsu = $carsGarage->findBy(['usuario' => $idUsuario]);
+        return $this->render('profile/profile.html.twig', [
+            'usuario' => $usuario,
+            'coches' => $cochesDelUsuario
+        ]);
+    }
 
-        // Sacar los coches mejor valorados por el usuario
+    #[Route('/new/{name}', name: 'new')]
+    public function new(EntityManagerInterface $em, string $name): Response
+    {
+        $newUser = new Users();
+        $newUser->setUserName($name);
+        $newUser->setUserMail($name . '@test.com');
+        $newUser->setUserPassword($name . "1234");
+        $newUser->setAdmin(0);
 
-        return $this->render('profile/profile.html.twig');
+        $em->persist($newUser);
+        $em->flush();
+        
+        return $this->json(['status' => 'User created!']);
     }
 }

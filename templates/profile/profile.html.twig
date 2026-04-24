@@ -279,7 +279,7 @@
 					<div class="ratio ratio-1x1 mb-3" style="width: 120px;">
 						<img src="https://img.a.transfermarkt.technology/portrait/big/8198-1748102259.jpg?lm=1" class="rounded-circle object-fit-cover shadow-sm">
 					</div>
-					<h3 class="fw-bold">@UserName</h3>
+					<h3 class="fw-bold">{{ usuario.UserName }}</h3>
 					<button class="btn btn-primary w-100 mt-2" style="max-width: 200px;">Editar perfil</button>
 				</div>
 
@@ -372,7 +372,7 @@
 						<button class="nav-btn btn-atras">
 							<i class="arrow left"></i>
 						</button>
-
+						{{ forEach car in cochesUsu }}
 						<div class="custom-scroll-container scroll-contenedor">
 							<div class="custom-item">
 								<div class="card-gallery">
@@ -381,66 +381,6 @@
 										<div class="texto-traslucido">
 											<span>Lamborghini Huracan</span>
 											<img src="https://upload.wikimedia.org/wikipedia/nah/5/5c/Lamborghini_logo.png" class="img-mini-overlay">
-										</div>
-									</div>
-									<div class="banda-inferior">
-										<div class="rating-static">
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="custom-item">
-								<div class="card-gallery">
-									<div class="img-container-rel">
-										<img src="https://hips.hearstapps.com/hmg-prod/images/p90615621-highres-the-new-bmw-ix3-50-x-68bab2f4cac27.jpg?crop=0.788xw:0.592xh;0,0.303xh&resize=1200:*" class="img-square">
-										<div class="texto-traslucido">
-											<span>BMW ix3</span>
-											<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/1280px-BMW.svg.png" class="img-mini-overlay">
-										</div>
-									</div>
-									<div class="banda-inferior">
-										<div class="rating-static">
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="custom-item">
-								<div class="card-gallery">
-									<div class="img-container-rel">
-										<img src="https://www.romacarabs.com/wp-content/uploads/2020/07/ford-kuga-caracteristicas.jpg" class="img-square">
-										<div class="texto-traslucido">
-											<span>Ford Kuga</span>
-											<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ford_logo_flat.svg/3840px-Ford_logo_flat.svg.png" class="img-mini-overlay">
 										</div>
 									</div>
 									<div class="banda-inferior">
