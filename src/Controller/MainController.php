@@ -8,18 +8,10 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class MainController extends AbstractController
 {
-    #[Route('/main', name: 'app_main')]
-    public function index(): Response
-    {
-        return $this->render('main/index.html.twig', [
-            'controller_name' => 'MainController',
-        ]);
-    }
-    
-    #[Route('/base', name: 'base')]
-    public function base(): Response
+    #[Route('/home', name: 'home')]
+    public function home(): Response
     {
         // $this->denyAccessUnlessGranted("ROLE_USER");
-        return $this->render('base.html.twig');
+        return $this->render('skeleton.html.twig');
     }
 }

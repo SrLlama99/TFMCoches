@@ -1,0 +1,80 @@
+:root {
+    --backgroundGradient: linear-gradient(to bottom, #FF0004, #721516 85%, #280203 100%);
+    --border: 3px white solid;
+    --shadow: 0px 3px 5px 2px rgba(0, 0, 0, 0.58);
+    --insetShadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.28) inset;
+    --garageColor: #BB00FF;
+    --logIOColor: #FF0004;
+    --navRounding: 40px;
+    --searchColor: rgb(0, 255, 0);
+}
+
+body {
+    background: var(--backgroundGradient) local;
+}
+
+/* NAVBAR */
+.customnav {
+    background-color: black;
+    border-radius: var(--navRounding);
+    color: white;
+    border: var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+.customNavBtn{
+    border: var(--border) !important;
+    border-radius: var(--navRounding) !important;
+    color: black !important;
+    --bs-nav-link-padding-y: 5px;
+}
+.customNavBtn:hover{
+    box-shadow: var(--insetShadow);
+    transition: transform 50ms ease-in;
+}
+.customNavBtn:active:not(.searchButton){
+    transform: translateY(3px);
+}
+
+.logIOButton {
+    background-color: var(--logIOColor) !important;
+}
+
+.garageButton {
+    background-color: var(--garageColor) !important;
+}
+
+.navForm{
+    position: relative;
+    display: inline-block;
+}
+.navSearchBar{
+    border: var(--border) !important;
+    border-radius: var(--navRounding) !important;
+    color: white;
+    min-width: 35svw;
+    padding-block: 10px !important;
+    background-color: #481212 !important;
+}
+
+.searchButton{
+    background-color: var(--searchColor) !important;
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+}
+
+.customNavBtn.searchButton:active{
+    transform: scale(1.08);
+}
+
+.bi{
+    font-size: 1.2rem !important;
+}
+
+.navBarLogo{
+    object-fit: cover;
+    width: 100%;
+    height: 40px;
+}

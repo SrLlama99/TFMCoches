@@ -1,36 +1,43 @@
 <nav class="customnav navbar navbar-expand-md m-1 p-2" data-bs-theme="dark">
-    <div class="container-fluid">
-        <span class="navbar-brand">TFG</span>
-        <ul class="navbar-nav">
-            <!-- TODO: Add search bar -->
-            {% if not app.user %}
-            ANONYMOUS
+    <div class="container">
+        <span class="navbar-brand">
+            <img class="navBarLogo" draggable="false" src={{ asset('logo.png') }} />
+        </span>
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbarCollapse" class="collapse navbar-collapse">
+           <ul class="navbar-nav gap-3 w-100 flex-row justify-content-center my-2 my-md-0">
             <li class="nav-item">
-                <button class="logIOButton customNavBtn btn" title="Log in">
+               <form class="navForm" method="get" action={{ path('home') }}> {# TODO: Change to search path here #}
+                    <input type="text" name="q" class="navSearchBar form-control"/>
+                    <button type="submit" class="searchButton customNavBtn btn">
+                        <i class="bi bi-search"></i>
+                    </button>
+               </form>
+            </li>
+
+            {% if not app.user %} {# ANONYMOUS USER #}
+            <li class="nav-item ms-md-auto">
+                <a class="nav-link logIOButton customNavBtn btn" title="Log in" href={{ path('home') }}> {# TODO: Change login path #}
                     <i class="bi bi-box-arrow-in-right"></i>
                     Login
-                </button>
+                </a>
             </li>
-            {% else %}
-            LOGGED IN
-            <li class="nav-item">
-                <button class="garageButton customNavBtn btn" title="My garage">
+            {% else %} {# USER IS LOGGED IN #}
+            <li class="nav-item ms-md-auto">
+                <a class="garageButton customNavBtn btn" title="My garage">
                     <i class="bi bi-car-front-fill"></i>
-                    Garage
-                </button>
-                <button class="logIOButton customNavBtn btn" title="Log out">
+                    <span class="d-none d-md-inline">Garage</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="logIOButton customNavBtn btn" title="Log out" href={{ path('home') }}> {# TODO: Add logout path #}
                     <i class="bi bi-box-arrow-right"></i>
-                </button>
+                </a>
             </li>
             {% endif %}
-        </ul>
-
-        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarToggler">
-            <span class="navbar-toggler-icon"></span></button>
-        <div id="navbarToggler" class="collapse navbar-collapse">
-            <form action="https://google.com" method="get">
-
-            </form>
+            </ul>
         </div>
     </div>
 </nav>
