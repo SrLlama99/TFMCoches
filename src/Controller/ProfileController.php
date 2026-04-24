@@ -9,16 +9,16 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class ProfileController extends AbstractController
 {
-    #[Route('/profile', name: 'profile')]
-    public function home(EntityManagerInterface $em, Request $request)
+    #[Route('/profile/{name}', name: 'profile')]
+    public function home(EntityManagerInterface $em, Request $request, $name)
     {
         // $this->denyAccessUnlessGranted("ROLE_USER");
-        // $rep = $em->getRepository(Usuario::class);
+        $rep = $em->getRepository(Usuario::class);
 
         // Sacar el usuario
-        // $usuario = $rep->findOneBy($name);
+        $usuario = $rep->findOneBy($name);
 
 
-        return $this->render('profile/profile.html.twig');
+        return $this->render('profile.html.twig', ['user' => $usuario]);
     }
 }
