@@ -25,8 +25,8 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', name: 'correo')]
     private $UserMail;
 
-    #[ORM\Column(type: 'string', name: 'UserPassword')]
-    private $UserPassword;
+    #[ORM\Column(type: 'string', name: 'contraseña')]
+    private $userPassword;
 
     #[ORM\Column(type: 'string', name: 'admin')]
     private $Admin;
@@ -66,12 +66,12 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserPassword()
     {
-        return $this->UserPassword;
+        return $this->userPassword;
     }
 
-    public function setUserPassword($UserPassword)
+    public function setUserPassword($userPassword)
     {
-        $this->UserPassword = $UserPassword;
+        $this->userPassword = $userPassword;
     }
 
     public function getAdmin()
