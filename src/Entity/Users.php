@@ -25,7 +25,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', name: 'correo')]
     private $UserMail;
 
-    #[ORM\Column(type: 'string', name: 'UserPassword')]
+    #[ORM\Column(type: 'string', name: 'contraseña')]
     private $UserPassword;
 
     #[ORM\Column(type: 'string', name: 'admin')]
