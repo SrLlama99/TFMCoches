@@ -14,30 +14,41 @@ class Marca
     #[ORM\Column(type:'string', name:'nombre')]
     private $nombreMarca;
 
-    #[ORM\Column(type: "string", name: "url")]
+    #[ORM\Column(type: 'string', name: 'url')]
     private $urlMarca;
 
-    public function getIdMarca() { 
+    #[ORM\Column(type: 'string', name: 'logourl')]
+    private $urlLogo;
+
+    public function getidMarca() { 
         return $this->idMarca; 
     }
 
-    public function setIdMarca($idMarca){
+    public function setidMarca($idMarca){
         $this->idMarca = $idMarca;
     }
 
-    public function getNombreMarca() { 
+    public function getnombreMarca() { 
         return $this->nombreMarca; 
     }
 
-    public function setNombreMarca($nombreMarca) { 
+    public function setnombreMarca($nombreMarca) { 
         $this->nombreMarca = $nombreMarca; 
     }
 
-    public function getUrlMarca() { 
+    public function geturlMarca() { 
         return $this->urlMarca; 
     }
 
-    public function setConfirmed($urlMarca) { 
+    public function seturlMarca($urlMarca) { 
         $this->urlMarca = $urlMarca; 
+    }
+
+    public function geturlLogo() { 
+        return $this->urlLogo; 
+    }
+
+    public function seturlLogo($urlLogo) { 
+        $this->urlLogo = $urlLogo; 
     }
 }
