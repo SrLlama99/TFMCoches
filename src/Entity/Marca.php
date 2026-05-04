@@ -24,15 +24,15 @@ class Marca
         return $this->idMarca; 
     }
 
-    public function setIdMarca($idMarca){
+    public function setidMarca($idMarca){
         $this->idMarca = $idMarca;
     }
 
-    public function getNombreMarca() { 
+    public function getnombreMarca() { 
         return $this->nombreMarca; 
     }
 
-    public function setNombreMarca($nombreMarca) { 
+    public function setnombreMarca($nombreMarca) { 
         $this->nombreMarca = $nombreMarca; 
     }
 

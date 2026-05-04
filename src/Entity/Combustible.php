@@ -26,7 +26,7 @@ class Combustible
         return $this->nombreCombustible; 
     }
 
-    public function setFollowed($nombreCombustible) { 
+    public function setNombreCombustible($nombreCombustible) { 
         $this->nombreCombustible = $nombreCombustible; 
     }
 }

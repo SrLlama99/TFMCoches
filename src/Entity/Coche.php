@@ -26,11 +26,11 @@ class Coche
     #[ORM\Column(type: "string", name: "transmision")]
     private $cocheTransmision;
 
-    public function getCocheId() { 
+    public function getcocheId() { 
         return $this->cocheId; 
     }
 
-    public function setCocheId($cocheId){
+    public function setcocheId($cocheId){
         $this->cocheId = $cocheId;
     }
 

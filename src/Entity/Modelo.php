@@ -24,7 +24,7 @@ class Modelo
         return $this->modeloId; 
     }
 
-    public function setModeloId($modeloId){
+    public function setmodeloId($modeloId){
         $this->modeloId = $modeloId;
     }
 
@@ -32,7 +32,7 @@ class Modelo
         return $this->marca; 
     }
 
-    public function setFollowed($marca) { 
+    public function setMarca($marca) { 
         $this->marca = $marca; 
     }
 
@@ -40,15 +40,15 @@ class Modelo
         return $this->modeloNombre; 
     }
 
-    public function setConfirmed($modeloNombre) { 
+    public function setnombreModelo($modeloNombre) { 
         $this->modeloNombre = $modeloNombre; 
     }
 
-    public function getFotoModelo(){
+    public function getfotoModelo(){
         return $this->fotoModelo;
     }
 
-    public function setFotoModelo($fotoModelo){
+    public function setfotoModelo($fotoModelo){
         $this->fotoModelo = $fotoModelo;
     }
 }
