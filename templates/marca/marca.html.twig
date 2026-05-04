@@ -279,7 +279,9 @@
 					<div class="ratio ratio-1x1 mb-3" style="width: 120px;">
 						<img src="{{ marca.urlLogo }}" class="rounded-circle object-fit-cover shadow-sm">
 					</div>
-					<a href="{{ marca.urlMarca }}"><h3 class="fw-bold bi bi-globe2 fs-2 d-flex align-items-center">{{ marca.nombreMarca }}</h3></a>
+					<a href="{{ marca.urlMarca }}">
+						<h3 class="fw-bold bi bi-globe2 fs-2 d-flex align-items-center">{{ marca.nombreMarca }}</h3>
+					</a>
 					<button class="btn btn-primary w-100 mt-2" style="max-width: 200px;">Editar marca</button>
 				</div>
 
@@ -293,37 +295,39 @@
 							<i class="arrow left"></i>
 						</button>
 						<div class="custom-scroll-container scroll-contenedor">
-						{% for model in modelos %}
-							<div class="custom-item">
-								<div class="card-gallery">
-									<div class="img-container-rel">
-										<img src="{{ model.fotoModelo }}" class="img-square">
-										<div class="texto-traslucido">
-											<span>{{ model.modeloNombre }}</span>
-											<img src='{{ marca.urlLogo }}' class="img-mini-overlay">
+							{% for model in modelos %}
+								<div class="custom-item">
+									<div class="card-gallery">
+										<div class="img-container-rel">
+											<img src="{{ model.fotoModelo }}" class="img-square">
+											<div class="texto-traslucido">
+												<span>{{ model.modeloNombre }}</span>
+												<img src='{{ marca.urlLogo }}' class="img-mini-overlay">
+											</div>
 										</div>
-									</div>
-									<div class="banda-inferior">
-										<div class="rating-static">
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
+										<div class="banda-inferior">
+											<div class="rating-static">
+												{% set estrellasMedia = model.mediaValoraciones %}
+												
+												{% if estrellasMedia > 0 %}
+													{% for i in 1..estrellasMedia %}
+														<svg class="gold" viewbox="0 0 24 24">
+															<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+														</svg>
+													{% endfor %}
+												{% endif %}
+
+												{% if estrellasMedia < 5 %}
+													{% for i in (estrellasMedia + 1)..5 %}
+														<svg class="grey" viewbox="0 0 24 24" style="fill: #e8e8e8;">
+															<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+														</svg>
+													{% endfor %}
+												{% endif %}
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
 							{% endfor %}
 						</div>
 						<button class="nav-btn btn-adelante">

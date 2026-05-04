@@ -1,6 +1,9 @@
 <?php
 namespace App\Entity;
 
+use App\Repository\ModeloRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -8,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Modelo
 {
     #[ORM\Id]
+    #[ORM\GeneratedValue]
     #[ORM\Column(type:'integer', name:'id')]
     private $modeloId;
 
@@ -19,6 +23,41 @@ class Modelo
 
     #[ORM\Column(type: "string", name: "foto")]
     private $fotoModelo;
+
+    #[ORM\OneToMany(mappedBy: 'modelo', targetEntity: Coche::class)]
+    private Collection $coches;
+
+    public function __construct()
+    {
+        $this->coches = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection<int, Coche>
+     */
+    public function getCoches(): Collection
+    {
+        return $this->coches;
+    }
+
+    public function getMediaValoraciones(): int
+    {
+        $sumaNotas = 0;
+        $totalValoraciones = 0;
+
+        foreach ($this->coches as $coche) {
+            foreach ($coche->getEstrellas() as $valoracion) {
+                $sumaNotas += $valoracion->getNota();
+                $totalValoraciones++;
+            }
+        }
+
+        if ($totalValoraciones === 0) {
+            return 0;
+        }
+
+        return (int) round($sumaNotas / $totalValoraciones);
+    }
 
     public function getModeloId() { 
         return $this->modeloId; 
