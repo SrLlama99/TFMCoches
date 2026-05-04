@@ -36,7 +36,7 @@ class Modelo
         $this->marca = $marca; 
     }
 
-    public function getNombreModelo() { 
+    public function getmodeloNombre() { 
         return $this->modeloNombre; 
     }
 
