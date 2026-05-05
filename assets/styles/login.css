@@ -23,16 +23,30 @@ body {
     overflow: visible; 
 }
 
+@keyframes entradaSuave {
+  from {
+    opacity: 0;
+    transform: translate(calc(-34% - 100px), 25%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-34%, 25%);
+  }
+}
+
 .cars-img {
     position: absolute;
     bottom: 0;
     left: 50%;
-    transform: translate(-34%, 25%);
+
     width: 170%;
     max-width: none;
 
     pointer-events: none;
     z-index: 2;
+
+    animation: entradaSuave 0.8s ease-out forwards;
 }
 
 
@@ -105,4 +119,17 @@ a {
     font-weight: bold;
     display: block;
     margin-bottom: 20px;
+}
+
+.hidden-checkbox {
+  display: none;
+}
+
+label{
+    color: #9e2b25;
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 20px;
+    cursor: pointer;
 }
