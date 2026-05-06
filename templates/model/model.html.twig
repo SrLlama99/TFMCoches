@@ -205,7 +205,9 @@
 			</div>
 
 			<aside class="profile-sidebar">
-				<img src="{{ marca.urlLogo }}" alt="Avatar" class="profile-avatar">
+				<a href="{{ path('marca', {'name': marca.nombreMarca, 'id': null}) }}">
+					<img src="{{ marca.urlLogo }}" alt="Avatar" class="profile-avatar">
+				</a>
 				<h3 class="fw-bold mb-1">{{model.modeloNombre}}</h3>
 				<p class="text-muted small">{{marca.nombreMarca}}</p>
 
@@ -274,21 +276,27 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<form id="ajax-rating-form">
+					<form id="ajax-rating-form" enctype="multipart/form-data">
 						<div class="row g-4">
 							<div class="col-md-6">
 								<label class="form-label small fw-bold">Motor</label>
 								<select name="motor" class="form-select border-0 bg-light p-3" style="border-radius: 15px;" required>
-									<option value="V8 Biturbo">V8 Biturbo</option>
-									<option value="V6 Turbo">V6 Turbo</option>
-									<option value="Eléctrico">Eléctrico</option>
+									{% if motores is defined and motores|length > 0 %}
+										{% for motor in motores %}
+											<option value="{{ motor.nombreMotor }}">{{ motor.nombreMotor }}</option>
+										{% endfor %}
+									{% else %}
+										<option value="V8 Biturbo">V8 Biturbo</option>
+										<option value="V6 Turbo">V6 Turbo</option>
+										<option value="Eléctrico">Eléctrico</option>
+									{% endif %}
 								</select>
 							</div>
 							<div class="col-md-6">
 								<label class="form-label small fw-bold">Transmisión</label>
 								<select name="transmision" class="form-select border-0 bg-light p-3" style="border-radius: 15px;" required>
-									<option value="Automática">Automática</option>
-									<option value="Manual">Manual</option>
+									<option value="A">Automática</option>
+									<option value="M">Manual</option>
 								</select>
 							</div>
 							<div class="col-md-12">
@@ -313,7 +321,7 @@
 								<input type="number" name="anio" class="form-control border-0 bg-light p-3" style="border-radius: 15px;" placeholder="2024" required>
 							</div>
 							<div class="col-12">
-								<textarea name="opinion" class="form-control border-0 bg-light p-3" style="border-radius: 15px;" rows="3" placeholder="Tu análisis..." required></textarea>
+								<textarea name="opinion" class="form-control border-0 bg-light p-3" style="border-radius: 15px;" rows="3" placeholder="Tu análisis..."></textarea>
 							</div>
 							<div class="col-12">
 								<input type="hidden" name="anadir_garaje" value="0">
@@ -325,6 +333,11 @@
 							<div class="col-12" id="notas-propietario-container" style="display: none;">
 								<label class="form-label small fw-bold">Notas del propietario (opcional)</label>
 								<textarea id="notasPropietario" name="notas_propietario" class="form-control border-0 bg-light p-3" style="border-radius: 15px;" rows="3" placeholder="Añade notas sobre el coche (opcional)"></textarea>
+								<div class="mt-3">
+									<label class="form-label small fw-bold">Imágenes del garaje (opcional)</label>
+									<input type="file" id="garajeImages" name="garaje_images[]" class="form-control" accept="image/*" multiple>
+									<div class="form-text small text-muted">Puedes subir varias imágenes (jpg, png...).</div>
+								</div>
 							</div>
 							<div class="col-12">
 								<button type="submit" id="submit-form-btn" class="btn btn-primary w-100 py-3 fw-bold" style="border-radius: 18px;">Publicar Comentario</button>
@@ -406,6 +419,9 @@ const wrapper = document.getElementById('comments-wrapper');
 
 						// limpiar formulario
 						ratingForm.reset();
+						// Asegurar limpiar input de archivos (no siempre se vacía con reset)
+						const fileInput = document.getElementById('garajeImages');
+						if (fileInput) fileInput.value = '';
 					} else {
 						alert(json.error || 'Error procesando valoración');
 					}

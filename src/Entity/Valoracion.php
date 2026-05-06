@@ -10,6 +10,7 @@ use App\Entity\Coche;
 class Valoracion
 {
     #[ORM\Id]
+    #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', name: 'id')]
     private $idValoracion;
 

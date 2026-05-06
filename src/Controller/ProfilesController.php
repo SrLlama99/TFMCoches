@@ -30,6 +30,22 @@ final class ProfilesController extends AbstractController
 
         if ($id) {
             $model = $modelRepo->findOneBy(['modeloId' => $id]);
+
+            if (!$model) {
+                throw $this->createNotFoundException('Modelo no encontrado');
+            }
+
+            // Comprobar que el id del modelo pertenece a la marca indicada en la URL
+            if ($marca && method_exists($marca, 'getIdMarca')) {
+                $marcaId = $marca->getIdMarca();
+            } else {
+                $marcaId = null;
+            }
+
+            if ($marcaId === null || $model->getMarca() !== $marcaId) {
+                throw $this->createNotFoundException('El modelo no pertenece a la marca indicada');
+            }
+
             $cars = $carsRepo->findBy(['modelo' => $model]);
 
             $nombresMotores = array_unique(array_map(function ($coche) {
@@ -101,11 +117,15 @@ final class ProfilesController extends AbstractController
                     ];
                 }, $valoracionesEntities);
 
+            // Obtener todos los motores para el select
+            $allMotors = $engineRepo->findAll();
+
             return $this->render('model/model.html.twig', [
                 'model' => $model,
                 'marca' => $marca,
                 'cars' => $cars,
                 'listaMotores' => $nombresMotores,
+                'motores' => $allMotors,
                 'listaColores' => $coloresUnicos,
                 'listaAnios' => $aniosUnicos,
                 'listaTransmisiones' => $transmisionesUnicas,
