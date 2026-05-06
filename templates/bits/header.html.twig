@@ -11,7 +11,7 @@
             <li class="nav-item">
                <form class="navForm" method="get" action={{ path('home') }}> {# TODO: Change to search path here #}
                     <input type="text" name="q" class="navSearchBar form-control"/>
-                    <button type="submit" class="searchButton customNavBtn btn">
+                    <button type="submit" class="h-100 d-flex justify-content-center align-items-center searchButton customNavBtn btn">
                         <i class="bi bi-search"></i>
                     </button>
                </form>
@@ -19,7 +19,7 @@
 
             {% if not app.user %} {# ANONYMOUS USER #}
             <li class="nav-item ms-md-auto">
-                <a class="nav-link logIOButton customNavBtn btn" title="Log in" href={{ path('home') }}> {# TODO: Change login path #}
+                <a class="h-100 d-flex justify-content-center align-items-center gap-1 nav-link logIOButton customNavBtn btn" title="Log in" href={{ path('home') }}> {# TODO: Change login path #}
                     <i class="bi bi-box-arrow-in-right"></i>
                     Login
                 </a>
