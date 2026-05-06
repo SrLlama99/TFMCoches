@@ -18,12 +18,16 @@
             <h1>TFG</h1>
 
             <form method="post" action="{{ path('app_login') }}">
-                <input type="text" id="username" name="_username" placeholder="Email of an already existing account"/>
+                <input type="text" id="username" name="_username" placeholder="Email of an already existing account" required />
 
-                <input type="password" id="password" name="_password" placeholder="Password" />
+                <input type="password" id="password" name="_password" placeholder="Password" required />
 
-                {% if error %}
+                {% if error  != 5 %}
                     <mark>Usuario o contraseña incorrectos</mark>
+                {% endif %}
+
+                {% if error == 5 %}
+                    <mark>Cuenta Creada Exitosamente</mark>
                 {% endif %}
 
                 <a class="recuperar" href="#">Did you forget your password?</a>
@@ -48,7 +52,7 @@
             <h1>TFG</h1>
             <label for="crearCuenta">Go back to login ->
             </label>
-            <form method="post" action="#">
+            <form method="post" action="{{ path('precesaCuentaNueva') }}">
                 <input type="text" name="usuName" placeholder="User Name" required>
                 <input type="text" name="usuGmail" placeholder="Email" required>
                 <input type="password" placeholder="Password" name="pass1" required>

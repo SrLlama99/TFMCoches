@@ -182,14 +182,17 @@ label {
     overflow: hidden;
     display: none;
     flex-direction: row-reverse;
+    pointer-events: none;
 }
 
 #crearCuenta:checked~.container1 {
     display: none;
+    pointer-events: none;
 }
 
 #crearCuenta:checked~.container2 {
     display: flex;
+    pointer-events: auto;
 }
 
 #crearCuenta:checked~.cars-img2{
