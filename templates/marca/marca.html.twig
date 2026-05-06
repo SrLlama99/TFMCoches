@@ -282,14 +282,14 @@
 					<a href="{{ marca.urlMarca }}">
 						<h3 class="fw-bold bi bi-globe2 fs-2 d-flex align-items-center">{{ marca.nombreMarca }}</h3>
 					</a>
-					<button class="btn btn-primary w-100 mt-2" style="max-width: 200px;">Editar marca</button>
+					<button class="btn btn-primary w-100 mt-2" style="max-width: 200px;">Edit Brand</button>
 				</div>
 
 			</div>
 
 			<div class="col-12">
 				<div class="gallery-section mb-5">
-					<h2 class="mb-4 fw-bold text-center">Modelos de la marca</h2>
+					<h2 class="mb-4 fw-bold text-center">Models of the brand:</h2>
 					<div class="carousel-flex-layout gallery-wrapper">
 						<button class="nav-btn btn-atras">
 							<i class="arrow left"></i>
@@ -297,6 +297,7 @@
 						<div class="custom-scroll-container scroll-contenedor">
 							{% for model in modelos %}
 								<div class="custom-item">
+								<a href="{{marca.nombreMarca}}/{{model.modeloId}}">
 									<div class="card-gallery">
 										<div class="img-container-rel">
 											<img src="{{ model.fotoModelo }}" class="img-square">
@@ -308,7 +309,7 @@
 										<div class="banda-inferior">
 											<div class="rating-static">
 												{% set estrellasMedia = model.mediaValoraciones %}
-												
+
 												{% if estrellasMedia > 0 %}
 													{% for i in 1..estrellasMedia %}
 														<svg class="gold" viewbox="0 0 24 24">
@@ -327,6 +328,7 @@
 											</div>
 										</div>
 									</div>
+									</a>
 								</div>
 							{% endfor %}
 						</div>

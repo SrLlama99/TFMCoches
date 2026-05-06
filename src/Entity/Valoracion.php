@@ -84,4 +84,14 @@ class Valoracion
     {
         $this->fecha = $fecha;
     }
+
+    public function getIdUsuario()
+    {
+        return $this->idUsuario;
+    }
+
+    public function setIdUsuario($idUsuario)
+    {
+        $this->idUsuario = $idUsuario;
+    }
 }
