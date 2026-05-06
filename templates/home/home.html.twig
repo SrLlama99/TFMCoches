@@ -1,0 +1,20 @@
+{% extends "skeleton.html.twig" %}
+{% block main %}
+	<div>
+		{% if mostRated %}
+			<h1>Most rated</h1>
+			{% for model in mostRated %}
+				{{ dump(model) }}
+			{% endfor %}
+		{% endif %}
+	</div>
+
+	<div>
+		{% if mostliked %}
+			<h1>Most rated</h1>
+			{% for model in mostRated %}
+				{{ dump(model) }}
+			{% endfor %}
+		{% endif %}
+	</div>
+{% endblock %}
