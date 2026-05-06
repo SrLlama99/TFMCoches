@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,7 @@
 </head>
 <body>
 <input type="checkbox" id="crearCuenta" class="hidden-checkbox" />
-<div class="container">
+<div class="container1">
     <div class="left">
         <img src="{{ asset('/images/cars.png') }}" class="cars-img">
     </div>
@@ -18,25 +18,59 @@
             <h1>TFG</h1>
 
             <form method="post" action="{{ path('app_login') }}">
-                <label>Correo de una cuenta registrada:</label>
-                <input type="text" id="username" name="_username" />
+                <input type="text" id="username" name="_username" placeholder="Email of an already existing account"/>
 
-                <label>Contraseña:</label>
-                <input type="password" id="password" name="_password" />
+                <input type="password" id="password" name="_password" placeholder="Password" />
 
                 {% if error %}
                     <mark>Usuario o contraseña incorrectos</mark>
                 {% endif %}
 
-                <a class="recuperar" href="#">¿Has olvidado tu contraseña?</a>
+                <a class="recuperar" href="#">Did you forget your password?</a>
 
                 <input class="boton-login" type="submit" value="Iniciar sesión">
             </form>
 
             <div class="crear-cuenta">
-                ¿No tienes cuenta? 
-                <label for="crearCuenta">Crear Cuenta</label>
+                You don´t have an account? 
+                <label for="crearCuenta">Create one</label>
             </div>
+        </div>
+    </div>
+</div>
+<div class="container2">
+    <div class="left2">
+        <img src="{{ asset('/images/cars2.png') }}" class="cars-img2">
+    </div>
+
+    <div class="right2">
+        <div class="login-box">
+            <h1>TFG</h1>
+            <label for="crearCuenta">Go back to login ->
+            </label>
+            <form method="post" action="#">
+                <input type="text" name="usuName" placeholder="User Name" required>
+                <input type="text" name="usuGmail" placeholder="Email" required>
+                <input type="password" placeholder="Password" name="pass1" required>
+                <input type="password" name="pass2" placeholder="Repeat password" required>
+                {% if error == 1 %}
+                    <mark>Las contraseñas no coinciden</mark>
+                {% endif %}
+                {% if error == 2 %}
+                    <mark>El correo ya esta registrado</mark>
+                {% endif %}
+                {% if error == 3 %}
+                    <mark>El nombre de usuario ya esta registrado</mark>
+                {% endif %}
+                {% if error == 4 %}
+                    <mark>Has introducido mal el código de verificación</mark>
+                {% endif %}
+                {% if error == 5 %}
+                    <mark>Cuenta Creada Exitosamente</mark>
+                {% endif %}
+                <input class="boton-login" type="submit" value="Create Account">
+            </form>
+
         </div>
     </div>
 </div>
