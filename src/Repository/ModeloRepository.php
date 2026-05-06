@@ -13,19 +13,37 @@ class ModeloRepository extends ServiceEntityRepository
         parent::__construct($registry, Modelo::class);
     }
 
-    public function findByBestRated()
+    public function findByWorst(int $limit = 1, \App\Entity\Marca $brand = null, string $order = 'ASC')
     {
-        $result = $this->getEntityManager()->createQueryBuilder()
-            ->select('m', 'SUM(v.estrellas) as totalEstrellas', 'COUNT(v)')
-            ->from('Modelo', 'm')
-            ->join('Valoracion', 'v', 'WITH', 'm.id = v.idCoche')
-            ->groupBy('m.id')
-            ->orderBy('');
-        return $result;
+        return $this->findByBest($limit, $brand, $order);
+    }
+    public function findByBest(int $limit = 1, \App\Entity\Marca $brand = null, string $order = 'DESC')
+    {
+        if ($brand) { //This bs returns the best from the brand provided
+            return $this->getEntityManager()->createQueryBuilder()
+                ->select('m', 'AVG(v.estrellas) as media')
+                ->from(\App\Entity\Modelo::class, 'm')
+                ->join(\App\Entity\Valoracion::class, 'v', 'WITH', 'm.modeloId = v.idCoche')
+                ->groupBy('m.modeloId')
+                ->where('m.marca = :marca')
+                ->setParameter('marca', $brand->getIdMarca())
+                ->orderBy('media', $order)
+                ->setMaxResults($limit)
+                ->getQuery()->getResult();
+        }
+        return
+            $this->getEntityManager()->createQueryBuilder()
+            ->select('m', 'AVG(v.estrellas) as media')
+            ->from(\App\Entity\Modelo::class, 'm')
+            ->join(\App\Entity\Valoracion::class, 'v', 'WITH', 'm.modeloId = v.idCoche')
+            ->groupBy('m.modeloId')
+            ->orderBy('media', $order)
+            ->setMaxResults($limit)
+            ->getQuery()->getResult();
     }
     public function findByMostRated($limit = 3)
     {
-        $result = $this->getEntityManager()->createQueryBuilder()
+        return $this->getEntityManager()->createQueryBuilder()
             ->select('m as modelo', 'COUNT(v.idCoche) as totalRates')
             ->from(\App\Entity\Modelo::class, 'm')
             ->join(\App\Entity\Valoracion::class, 'v', 'WITH', 'm.modeloId = v.idCoche')
@@ -34,6 +52,5 @@ class ModeloRepository extends ServiceEntityRepository
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
-        return $result;
     }
 }

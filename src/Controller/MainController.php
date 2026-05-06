@@ -18,15 +18,18 @@ final class MainController extends AbstractController
         $modelosEM = $em->getRepository(Modelo::class);
 
         $mostRated = $modelosEM->findByMostRated();
-        // $mostLiked = $modelosEM->findByBest(); // TODO: Add 3 best cars from the db
-        // $mostHated
+        $mostLiked = $modelosEM->findByBest(3);
+        $mostHated = $modelosEM->findByWorst(3);
         // $topFromBrands= $modelos->findBestOfBrands();
-        
-        return $this->render('home/home.html.twig',
+
+        return $this->render(
+            'home/home.html.twig',
             [
-                // "mostLiked"=>$mostLiked,
+                "mostRated" => $mostRated,
+                "mostLiked" => $mostLiked,
+                "mostHated"=>$mostHated
                 // "topFromBrands"=>$topFromBrands
-                "mostRated"=>$mostRated
-            ]);
+            ]
+        );
     }
 }

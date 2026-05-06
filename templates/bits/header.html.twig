@@ -20,19 +20,19 @@
             {% if not app.user %} {# ANONYMOUS USER #}
             <li class="nav-item ms-md-auto">
                 <a class="h-100 d-flex justify-content-center align-items-center gap-1 nav-link logIOButton customNavBtn btn" title="Log in" href={{ path('home') }}> {# TODO: Change login path #}
-                    <i class="bi bi-box-arrow-in-right"></i>
-                    Login
+                    <i class="bi bi-box-arrow-in-right px-2 px-md-0"></i>
+                    <span class="d-none d-md-inline">Login</span>
                 </a>
             </li>
             {% else %} {# USER IS LOGGED IN #}
             <li class="nav-item ms-md-auto">
-                <a class="garageButton customNavBtn btn" title="My garage">
+                <a class="h-100 d-flex justify-content-center align-items-center gap-1 garageButton customNavBtn btn" title="My garage">
                     <i class="bi bi-car-front-fill"></i>
                     <span class="d-none d-md-inline">Garage</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="logIOButton customNavBtn btn" title="Log out" href={{ path('home') }}> {# TODO: Add logout path #}
+                <a class="h-100 d-flex justify-content-center align-items-center gap-1 logIOButton customNavBtn btn" title="Log out" href={{ path('home') }}> {# TODO: Add logout path #}
                     <i class="bi bi-box-arrow-right"></i>
                 </a>
             </li>
