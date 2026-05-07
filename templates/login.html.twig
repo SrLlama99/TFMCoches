@@ -22,11 +22,11 @@
 
                 <input type="password" id="password" name="_password" placeholder="Password" required />
 
-                {% if error  != 5 %}
+                {% if loginError  %}
                     <mark>Usuario o contraseña incorrectos</mark>
                 {% endif %}
 
-                {% if error == 5 %}
+                {% if registerError == 5 %}
                     <mark>Cuenta Creada Exitosamente</mark>
                 {% endif %}
 
@@ -57,19 +57,19 @@
                 <input type="text" name="usuGmail" placeholder="Email" required>
                 <input type="password" placeholder="Password" name="pass1" required>
                 <input type="password" name="pass2" placeholder="Repeat password" required>
-                {% if error == 1 %}
+                {% if registerError == 1 %}
                     <mark>Las contraseñas no coinciden</mark>
                 {% endif %}
-                {% if error == 2 %}
+                {% if registerError == 2 %}
                     <mark>El correo ya esta registrado</mark>
                 {% endif %}
-                {% if error == 3 %}
+                {% if registerError == 3 %}
                     <mark>El nombre de usuario ya esta registrado</mark>
                 {% endif %}
-                {% if error == 4 %}
+                {% if registerError == 4 %}
                     <mark>Has introducido mal el código de verificación</mark>
                 {% endif %}
-                {% if error == 5 %}
+                {% if registerError == 5 %}
                     <mark>Cuenta Creada Exitosamente</mark>
                 {% endif %}
                 <input class="boton-login" type="submit" value="Create Account">

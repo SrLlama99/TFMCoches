@@ -34,7 +34,7 @@ final class LoginController extends AbstractController
          $lastUsername = $authenticationUtils->getLastUsername();
 
         // Renderizar el formulario de login
-        return $this->render('login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render('login.html.twig', ['last_username' => $lastUsername, 'loginError' => $error, 'registerError' => null]);
     }
 
     #[Route('/crearcuentaProcesa', name:'precesaCuentaNueva')]
@@ -50,11 +50,11 @@ final class LoginController extends AbstractController
         $usuExistente = $eq->findBy(['UserName' => $usuName]);
 
         if($pass1 != $pass2){
-            return $this->render('login.html.twig',["error"=>1]);
+            return $this->render('login.html.twig',["registerError"=>1]);
         }else if($correoExistente){
-            return $this->render('login.html.twig',["error"=>2]);
+            return $this->render('login.html.twig',["registerError"=>2]);
         }else if($usuExistente){
-            return $this->render('login.html.twig',["error"=>3]);
+            return $this->render('login.html.twig',["registerError"=>3]);
         }else{
             // $codeVerify = rand(100000,999999);
             // $request->getSession()->set("codigoVerificacion", $codeVerify);
@@ -89,7 +89,7 @@ final class LoginController extends AbstractController
             // $user->setAdmin(false);
             $entityManager->persist($user);
             $entityManager->flush();
-            return $this->render('login.html.twig',["error"=>5]);
+            return $this->render('login.html.twig',["registerError"=>5]);
         }
     }
 	
