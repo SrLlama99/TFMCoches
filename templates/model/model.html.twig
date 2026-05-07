@@ -2,6 +2,7 @@
 
 {% block stylesheets %}
 	<style>
+		/* RECORDATORIO PARA MI DE CAMBIAR LOS COMENTARIOS AL INGLÉS */
 		/* Layout Principal */
 		.main-grid {
 			display: grid;
@@ -355,7 +356,7 @@
 const loadMoreBtn = document.getElementById('load-more-comments');
 const wrapper = document.getElementById('comments-wrapper');
 
-		// Toggle mostrar 'Notas del propietario' cuando se marca 'Añadir al garaje'
+		// Toggle show Notas if the add to garage is active
 		const anadirGarajeCheckbox = document.getElementById('anadirGaraje');
 		const notasContainer = document.getElementById('notas-propietario-container');
 		if (anadirGarajeCheckbox && notasContainer) {
@@ -363,18 +364,18 @@ const wrapper = document.getElementById('comments-wrapper');
 				notasContainer.style.display = anadirGarajeCheckbox.checked ? 'block' : 'none';
 			};
 			anadirGarajeCheckbox.addEventListener('change', setNotasVisibility);
-			// estado inicial
+			// original state
 			setNotasVisibility();
 		}
 
-		// Envío AJAX del formulario de valoración
+		// Send AJAX of the form
 		const ratingForm = document.getElementById('ajax-rating-form');
 		if (ratingForm) {
 			ratingForm.addEventListener('submit', (e) => {
 				e.preventDefault();
 				const submitBtn = document.getElementById('submit-form-btn');
 				submitBtn.disabled = true;
-				submitBtn.innerText = 'Enviando...';
+				submitBtn.innerText = 'Sending...';
 
 				const formData = new FormData(ratingForm);
 
@@ -388,14 +389,14 @@ const wrapper = document.getElementById('comments-wrapper');
 				.then(res => res.json())
 				.then(json => {
 					if (json.success) {
-						// Cerrar modal
+						// Close modal
 						const modalEl = document.getElementById('ratingModal');
 						if (typeof bootstrap !== 'undefined') {
 							const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
 							modalInstance.hide();
 						}
 
-						// Añadir comentario al DOM (al inicio)
+						// Add Valoraciones to DOM
 						const item = json.data;
 						const html = `\
 							<div class="comment-item">\
@@ -417,9 +418,9 @@ const wrapper = document.getElementById('comments-wrapper');
 
 						wrapper.insertAdjacentHTML('afterbegin', html);
 
-						// limpiar formulario
+						// clean form
 						ratingForm.reset();
-						// Asegurar limpiar input de archivos (no siempre se vacía con reset)
+						// clean image input
 						const fileInput = document.getElementById('garajeImages');
 						if (fileInput) fileInput.value = '';
 					} else {
@@ -438,8 +439,8 @@ const wrapper = document.getElementById('comments-wrapper');
 		}
 
 loadMoreBtn.addEventListener('click', () => {
-loadMoreBtn.innerText = 'Cargando...';
-			// Fetch desde el endpoint que devuelve JSON
+loadMoreBtn.innerText = 'Loading...';
+			// Fetch from the endpoint that gives JSON
 			fetch('{{ path('model_comments', {'modelId': model.modeloId}) }}?offset=' + commentOffset + '&limit=10')
 				.then(res => res.json())
 				.then(json => {

@@ -35,7 +35,7 @@ final class ProfilesController extends AbstractController
                 throw $this->createNotFoundException('Modelo no encontrado');
             }
 
-            // Comprobar que el id del modelo pertenece a la marca indicada en la URL
+            // Check that the id of the model is from the brand of the link
             if ($marca && method_exists($marca, 'getIdMarca')) {
                 $marcaId = $marca->getIdMarca();
             } else {
@@ -64,11 +64,11 @@ final class ProfilesController extends AbstractController
                 return $coche->getCocheTransmision();
             }, $cars));
 
-            // Cargar las valoraciones (comentarios) desde la base de datos
+            // Load the Valoraciones from the database
             $valorRepo = $em->getRepository(Valoracion::class);
             $usersRepo = $em->getRepository(Users::class);
 
-            // Obtener las 10 valoraciones más recientes para este modelo (todos sus coches)
+            // Get the last 10 Valoraciones to the model's cars
             $qbInit = $valorRepo->createQueryBuilder('v')
                 ->join('v.idCoche', 'c')
                 ->where('c.modelo = :modelo')
@@ -80,7 +80,7 @@ final class ProfilesController extends AbstractController
 
             $valoraciones = array_map(function ($v) use ($usersRepo) {
                 $username = 'Usuario';
-                // obtener nombre de usuario si existe
+                // obtain username if exists
                 if (method_exists($v, 'getIdUsuario')) {
                     $user = $usersRepo->find($v->getIdUsuario());
                     if ($user) {
@@ -117,7 +117,7 @@ final class ProfilesController extends AbstractController
                     ];
                 }, $valoracionesEntities);
 
-            // Obtener todos los motores para el select
+            // get all the engines to use in the select of engines
             $allMotors = $engineRepo->findAll();
 
             return $this->render('model/model.html.twig', [
@@ -260,7 +260,7 @@ final class ProfilesController extends AbstractController
     #[Route('/modelo/{modelId}/add-rating', name: 'model_add_rating', methods: ['POST'])]
     public function addRating(EntityManagerInterface $em, int $modelId, Request $request): JsonResponse
     {
-        // Usuario autenticado
+        // Require user to put a Valoracion (i will change the message in the future)
         $user = $this->getUser();
         if (!$user) {
             return new JsonResponse(['error' => 'Unauthorized'], 401);
@@ -282,18 +282,11 @@ final class ProfilesController extends AbstractController
         $notasPropietario = trim($request->request->get('notas_propietario', ''));
 
         try {
-            // Buscar o crear Motor
+            // Search engine
             $motorRepo = $em->getRepository(Motor::class);
             $motor = $motorRepo->findOneBy(['nombreMotor' => $motorName]);
-            if (!$motor) {
-                $motor = new Motor();
-                $motor->setNombreMotor($motorName);
-                $motor->setCarburante(0);
-                $em->persist($motor);
-                $em->flush();
-            }
 
-            // Buscar coche con las mismas especificaciones
+            // Search a car with the same specifications
             $cocheRepo = $em->getRepository(Coche::class);
             $qb = $cocheRepo->createQueryBuilder('c')
                 ->where('c.modelo = :modelo')
@@ -311,7 +304,7 @@ final class ProfilesController extends AbstractController
             $coche = $qb->getQuery()->getOneOrNullResult();
 
             if (!$coche) {
-                // Crear nuevo coche
+                // New car if not exists
                 $coche = new Coche();
                 $coche->setModelo($model);
                 $coche->setMotor($motor);
@@ -322,7 +315,7 @@ final class ProfilesController extends AbstractController
                 $em->flush();
             }
 
-            // Crear la valoración
+            // Create the Valoracion
             $valoracion = new Valoracion();
             $valoracion->setIdUsuario(method_exists($user, 'getUserId') ? $user->getUserId() : (method_exists($user, 'getId') ? $user->getId() : null));
             $valoracion->setIdCoche($coche);
@@ -332,7 +325,7 @@ final class ProfilesController extends AbstractController
             $em->persist($valoracion);
             $em->flush();
 
-            // Si se añadió al garaje, crear entrada en cocheGaraje
+            // If the user added the car to the garage this add the car to the databases table CocheGaraje
             if ($anadirGaraje === 1) {
                 $garaje = new \App\Entity\cocheGaraje();
                 $garaje->setUsuario(method_exists($user, 'getUserId') ? $user->getUserId() : (method_exists($user, 'getId') ? $user->getId() : null));
@@ -345,7 +338,7 @@ final class ProfilesController extends AbstractController
             return new JsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
         }
 
-        // Preparar respuesta con la nueva valoración para añadir al DOM
+        // Prepare response to send to the DOM
         $response = [
             'success' => true,
             'data' => [
