@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="{{ asset('styles/login.css') }}">
 </head>
 <body>
-<input type="checkbox" id="crearCuenta" class="hidden-checkbox" />
+<input type="checkbox" id="crearCuenta" class="hidden-checkbox" {% if checked %}checked{% endif %}/>
+<input type="checkbox" id="contraseñaOlvidada" class="hidden-checkbox" {% if checked %}checked{% endif %}/>
+
 <div class="container1">
     <div class="left">
         <img src="{{ asset('/images/cars.png') }}" class="cars-img">
@@ -29,8 +31,8 @@
                 {% if registerError == 5 %}
                     <mark>Cuenta Creada Exitosamente</mark>
                 {% endif %}
-
-                <a class="recuperar" href="#">Did you forget your password?</a>
+                
+                <label for="contraseñaOlvidada">Did you forget your password?</label>
 
                 <input class="boton-login" type="submit" value="Iniciar sesión">
             </form>
@@ -69,10 +71,37 @@
                 {% if registerError == 4 %}
                     <mark>Has introducido mal el código de verificación</mark>
                 {% endif %}
-                {% if registerError == 5 %}
-                    <mark>Cuenta Creada Exitosamente</mark>
-                {% endif %}
                 <input class="boton-login" type="submit" value="Create Account">
+            </form>
+
+        </div>
+    </div>
+</div>
+<div class="container3">
+    <div class="left2">
+        <img src="{{ asset('/images/cars3.png') }}" class="cars-img2">
+    </div>
+
+    <div class="right2">
+        <div class="login-box">
+            <h1>TFG</h1>
+            <label for="contraseñaOlvidada">Go back to login ->
+            </label>
+            <form method="post" action="{{ path('procesaPass1') }}">
+                <input type="text" name="usuName" placeholder="User Mail" required>
+                {% if registerError == 1 %}
+                    <mark>Las contraseñas no coinciden</mark>
+                {% endif %}
+                {% if registerError == 2 %}
+                    <mark>El correo ya esta registrado</mark>
+                {% endif %}
+                {% if registerError == 3 %}
+                    <mark>El nombre de usuario ya esta registrado</mark>
+                {% endif %}
+                {% if registerError == 4 %}
+                    <mark>Has introducido mal el código de verificación</mark>
+                {% endif %}
+                <input class="boton-login" type="submit" value="Recover Password">
             </form>
 
         </div>

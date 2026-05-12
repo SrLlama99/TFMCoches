@@ -185,6 +185,15 @@ label {
     pointer-events: none;
 }
 
+.container3{
+    display: flex;
+    height: 100dvh;
+    overflow: hidden;
+    display: none;
+    flex-direction: row-reverse;
+    pointer-events: none;
+}
+
 #crearCuenta:checked~.container1 {
     display: none;
     pointer-events: none;
@@ -196,5 +205,19 @@ label {
 }
 
 #crearCuenta:checked~.cars-img2{
+    display:block;
+}
+
+#contraseñaOlvidada:checked~.container1{
+    display: none;
+    pointer-events: none;
+}
+
+#contraseñaOlvidada:checked~.container3{
+    display: flex;
+    pointer-events: auto;
+}
+
+#contraseñaOlvidada:checked~.cars-img2{
     display:block;
 }

@@ -34,7 +34,7 @@ final class LoginController extends AbstractController
          $lastUsername = $authenticationUtils->getLastUsername();
 
         // Renderizar el formulario de login
-        return $this->render('login.html.twig', ['last_username' => $lastUsername, 'loginError' => $error, 'registerError' => null]);
+        return $this->render('login.html.twig', ['last_username' => $lastUsername, 'loginError' => $error, 'registerError' => null, 'checked' => false]);
     }
 
     #[Route('/crearcuentaProcesa', name:'precesaCuentaNueva')]
@@ -50,33 +50,46 @@ final class LoginController extends AbstractController
         $usuExistente = $eq->findBy(['UserName' => $usuName]);
 
         if($pass1 != $pass2){
-            return $this->render('login.html.twig',["registerError"=>1]);
+            return $this->render('login.html.twig',["registerError"=>1, "loginError" => null, 'checked' => true]);
         }else if($correoExistente){
-            return $this->render('login.html.twig',["registerError"=>2]);
+            return $this->render('login.html.twig',["registerError"=>2, "loginError" => null, 'checked' => true]);
         }else if($usuExistente){
-            return $this->render('login.html.twig',["registerError"=>3]);
+            return $this->render('login.html.twig',["registerError"=>3, "loginError" => null, 'checked' => true]);
         }else{
-            // $codeVerify = rand(100000,999999);
-            // $request->getSession()->set("codigoVerificacion", $codeVerify);
+            $codeVerify = rand(100000,999999);
+            $request->getSession()->set("codigoVerificacion", $codeVerify);
             $request->getSession()->set("correoCrear", $correo);
             $request->getSession()->set("usuarioCrear", $usuName);
             $request->getSession()->set("pass", $pass1);
-            // $request->getSession()->set("date", $fecha);
 
-            // $email = (new TemplatedEmail())
-            //     ->from(new Address('no-reply@VIVII.com', 'VIVII'))
-            //     ->to($correo)
-            //     ->subject('prueba de correo con Twig')
-            //     ->htmlTemplate('email/correoCrear.html.twig')
-            //     ->context([
-            //     'nombre' => $usuName, 
-            //     'valiCode' => $codeVerify
-            //     ]);
-            // $mailer->send($email);
+            $email = (new TemplatedEmail())
+                ->from(new Address('no-reply@VIVII.com', 'VIVII'))
+                ->to($correo)
+                ->subject('prueba de correo con Twig')
+                ->htmlTemplate('email/correoCrear.html.twig')
+                ->context([
+                'nombre' => $usuName, 
+                'valiCode' => $codeVerify
+                ])
+                ->embedFromPath(
+                    $this->getParameter('kernel.project_dir') . '/public/images/logo.png',
+                    'carsimg'
+                );
+            $mailer->send($email);
 
+            return $this->render('crearCuenta.html.twig',["loginError"=>0]);
+        }
+    }
+
+    #[Route('/procesaCuentaNueva', name:'procesaCuentaFinal')]
+    public function procesa2(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher){
+        if($request->request->get("codeValidation") == $request->getSession()->get("codigoVerificacion")){
+            $usuName = $request->getSession()->get("usuarioCrear");
+            $correo = $request->getSession()->get("correoCrear");
+            $pass = $request->getSession()->get("pass");
             $user = new Users;
 
-            $plaintextPassword = $pass1;
+            $plaintextPassword = $pass;
             
             $hashedPassword = $passwordHasher->hashPassword(
                 $user,
@@ -86,10 +99,40 @@ final class LoginController extends AbstractController
             $user->setUserName($usuName);
             $user->setUserMail($correo);
             $user->setUserPassword($hashedPassword);
-            // $user->setAdmin(false);
             $entityManager->persist($user);
             $entityManager->flush();
-            return $this->render('login.html.twig',["registerError"=>5]);
+            return $this->render('login.html.twig', ["registerError"=>5, "loginError" => null, 'checked' => true]);
+        }else{
+             return $this->render('login.html.twig', ["registerError"=>4, "loginError" => null, 'checked' => true]);
+        }
+    }
+
+    #[Route('/procesaCambiarPass1', name:'procesaPass1')]
+    public function procesa1(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer){
+        $correoRecu = $request->request->get('recoverMail');
+        $request->getSession()->set("correoCambiar", $correoRecu);
+
+        $eq = $entityManager->getRepository(Users::class);
+        $correo = $eq->findBy(["UserMail" => $correoRecu]);
+
+        if($correo){
+            $codeVerify = rand(100000,999999);
+            $request->getSession()->set("codeVerify", $codeVerify);
+            $request->getSession()->set("correoCambiar", $correoRecu);
+
+            $email = (new TemplatedEmail())
+                ->from(new Address('no-reply@VIVII.com', 'VIVII'))
+                ->to($correoRecu)
+                ->subject('prueba de correo con Twig')
+                ->htmlTemplate('email/correoRecuperar.html.twig')
+                ->context([
+                'nombre' => $correoRecu, 
+                'valiCode' => $codeVerify
+                ]);
+            $mailer->send($email);
+            return $this->render('cambiarContraseñas/cambiarPass2.html.twig', ["error" => 0]);
+        }else{
+            return $this->render('cambiarContraseñas/cambiarPass.html.twig',["error"=>1]);
         }
     }
 	
