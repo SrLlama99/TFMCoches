@@ -8,7 +8,7 @@
 </head>
 <body>
 <input type="checkbox" id="crearCuenta" class="hidden-checkbox" {% if checked %}checked{% endif %}/>
-<input type="checkbox" id="contraseñaOlvidada" class="hidden-checkbox" {% if checked %}checked{% endif %}/>
+<input type="checkbox" id="contraseñaOlvidada" class="hidden-checkbox" {% if checked2 %}checked{% endif %}/>
 
 <div class="container1">
     <div class="left">
@@ -88,18 +88,12 @@
             <label for="contraseñaOlvidada">Go back to login ->
             </label>
             <form method="post" action="{{ path('procesaPass1') }}">
-                <input type="text" name="usuName" placeholder="User Mail" required>
+                <input type="text" name="usuMail" placeholder="User Mail" required>
                 {% if registerError == 1 %}
-                    <mark>Las contraseñas no coinciden</mark>
+                    <mark>El correo no se ha encontrado</mark>
                 {% endif %}
                 {% if registerError == 2 %}
-                    <mark>El correo ya esta registrado</mark>
-                {% endif %}
-                {% if registerError == 3 %}
-                    <mark>El nombre de usuario ya esta registrado</mark>
-                {% endif %}
-                {% if registerError == 4 %}
-                    <mark>Has introducido mal el código de verificación</mark>
+                    <mark>La contraseña se ha guardado</mark>
                 {% endif %}
                 <input class="boton-login" type="submit" value="Recover Password">
             </form>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña</title>
+    <link rel="stylesheet" href="{{ asset('styles/login.css') }}">
+</head>
+<body>
+<div class="container4">
+    <div class="left2">
+        <img src="{{ asset('/images/cars3.png') }}" class="cars-img2">
+    </div>
+
+    <div class="right2">
+        <div class="login-box">
+            <h1>TFG</h1>
+            <a href="{{ path('app_login') }}">Go back to login -></a>
+            <form method="post" action="{{ path('codeVery') }}">
+                <label>Introduce the validation code that we have send you to your mail</label>
+                <input type="text" name="recoverValiNumber"  placeholder="Validation Code"><br><br>
+                {% if registerError == 1 %}
+                    <mark>El codigo es incorrecto</mark>
+                {% endif %}
+                <input class="boton-login" type="submit" value="Recover Password">
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
