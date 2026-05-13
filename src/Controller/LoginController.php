@@ -128,7 +128,11 @@ final class LoginController extends AbstractController
                 ->context([
                 'nombre' => $correoRecu, 
                 'valiCode' => $codeVerify
-                ]);
+                ])
+                ->embedFromPath(
+                    $this->getParameter('kernel.project_dir') . '/public/images/logo.png',
+                    'carsimg'
+                );
             $mailer->send($email);
 
             return $this->render('cambiarPass/cambiarPass1.html.twig', ["registerError" => 0]);
