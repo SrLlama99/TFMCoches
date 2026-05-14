@@ -5,24 +5,33 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-body {
-    height: 100%;
+body{
+    margin:0;
+    min-height:100vh;
 }
 
-.container1 {
-    display: flex;
-    height: 100dvh;
-    overflow: hidden;
+.layout{
+    display:grid;
+    grid-template-columns: 60% 40%;
+    min-height:100vh;
 }
 
-.left {
-    width: 60%;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.9) 100%);
-    background-color: #c40000;
-    position: relative;
-    overflow: visible;
+.image-side{
+    position:relative;
+    overflow:hidden;
+
+    background:#b22222;
 }
 
+.image-side img{
+    position:absolute;
+    bottom:0;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:170%;
+}
 
 @keyframes entradaSuave {
     from {
@@ -70,12 +79,11 @@ body {
     animation: entradaSuave2 1s ease-out forwards;
 }
 
-.right {
-    width: 40%;
-    background-color: #e5e5e5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.form-side{
+    display:grid;
+    place-items:center;
+
+    background:#e5e5e5;
 }
 .right2 {
     width: 40%;
@@ -95,8 +103,11 @@ body {
     overflow: visible;
 }
 
-.login-box {
-    width: 70%;
+.login-box{
+    position:relative;
+    z-index:2;
+
+    width:min(85%, 420px);
 }
 
 .login-box h1 {
@@ -110,6 +121,22 @@ label {
     display: block;
     margin-bottom: 8px;
     color: #9e2b25;
+}
+
+input{
+    width:100%;
+    height:65px;
+
+    border:none;
+    border-radius:22px;
+
+    background:#9e2b25;
+
+    color:white;
+
+    padding:0 20px;
+
+    margin-bottom:25px;
 }
 
 input[type="text"],
@@ -227,4 +254,218 @@ label {
     height: 100dvh;
     overflow: hidden;
     flex-direction: row-reverse;
+}
+
+/* =========================
+   TABLETS
+========================= */
+@media screen and (max-width: 1024px) {
+
+    .left,
+    .left2 {
+        width: 50%;
+    }
+
+    .right,
+    .right2 {
+        width: 50%;
+        padding: 30px;
+    }
+
+    .login-box {
+        width: 90%;
+    }
+
+    .login-box h1 {
+        font-size: 50px;
+    }
+
+    .cars-img,
+    .cars-img2 {
+        width: 220%;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        padding: 14px;
+        font-size: 15px;
+    }
+
+    .boton-login {
+        width: 75%;
+    }
+}
+
+/* =========================
+   MÓVILES GRANDES
+========================= */
+@media screen and (max-width: 768px) {
+
+    .layout{
+        grid-template-columns:1fr;
+    }
+
+    .image-side{
+        position:absolute;
+        inset:0;
+        z-index:1;
+    }
+
+    .image-side img{
+        width:240%;
+        height:100%;
+        object-fit:cover;
+
+        filter:blur(3px);
+    }
+
+    .image-side::after{
+        content:"";
+
+        position:absolute;
+        inset:0;
+
+        background:
+        linear-gradient(
+            to bottom,
+            rgba(255,255,255,0.7),
+            rgba(0,0,0,0.9)
+        );
+    }
+
+    .form-side{
+        position:relative;
+        z-index:2;
+
+        background:transparent;
+    }
+
+    .login-box{
+        width:85%;
+        max-width:420px;
+    }
+    a {
+        color: #9e2b25;
+        font-size: 15px;
+        margin-bottom: 12px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 100%;
+        height: 68px;
+        border-radius: 22px;
+        border: none;
+        background-color: #9e2b25;
+        color: white;
+        padding: 0 20px;
+        margin-bottom: 28px;
+        font-size: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    input::placeholder {
+        color: rgba(255,255,255,0.9);
+        font-style: normal;
+    }
+
+    .boton-login {
+        width: 58%;
+        height: 52px;
+        border-radius: 20px;
+        margin-top: 25px;
+        background-color: #9e2b25;
+        color: white;
+        font-size: 18px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    }
+
+    mark {
+        text-align: center;
+        font-size: 13px;
+        margin-bottom: 15px;
+    }
+}
+/* =========================
+   MÓVILES PEQUEÑOS
+========================= */
+@media screen and (max-width: 480px) {
+
+    .left,
+    .left2 {
+        height: 30vh;
+        position: absolute;
+        z-index: 1;
+        overflow: hidden;
+    }
+
+    .right,
+    .right2 {
+        height: 70vh;
+        padding: 15px;
+        z-index: 3;
+    }
+
+    .login-box {
+        width: 100%;
+        z-index: 4;
+    }
+
+    .login-box h1 {
+        font-size: 34px;
+        margin-bottom: 20px;
+    }
+
+    .cars-img,
+    .cars-img2 {
+        width: 180%;
+        bottom: -10px;
+         z-index: 1;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        padding: 12px;
+        font-size: 13px;
+        margin-bottom: 15px;
+    }
+
+    .boton-login {
+        padding: 12px;
+        border-radius: 15px;
+        font-size: 14px;
+    }
+
+    label,
+    .crear-cuenta,
+    a,
+    mark {
+        font-size: 12px;
+    }
+}
+
+/* =========================
+   MÓVILES MUY PEQUEÑOS
+========================= */
+@media screen and (max-width: 360px) {
+
+    .login-box h1 {
+        font-size: 28px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        font-size: 12px;
+        padding: 10px;
+    }
+
+    .boton-login {
+        font-size: 13px;
+        padding: 10px;
+    }
+
+    .cars-img,
+    .cars-img2 {
+        width: 220%;
+    }
 }

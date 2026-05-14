@@ -10,12 +10,11 @@
 <input type="checkbox" id="crearCuenta" class="hidden-checkbox" {% if checked %}checked{% endif %}/>
 <input type="checkbox" id="contraseñaOlvidada" class="hidden-checkbox" {% if checked2 %}checked{% endif %}/>
 
-<div class="container1">
-    <div class="left">
+<div class="layout">
+    <div class="image-side">
         <img src="{{ asset('/images/cars.png') }}" class="cars-img">
     </div>
-
-    <div class="right">
+    <div class="form-side">
         <div class="login-box">
             <h1>TFG</h1>
 
@@ -25,7 +24,7 @@
                 <input type="password" id="password" name="_password" placeholder="Password" required />
 
                 {% if loginError  %}
-                    <mark>Usuario o contraseña incorrectos</mark>
+                    <mark>you inserted your mail or password incorrecly</mark>
                 {% endif %}
 
                 {% if registerError == 5 %}
@@ -60,16 +59,16 @@
                 <input type="password" placeholder="Password" name="pass1" required>
                 <input type="password" name="pass2" placeholder="Repeat password" required>
                 {% if registerError == 1 %}
-                    <mark>Las contraseñas no coinciden</mark>
+                    <mark>The passwords does't match</mark>
                 {% endif %}
                 {% if registerError == 2 %}
-                    <mark>El correo ya esta registrado</mark>
+                    <mark>That mail is already on use</mark>
                 {% endif %}
                 {% if registerError == 3 %}
-                    <mark>El nombre de usuario ya esta registrado</mark>
+                    <mark>That username is already on use</mark>
                 {% endif %}
                 {% if registerError == 4 %}
-                    <mark>Has introducido mal el código de verificación</mark>
+                    <mark>You inserted the wrong code</mark>
                 {% endif %}
                 <input class="boton-login" type="submit" value="Create Account">
             </form>
@@ -89,11 +88,11 @@
             </label>
             <form method="post" action="{{ path('procesaPass1') }}">
                 <input type="text" name="usuMail" placeholder="User Mail" required>
-                {% if registerError == 1 %}
-                    <mark>El correo no se ha encontrado</mark>
+                {% if registerError == 6 %}
+                    <mark>We couldn't find that mail</mark>
                 {% endif %}
-                {% if registerError == 2 %}
-                    <mark>La contraseña se ha guardado</mark>
+                {% if registerError == 7 %}
+                    <mark>We have save your new password</mark>
                 {% endif %}
                 <input class="boton-login" type="submit" value="Recover Password">
             </form>

@@ -43,7 +43,6 @@ final class LoginController extends AbstractController
         $correo = $request->request->get('usuGmail');
         $pass1 = $request->request->get('pass1');
         $pass2 = $request->request->get('pass2');
-        // $fecha = $request->request->get('birthDate');
         
         $eq = $entityManager->getRepository(Users::class);
         $correoExistente = $eq->findBy(['UserMail' => $correo]);
@@ -137,7 +136,7 @@ final class LoginController extends AbstractController
 
             return $this->render('cambiarPass/cambiarPass1.html.twig', ["registerError" => 0]);
         }else{
-            return $this->render('login.html.twig',["registerError"=>1, "loginError" => null, 'checked2' => true, 'checked' => false]);
+            return $this->render('login.html.twig',["registerError"=>6, "loginError" => null, 'checked2' => true, 'checked' => false]);
         }
     }
 	
@@ -173,7 +172,7 @@ final class LoginController extends AbstractController
                 $entityManager->flush();
             }
 
-            return $this->render('login.html.twig', ["registerError"=>2, "loginError" => null, 'checked' => false, 'checked2' => true]);
+            return $this->render('login.html.twig', ["registerError"=>7, "loginError" => null, 'checked' => false, 'checked2' => true]);
         }else{
             return $this->render('cambiarPass/cambiarPass2.html.twig', ["registerError"=>1]);
         }
