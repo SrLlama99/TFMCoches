@@ -335,7 +335,7 @@ final class ProfilesController extends AbstractController
                 // Process uploaded photos (if any) and collect filenames to store in DB
                 $photoNames = [];
                 $movedFiles = [];
-                if (!empty($_FILES["photos"]["name"][0])) {
+                if (!empty($_FILES["photos"]["name"])) {
                     $allowed = ["png", "jpg", "jpeg", "webp"];
 
                     // Use absolute path to public folder
@@ -409,7 +409,7 @@ final class ProfilesController extends AbstractController
         $marcaRepo = $em->getRepository(Marca::class);
         $valorRepo = $em->getRepository(Valoracion::class);
 
-        $usuario = $usersRepo->findOneBy(['UserName' => $name]);
+        $usuario = $usersRepo->findOneBy(['UserName' => strtolower($name)]);
         if (!$usuario) {
             throw $this->createNotFoundException('Usuario no encontrado');
         }

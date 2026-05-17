@@ -270,7 +270,7 @@
 {% endblock %}
 
 {% block main %}
-	<div class="container py-5">
+	<div class="container py-5 min-vh-100">
 		<div class="row">
 			<div class="col-lg-4 mb-4">
 				<div class="card shadow-sm border-0 profile-card-custom p-4 mb-4">
@@ -278,13 +278,16 @@
 						<img src="https://img.a.transfermarkt.technology/portrait/big/8198-1748102259.jpg?lm=1" class="rounded-circle object-fit-cover shadow-sm">
 					</div>
 					<h3 class="fw-bold">{{ usuario.UserName }}</h3>
+					{% if usuario.userId == app.user.UserId %}
 					<button class="btn btn-primary w-100 mt-2" style="max-width: 200px;">Edit profile</button>
+					{% endif %}
 				</div>
 
 				<div class="card shadow-sm border-0 p-4">
 					<h5 class="fw-bold mb-4 text-primary">Last reviews made by
 						{{ usuario.UserName }}</h5>
 					<div class="comments-section">
+						{% if ultimos %}
 						{% for last in ultimos %}
 							<div class="comment-item">
 								<img src="{{ last.marca.urlLogo }}" class="comment-avatar" alt="Avatar">
@@ -336,6 +339,9 @@
 								</div>
 							</div>
 						{% endfor %}
+						{% else %}
+						<p>The user has not posted any reviews</p>
+						{% endif %}
 					</div>
 				</div>
 			</div>
@@ -344,6 +350,7 @@
 				<div class="gallery-section mb-5">
 					<h2 class="mb-4 fw-bold text-center">Cars in garage</h2>
 					<div class="carousel-flex-layout gallery-wrapper">
+						{% if coches %}
 						<button class="nav-btn btn-atras">
 							<i class="arrow left"></i>
 						</button>
@@ -386,6 +393,9 @@
 						<button class="nav-btn btn-adelante">
 							<i class="arrow right"></i>
 						</button>
+						{% else %}
+						<p class="text-center">The user has not stored any cars in the garage.</p>
+						{% endif %}
 					</div>
 				</div>
 
@@ -393,6 +403,7 @@
 					<h2 class="mb-4 fw-bold text-center">Most rated by
 						{{usuario.UserName}}</h2>
 					<div class="carousel-flex-layout gallery-wrapper">
+						{% if valorados%}
 						<button class="nav-btn btn-atras">
 							<i class="arrow left"></i>
 						</button>
@@ -437,6 +448,9 @@
 						<button class="nav-btn btn-adelante">
 							<i class="arrow right"></i>
 						</button>
+						{% else %}
+						<p>The user has not rated any car.</p>
+						{% endif %}
 					</div>
 				</div>
 			</div>

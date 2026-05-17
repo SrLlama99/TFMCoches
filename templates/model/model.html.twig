@@ -156,7 +156,7 @@
 {% endblock %}
 
 {% block main %}
-	<div class="container py-5">
+	<div class="container py-5 min-vh-100">
 		<div
 			class="main-grid">
 
@@ -261,8 +261,12 @@
 					</div>
 				</div>
 
+				{% if is_granted('ROLE_ADMIN') %}
 				<button class="btn btn-primary w-100 mt-auto">Delete model</button>
-				<button type="button" class="btn btn-outline-primary w-100 mt-3" data-bs-toggle="modal" data-bs-target="#ratingModal">Añadir comentario</button>
+				{% endif %}
+				{% if app.user %}
+				<button type="button" class="btn btn-outline-primary w-100 mt-3" data-bs-toggle="modal" data-bs-target="#ratingModal">Add Review</button>
+				{% endif %}
 			</aside>
 
 		</div>
@@ -334,7 +338,7 @@
 								<textarea id="notasPropietario" name="notas_propietario" class="form-control border-0 bg-light p-3" style="border-radius: 15px;" rows="3" placeholder="Add notes about your car (optional)"></textarea>
 								<div class="mt-3">
 									<label class="form-label small fw-bold">Images of your car (optional)</label>
-									<input type="file" id="garajeImages" name="garaje_images[]" class="form-control" accept="image/*" multiple>
+									<input type="file" id="garajeImage" name="garaje_image" class="form-control" accept="image/*">
 									<div class="form-text small text-muted">You can upload multiple images (jpg, png...).</div>
 								</div>
 							</div>
@@ -419,7 +423,7 @@ const wrapper = document.getElementById('comments-wrapper');
 						// clean form
 						ratingForm.reset();
 						// clean image input
-						const fileInput = document.getElementById('garajeImages');
+						const fileInput = document.getElementById('garajeImage');
 						if (fileInput) fileInput.value = '';
 					} else {
 						alert(json.error || 'Error procesando valoración');

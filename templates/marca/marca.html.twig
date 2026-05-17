@@ -281,7 +281,9 @@
 					<a href="{{ marca.urlMarca }}">
 						<h3 class="fw-bold bi bi-globe2 fs-2 d-flex align-items-center">{{ marca.nombreMarca }}</h3>
 					</a>
+					{% if is_granted('ROLE_ADMIN') %}
 					<button class="btn btn-primary w-100 mt-2" style="max-width: 200px;">Edit Brand</button>
+					{% endif %}
 				</div>
 
 			</div>
