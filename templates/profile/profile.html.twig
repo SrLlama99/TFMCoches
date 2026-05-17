@@ -400,6 +400,7 @@
 						<div class="custom-scroll-container scroll-contenedor">
 							{% for value in valorados %}
 								<div class="custom-item">
+								<a href="{{ path('marca', { name: value.marca.nombreMarca, id: value.modelo.modeloId }) }}">
 									<div class="card-gallery">
 										<div class="img-container-rel">
 											<img src="{{ value.modelo.fotoModelo }}" class="img-square">
@@ -429,6 +430,7 @@
 										</div>
 									</div>
 								</div>
+								</a>
 							{% endfor %}
 						</div>
 

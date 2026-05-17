@@ -296,7 +296,7 @@
 						<div class="custom-scroll-container scroll-contenedor">
 							{% for model in modelos %}
 								<div class="custom-item">
-								<a href="{{marca.nombreMarca}}/{{model.modeloId}}">
+								<a href="{{ path('marca', { name: marca.nombreMarca, id: model.modeloId }) }}">
 									<div class="card-gallery">
 										<div class="img-container-rel">
 											<img src="{{ model.fotoModelo }}" class="img-square">
