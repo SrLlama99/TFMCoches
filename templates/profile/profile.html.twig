@@ -13,7 +13,7 @@
 			gap: 15px;
 		}
 
-		/* MOTOR DEL CARRUSEL */
+		/* CAROUSEL ENGINE */
 		.custom-scroll-container {
 			display: flex !important;
 			overflow: hidden;
@@ -40,7 +40,7 @@
 			}
 		}
 
-		/* PERFIL Y COMENTARIOS */
+		/* PROFILE AND COMMENTS */
 		.profile-card-custom {
 			display: flex;
 			flex-direction: column;
@@ -79,7 +79,7 @@
 			margin: 0;
 		}
 
-		/* TARJETAS DE LA GALERÍA */
+		/* GALLERY CARDS */
 		.card-gallery {
 			background: #fff;
 			border-radius: 18px;
@@ -139,7 +139,7 @@
 			margin: 0;
 		}
 
-		/* BOTONES NAVEGACIÓN */
+		/* NAVIGATION BUTTONS */
 		.nav-btn {
 			background: #222;
 			color: white;
@@ -181,7 +181,7 @@
 			padding-right: 5px;
 		}
 
-		/* Contenedor del comentario */
+		/* Comment container */
 		.comment-item {
 			display: flex;
 			align-items: flex-start;
@@ -195,12 +195,10 @@
 		}
 
 		.comment-item:hover {
-			transform: translateX(5px);
-			background: #f8f9ff;
-			border-color: #007bff;
+			background: #fafafa;
 		}
 
-		/* Cuerpo del texto */
+		/* Text body */
 		.comment-body {
 			flex-grow: 1;
 		}
@@ -220,7 +218,7 @@
 			line-height: 1.4;
 		}
 
-		/* Personalización de la barra de scroll */
+		/* Scrollbar customization */
 		.comments-section::-webkit-scrollbar {
 			width: 6px;
 		}
@@ -229,10 +227,10 @@
 			border-radius: 10px;
 		}
 
-		/* Componente de Estrellas Solo Lectura */
+		/* Read-only Stars Component */
 		.rating-static {
 			display: flex;
-			justify-content: center; /* Centrado en el carrusel */
+			justify-content: center; /* Centered in the carousel */
 			gap: 0.2rem;
 			margin: 5px 0;
 		}
@@ -240,15 +238,15 @@
 		.rating-static svg {
 			width: 1.1rem;
 			height: 1.1rem;
-			fill: #e8e8e8; /* Gris para estrellas vacías */
+			fill: #e8e8e8; /* Gray for empty stars */
 		}
 
 		.rating-static .gold {
-			fill: #ffca08; /* Dorado para estrellas llenas */
+			fill: #ffca08; /* Gold for filled stars */
 			filter: drop-shadow(0 0 2px rgba(255, 202, 8, 0.3));
 		}
 
-		/* Ajuste de la banda inferior para que las estrellas luzcan mejor */
+		/* Bottom band adjustment for better star display */
 		.banda-inferior {
 			background: #ffffff;
 			padding: 12px;
@@ -261,17 +259,17 @@
 		.comment-avatar {
 			width: 50px;
 			height: 50px;
-			object-fit: contain; /* Esto hace que la imagen se adapte sin cortarse */
+			object-fit: contain; /* Keeps the image from being cropped */
 			background-color: #f8f9fa;
 			flex-shrink: 0;
 			border-radius: 8px;
 			border: 1px solid #eee;
-			padding: 4px; /* Un poco de margen interno para logos */
+			padding: 4px; /* Small inner padding for logos */
 		}
 	</style>
 {% endblock %}
 
-{% block body %}
+{% block main %}
 	<div class="container py-5">
 		<div class="row">
 			<div class="col-lg-4 mb-4">
@@ -280,130 +278,109 @@
 						<img src="https://img.a.transfermarkt.technology/portrait/big/8198-1748102259.jpg?lm=1" class="rounded-circle object-fit-cover shadow-sm">
 					</div>
 					<h3 class="fw-bold">{{ usuario.UserName }}</h3>
-					<button class="btn btn-primary w-100 mt-2" style="max-width: 200px;">Editar perfil</button>
+					<button class="btn btn-primary w-100 mt-2" style="max-width: 200px;">Edit profile</button>
 				</div>
 
 				<div class="card shadow-sm border-0 p-4">
-					<h5 class="fw-bold mb-4 text-primary">Comentarios recibidos</h5>
+					<h5 class="fw-bold mb-4 text-primary">Last reviews made by
+						{{ usuario.UserName }}</h5>
 					<div class="comments-section">
+						{% for last in ultimos %}
+							<div class="comment-item">
+								<img src="{{ last.marca.urlLogo }}" class="comment-avatar" alt="Avatar">
+								<div class="comment-body">
+									<span class="comment-author">{{ last.modelo.modeloNombre }}<small class="text-muted small ms-2">{{ last.valoracion.timeAgo }}</small>
+									</span>
+									{% if last.valoracion.comentario is not null or last.valoracion.comentario != "" %}
+										<p class="comment-text">{{ last.valoracion.comentario }}</p>
+									{% endif %}
+									<div class="rating-static">
+										{% if last.valoracion.estrellas > 0 %}
+											{% for i in 1..last.valoracion.estrellas %}
+												<svg class="gold" viewbox="0 0 24 24">
+													<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+												</svg>
+											{% endfor %}
+										{% endif %}
 
-						<div class="comment-item">
-							<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/960px-Volkswagen_logo_2019.svg.png" class="comment-avatar" alt="Avatar">
-							<div class="comment-body">
-								<span class="comment-author">Golf</span>
-								<p class="comment-text">Coche práctico y barato perfecto para principiantes.</p>
-								<div class="rating-static">
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
+										{% if last.valoracion.estrellas < 5 %}
+											{% for i in (last.valoracion.estrellas + 1)..5 %}
+												<svg class="grey" viewbox="0 0 24 24" style="fill: #e8e8e8;">
+													<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+												</svg>
+											{% endfor %}
+										{% endif %}
+									</div>
+									<div class="small text-muted mt-1">
+										{% if last.coche.motor.nombreMotor %}
+											<span class="me-2">
+												<strong>Engine:</strong>
+												{{ last.coche.motor.nombreMotor }}</span>
+										{% endif %}
+										{% if last.coche.cocheColor %}
+											<span class="me-2">
+												<strong>Color:</strong>
+												{{ last.coche.cocheColor }}</span>
+										{% endif %}
+										{% if last.coche.cocheAnio %}
+											<span class="me-2">
+												<strong>Year:</strong>
+												{{ last.coche.cocheAnio }}</span>
+										{% endif %}
+										{% if last.coche.cocheTransmision %}
+											<span class="me-2">
+												<strong>Transmission:</strong>
+												{{ last.coche.cocheTransmision }}</span>
+										{% endif %}
+									</div>
 								</div>
 							</div>
-						</div>
-
-						<div class="comment-item">
-							<img src="https://makerworld.bblmw.com/makerworld/model/US8ec7b571d2726d/design/2025-03-23_23aae48e33ffe.png?x-oss-process=image/resize,w_1000/format,webp" class="comment-avatar" alt="Avatar">
-							<div class="comment-body">
-								<span class="comment-author">A4</span>
-								<p class="comment-text">Buen coche con gran manejo, es precioso.</p>
-								<div class="rating-static">
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-								</div>
-							</div>
-						</div>
-
-						<div class="comment-item">
-							<img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/SEAT_logo_%282012%29.png" class="comment-avatar" alt="Avatar">
-							<div class="comment-body">
-								<span class="comment-author">Ibiza</span>
-                                <div class="rating-static">
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-								</div>
-							</div>
-						</div>
-
+						{% endfor %}
 					</div>
 				</div>
 			</div>
 
 			<div class="col-lg-8">
 				<div class="gallery-section mb-5">
-					<h2 class="mb-4 fw-bold text-center">Coches en el garaje</h2>
+					<h2 class="mb-4 fw-bold text-center">Cars in garage</h2>
 					<div class="carousel-flex-layout gallery-wrapper">
 						<button class="nav-btn btn-atras">
 							<i class="arrow left"></i>
 						</button>
-						{{ forEach car in cochesUsu }}
+
 						<div class="custom-scroll-container scroll-contenedor">
-							<div class="custom-item">
-								<div class="card-gallery">
-									<div class="img-container-rel">
-										<img src="https://res.cloudinary.com/unix-center/image/upload/c_limit,dpr_3.0,f_auto,fl_progressive,g_center,h_580,q_75,w_906/tnt1sdreuccr9iqjyewf.jpg" class="img-square">
-										<div class="texto-traslucido">
-											<span>Lamborghini Huracan</span>
-											<img src="https://upload.wikimedia.org/wikipedia/nah/5/5c/Lamborghini_logo.png" class="img-mini-overlay">
+							{% for car in coches %}
+								<div class="custom-item">
+									<div class="card-gallery">
+										<div class="img-container-rel">
+											<img src="https://res.cloudinary.com/unix-center/image/upload/c_limit,dpr_3.0,f_auto,fl_progressive,g_center,h_580,q_75,w_906/tnt1sdreuccr9iqjyewf.jpg" class="img-square">
+											<div class="texto-traslucido">
+												<span>{{ car.modelo.modeloNombre }}</span>
+												<img src="{{ car.marca.urlLogo }}" class="img-mini-overlay">
+											</div>
 										</div>
-									</div>
-									<div class="banda-inferior">
-										<div class="rating-static">
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
+										<div class="banda-inferior">
+											<div class="rating-static">
+												{% if car.valoracion.estrellas > 0 %}
+													{% for i in 1..car.valoracion.estrellas %}
+														<svg class="gold" viewbox="0 0 24 24">
+															<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+														</svg>
+													{% endfor %}
+												{% endif %}
+
+												{% if car.valoracion.estrellas < 5 %}
+													{% for i in (car.valoracion.estrellas + 1)..5 %}
+														<svg class="grey" viewbox="0 0 24 24" style="fill: #e8e8e8;">
+															<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+														</svg>
+													{% endfor %}
+												{% endif %}
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+							{% endfor %}
 						</div>
 
 						<button class="nav-btn btn-adelante">
@@ -413,73 +390,46 @@
 				</div>
 
 				<div class="gallery-section mb-5">
-					<h2 class="mb-4 fw-bold text-center">Galería Pro 2</h2>
+					<h2 class="mb-4 fw-bold text-center">Most rated by
+						{{usuario.UserName}}</h2>
 					<div class="carousel-flex-layout gallery-wrapper">
 						<button class="nav-btn btn-atras">
 							<i class="arrow left"></i>
 						</button>
 
 						<div class="custom-scroll-container scroll-contenedor">
-							<div class="custom-item">
-								<div class="card-gallery">
-									<div class="img-container-rel">
-										<img src="https://images.ecestaticos.com/mXiaMzhISsDQH7Ki2YqTyi3XcCc=/0x0:0x0/1200x900/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F36a%2Fe15%2F4ac%2F36ae154acded8663e9bd0402a78ab17f.jpg" class="img-square">
-										<div class="texto-traslucido">
-											<span>CATEGORÍA X</span>
-											<img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" class="img-mini-overlay">
+							{% for value in valorados %}
+								<div class="custom-item">
+									<div class="card-gallery">
+										<div class="img-container-rel">
+											<img src="{{ value.modelo.fotoModelo }}" class="img-square">
+											<div class="texto-traslucido">
+												<span>{{ value.modelo.modeloNombre }}</span>
+												<img src="{{ value.marca.urlLogo }}" class="img-mini-overlay">
+											</div>
 										</div>
-									</div>
-									<div class="banda-inferior">
-										<div class="rating-static">
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="custom-item">
-								<div class="card-gallery">
-									<div class="img-container-rel">
-										<img src="https://images.ecestaticos.com/mXiaMzhISsDQH7Ki2YqTyi3XcCc=/0x0:0x0/1200x900/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F36a%2Fe15%2F4ac%2F36ae154acded8663e9bd0402a78ab17f.jpg" class="img-square">
-										<div class="texto-traslucido">
-											<span>CATEGORÍA Y</span>
-											<img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" class="img-mini-overlay">
-										</div>
-									</div>
-									<div class="banda-inferior">
-										<div class="rating-static">
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
+										<div class="banda-inferior">
+											<div class="rating-static">
+												{% if value.valoracion.estrellas > 0 %}
+													{% for i in 1..value.valoracion.estrellas %}
+														<svg class="gold" viewbox="0 0 24 24">
+															<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+														</svg>
+													{% endfor %}
+												{% endif %}
+
+												{% if value.valoracion.estrellas < 5 %}
+													{% for i in (value.valoracion.estrellas + 1)..5 %}
+														<svg class="grey" viewbox="0 0 24 24" style="fill: #e8e8e8;">
+															<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+														</svg>
+													{% endfor %}
+												{% endif %}
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+							{% endfor %}
 						</div>
 
 						<button class="nav-btn btn-adelante">

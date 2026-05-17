@@ -2,7 +2,7 @@
 
 {% block stylesheets %}
 	<style>
-	/* RECORDATORIO PARA MI DE CAMBIAR LOS COMENTARIOS AL INGLÉS Y COMENTAR EL RESTO DEL CODE*/
+	/* REMINDER: CHANGE COMMENTS TO ENGLISH AND DOCUMENT THE REST OF THE CODE */
 		.gallery-section {
 			max-width: 1000px;
 			margin: 0 auto;
@@ -14,7 +14,7 @@
 			gap: 15px;
 		}
 
-		/* MOTOR DEL CARRUSEL */
+		/* CAROUSEL ENGINE */
 		.custom-scroll-container {
 			display: flex !important;
 			overflow: hidden;
@@ -41,7 +41,7 @@
 			}
 		}
 
-		/* PERFIL Y COMENTARIOS */
+		/* PROFILE AND COMMENTS */
 		.profile-card-custom {
 			display: flex;
 			flex-direction: column;
@@ -80,7 +80,7 @@
 			margin: 0;
 		}
 
-		/* TARJETAS DE LA GALERÍA */
+		/* GALLERY CARDS */
 		.card-gallery {
 			background: #fff;
 			border-radius: 18px;
@@ -140,7 +140,7 @@
 			margin: 0;
 		}
 
-		/* BOTONES NAVEGACIÓN */
+		/* NAVIGATION BUTTONS */
 		.nav-btn {
 			background: #222;
 			color: white;
@@ -182,7 +182,7 @@
 			padding-right: 5px;
 		}
 
-		/* Contenedor del comentario */
+		/* Comment container */
 		.comment-item {
 			display: flex;
 			align-items: flex-start;
@@ -196,12 +196,10 @@
 		}
 
 		.comment-item:hover {
-			transform: translateX(5px);
-			background: #f8f9ff;
-			border-color: #007bff;
+			background: #fafafa;
 		}
 
-		/* Cuerpo del texto */
+		/* Text body */
 		.comment-body {
 			flex-grow: 1;
 		}
@@ -221,7 +219,7 @@
 			line-height: 1.4;
 		}
 
-		/* Personalización de la barra de scroll */
+		/* Scrollbar customization */
 		.comments-section::-webkit-scrollbar {
 			width: 6px;
 		}
@@ -230,10 +228,10 @@
 			border-radius: 10px;
 		}
 
-		/* Componente de Estrellas Solo Lectura */
+		/* Read-only Stars Component */
 		.rating-static {
 			display: flex;
-			justify-content: center; /* Centrado en el carrusel */
+			justify-content: center; /* Centered in the carousel */
 			gap: 0.2rem;
 			margin: 5px 0;
 		}
@@ -241,15 +239,15 @@
 		.rating-static svg {
 			width: 1.1rem;
 			height: 1.1rem;
-			fill: #e8e8e8; /* Gris para estrellas vacías */
+			fill: #e8e8e8; /* Gray for empty stars */
 		}
 
 		.rating-static .gold {
-			fill: #ffca08; /* Dorado para estrellas llenas */
+			fill: #ffca08; /* Gold for filled stars */
 			filter: drop-shadow(0 0 2px rgba(255, 202, 8, 0.3));
 		}
 
-		/* Ajuste de la banda inferior para que las estrellas luzcan mejor */
+		/* Bottom band adjustment for better star display */
 		.banda-inferior {
 			background: #ffffff;
 			padding: 12px;
@@ -262,12 +260,12 @@
 		.comment-avatar {
 			width: 50px;
 			height: 50px;
-			object-fit: contain; /* Esto hace que la imagen se adapte sin cortarse */
+			object-fit: contain; /* Keeps the image from being cropped */
 			background-color: #f8f9fa;
 			flex-shrink: 0;
 			border-radius: 8px;
 			border: 1px solid #eee;
-			padding: 4px; /* Un poco de margen interno para logos */
+			padding: 4px; /* Small inner padding for logos */
 		}
 	</style>
 {% endblock %}

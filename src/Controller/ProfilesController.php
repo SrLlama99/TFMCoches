@@ -13,6 +13,8 @@ use App\Entity\Marca;
 use App\Entity\Motor;
 use App\Entity\Valoracion;
 use App\Entity\Users;
+use App\Entity\FotoGaraje;
+use App\Entity\cocheGaraje;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 final class ProfilesController extends AbstractController
@@ -88,34 +90,34 @@ final class ProfilesController extends AbstractController
                     }
                 }
 
-                    $coche = null;
-                    $motorName = null;
-                    $color = null;
-                    $anio = null;
-                    $transmision = null;
+                $coche = null;
+                $motorName = null;
+                $color = null;
+                $anio = null;
+                $transmision = null;
 
-                    if (method_exists($v, 'getIdCoche')) {
-                        $coche = $v->getIdCoche();
-                        if ($coche) {
-                            $motorName = method_exists($coche, 'getMotor') && $coche->getMotor() ? $coche->getMotor()->getNombreMotor() : null;
-                            $color = method_exists($coche, 'getCocheColor') ? $coche->getCocheColor() : null;
-                            $anio = method_exists($coche, 'getCocheAnio') ? $coche->getCocheAnio() : null;
-                            $transmision = method_exists($coche, 'getCocheTransmision') ? $coche->getCocheTransmision() : null;
-                        }
+                if (method_exists($v, 'getIdCoche')) {
+                    $coche = $v->getIdCoche();
+                    if ($coche) {
+                        $motorName = method_exists($coche, 'getMotor') && $coche->getMotor() ? $coche->getMotor()->getNombreMotor() : null;
+                        $color = method_exists($coche, 'getCocheColor') ? $coche->getCocheColor() : null;
+                        $anio = method_exists($coche, 'getCocheAnio') ? $coche->getCocheAnio() : null;
+                        $transmision = method_exists($coche, 'getCocheTransmision') ? $coche->getCocheTransmision() : null;
                     }
+                }
 
-                    return [
-                        'username' => $username,
-                        'comentario' => $v->getComentario(),
-                        'estrellas' => $v->getEstrellas(),
-                        'fecha' => $v->getFecha(),
-                        'timeAgo' => $this->formatTimeAgo($v->getFecha()),
-                        'motor' => $motorName,
-                        'color' => $color,
-                        'anio' => $anio,
-                        'transmision' => $transmision,
-                    ];
-                }, $valoracionesEntities);
+                return [
+                    'username' => $username,
+                    'comentario' => $v->getComentario(),
+                    'estrellas' => $v->getEstrellas(),
+                    'fecha' => $v->getFecha(),
+                    'timeAgo' => $this->formatTimeAgo($v->getFecha()),
+                    'motor' => $motorName,
+                    'color' => $color,
+                    'anio' => $anio,
+                    'transmision' => $transmision,
+                ];
+            }, $valoracionesEntities);
 
             // get all the engines to use in the select of engines
             $allMotors = $engineRepo->findAll();
@@ -144,7 +146,7 @@ final class ProfilesController extends AbstractController
     }
 
     /**
-     * Devuelve una cadena relativa en español: "hace X minutos".
+     * Returns a human-readable relative time string (e.g. "5 minutes ago").
      */
     private function formatTimeAgo($fecha): string
     {
@@ -315,7 +317,6 @@ final class ProfilesController extends AbstractController
                 $em->flush();
             }
 
-            // Create the Valoracion
             $valoracion = new Valoracion();
             $valoracion->setIdUsuario(method_exists($user, 'getUserId') ? $user->getUserId() : (method_exists($user, 'getId') ? $user->getId() : null));
             $valoracion->setIdCoche($coche);
@@ -325,13 +326,55 @@ final class ProfilesController extends AbstractController
             $em->persist($valoracion);
             $em->flush();
 
-            // If the user added the car to the garage this add the car to the databases table CocheGaraje
             if ($anadirGaraje === 1) {
                 $garaje = new \App\Entity\cocheGaraje();
                 $garaje->setUsuario(method_exists($user, 'getUserId') ? $user->getUserId() : (method_exists($user, 'getId') ? $user->getId() : null));
                 $garaje->setCoche($coche->getcocheId());
                 $garaje->setNotas($notasPropietario ?: '');
+
+                // Process uploaded photos (if any) and collect filenames to store in DB
+                $photoNames = [];
+                $movedFiles = [];
+                if (!empty($_FILES["photos"]["name"][0])) {
+                    $allowed = ["png", "jpg", "jpeg", "webp"];
+
+                    // Use absolute path to public folder
+                    $uploadDir = $this->getParameter('kernel.project_dir') . '/public/assets/images/';
+                    if (!is_dir($uploadDir)) {
+                        mkdir($uploadDir, 0755, true);
+                    }
+
+                    foreach ($_FILES["photos"]["name"] as $key => $val) {
+                        $originalName = $_FILES["photos"]["name"][$key];
+                        $tmpName      = $_FILES["photos"]["tmp_name"][$key];
+                        $extension    = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+
+                        if (in_array($extension, $allowed)) {
+                            $newName = (method_exists($user, 'getUserId') ? $user->getUserId() : (method_exists($user, 'getId') ? $user->getId() : 'user')) . "_" . time() . "_" . $key . "." . $extension;
+                            $targetPath = $uploadDir . $newName;
+
+                            if (is_uploaded_file($tmpName) && move_uploaded_file($tmpName, $targetPath)) {
+                                $photoNames[] = $newName; // filename
+                                $movedFiles[] = $targetPath; // absolute path
+                            }
+                        }
+                    }
+                }
+
+                // Persist garaje and create FotoGaraje rows for each uploaded photo
                 $em->persist($garaje);
+
+                if (!empty($photoNames)) {
+                    foreach ($photoNames as $fname) {
+                        $foto = new FotoGaraje();
+                        $foto->setPoseedor($user);
+                        $foto->setCoche($coche->getcocheId());
+                        // store web-accessible path
+                        $foto->setUrl('/assets/images/' . $fname);
+                        $em->persist($foto);
+                    }
+                }
+
                 $em->flush();
             }
         } catch (\Exception $e) {
@@ -354,5 +397,203 @@ final class ProfilesController extends AbstractController
         ];
 
         return new JsonResponse($response);
+    }
+
+    #[Route('/profile/{name}', name: 'profile')]
+    public function profile(EntityManagerInterface $em, string $name): Response
+    {
+        $usersRepo = $em->getRepository(Users::class);
+        $carsGarageRepo = $em->getRepository(cocheGaraje::class);
+        $carsRepo = $em->getRepository(Coche::class);
+        $modelRepo = $em->getRepository(Modelo::class);
+        $marcaRepo = $em->getRepository(Marca::class);
+        $valorRepo = $em->getRepository(Valoracion::class);
+
+        $usuario = $usersRepo->findOneBy(['UserName' => $name]);
+        if (!$usuario) {
+            throw $this->createNotFoundException('Usuario no encontrado');
+        }
+
+        // Handle possible inconsistency: in some places the Users entity is stored,
+        // elsewhere the user id is stored in `cocheGaraje.usuario`.
+        $usuarioId = null;
+        if (method_exists($usuario, 'getUserId')) {
+            $usuarioId = $usuario->getUserId();
+        } elseif (method_exists($usuario, 'getId')) {
+            $usuarioId = $usuario->getId();
+        }
+
+        // `cocheGaraje` does not define associations (stores IDs). We retrieve records
+        // using the user id and then resolve entities manually.
+        if ($usuarioId === null) {
+            throw $this->createNotFoundException('Usuario inválido');
+        }
+
+        $registrosGaraje = $carsGarageRepo->findBy(['usuario' => $usuarioId]);
+
+        $cochesDelUsuario = [];
+
+        foreach ($registrosGaraje as $registro) {
+            // `getCoche()` may return the Coche entity or an id depending on how it was persisted.
+            $coche = $registro->getCoche();
+
+            if (is_int($coche) || is_string($coche)) {
+                $coche = $carsRepo->find((int) $coche);
+            }
+
+            if (!$coche) {
+                continue;
+            }
+
+            // Get model: it may be an entity or an id
+            $modelo = null;
+            if (method_exists($coche, 'getModelo')) {
+                $modelo = $coche->getModelo();
+                if ($modelo && !is_object($modelo)) {
+                    $modelo = $modelRepo->find($modelo);
+                }
+            }
+
+            // Get brand from the model: it may be an entity or an id
+            $marca = null;
+            if ($modelo && method_exists($modelo, 'getMarca')) {
+                $marcaVal = $modelo->getMarca();
+                if (is_object($marcaVal)) {
+                    $marca = $marcaVal;
+                } elseif ($marcaVal) {
+                    $marca = $marcaRepo->find($marcaVal);
+                }
+            }
+
+            // get the rating this user left for this car (if any)
+            $valoracionUsuario = null;
+            if ($usuarioId !== null) {
+                $v = $valorRepo->findOneBy(['idUsuario' => $usuarioId, 'idCoche' => $coche]);
+                if ($v) {
+                    $valoracionUsuario = [
+                        'estrellas' => $v->getEstrellas(),
+                        'comentario' => $v->getComentario(),
+                        'fecha' => $v->getFecha(),
+                    ];
+                }
+            }
+
+            $cochesDelUsuario[] = [
+                'garaje' => $registro,
+                'coche' => $coche,
+                'modelo' => $modelo,
+                'marca' => $marca,
+                'valoracion' => $valoracionUsuario,
+            ];
+        }
+
+        // --- Most-rated cars by this user ---
+        $cochesMasValorados = [];
+        $seen = [];
+
+        $valoracionesUsuario = $valorRepo->createQueryBuilder('v')
+            ->where('v.idUsuario = :uid')
+            ->setParameter('uid', $usuarioId)
+            ->orderBy('v.estrellas', 'DESC')
+            ->addOrderBy('v.fecha', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        foreach ($valoracionesUsuario as $v) {
+
+            $vcoche = $v->getIdCoche();
+            if (is_int($vcoche) || is_string($vcoche)) {
+                $vcoche = $carsRepo->find((int) $vcoche);
+            }
+            if (!$vcoche) continue;
+
+            $cid = method_exists($vcoche, 'getcocheId') ? $vcoche->getcocheId() : (method_exists($vcoche, 'getId') ? $vcoche->getId() : null);
+            if ($cid === null) continue;
+            if (in_array($cid, $seen, true)) continue;
+            $seen[] = $cid;
+
+            $vmodelo = null;
+            if (method_exists($vcoche, 'getModelo')) {
+                $vmodelo = $vcoche->getModelo();
+                if ($vmodelo && !is_object($vmodelo)) {
+                    $vmodelo = $modelRepo->find($vmodelo);
+                }
+            }
+
+            $vmarca = null;
+            if ($vmodelo && method_exists($vmodelo, 'getMarca')) {
+                $marcaVal = $vmodelo->getMarca();
+                if (is_object($marcaVal)) {
+                    $vmarca = $marcaVal;
+                } elseif ($marcaVal) {
+                    $vmarca = $marcaRepo->find($marcaVal);
+                }
+            }
+
+            $cochesMasValorados[] = [
+                'coche' => $vcoche,
+                'modelo' => $vmodelo,
+                'marca' => $vmarca,
+                'valoracion' => [
+                    'estrellas' => $v->getEstrellas(),
+                    'comentario' => $v->getComentario(),
+                    'fecha' => $v->getFecha(),
+                ],
+            ];
+        }
+
+        // --- Latest ratings by the user (most recent) ---
+        $ultimasValoraciones = [];
+        $recentVals = $valorRepo->createQueryBuilder('rv')
+            ->where('rv.idUsuario = :uid')
+            ->setParameter('uid', $usuarioId)
+            ->orderBy('rv.fecha', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        foreach ($recentVals as $v) {
+            $vcoche = $v->getIdCoche();
+            if (is_int($vcoche) || is_string($vcoche)) {
+                $vcoche = $carsRepo->find((int) $vcoche);
+            }
+            if (!$vcoche) continue;
+
+            $vmodelo = null;
+            if (method_exists($vcoche, 'getModelo')) {
+                $vmodelo = $vcoche->getModelo();
+                if ($vmodelo && !is_object($vmodelo)) {
+                    $vmodelo = $modelRepo->find($vmodelo);
+                }
+            }
+
+            $vmarca = null;
+            if ($vmodelo && method_exists($vmodelo, 'getMarca')) {
+                $marcaVal = $vmodelo->getMarca();
+                if (is_object($marcaVal)) {
+                    $vmarca = $marcaVal;
+                } elseif ($marcaVal) {
+                    $vmarca = $marcaRepo->find($marcaVal);
+                }
+            }
+
+            $ultimasValoraciones[] = [
+                'coche' => $vcoche,
+                'modelo' => $vmodelo,
+                'marca' => $vmarca,
+                'valoracion' => [
+                    'estrellas' => $v->getEstrellas(),
+                    'comentario' => $v->getComentario(),
+                    'fecha' => $v->getFecha(),
+                    'timeAgo' => $this->formatTimeAgo($v->getFecha()),
+                ],
+            ];
+        }
+
+        return $this->render('profile/profile.html.twig', [
+            'usuario' => $usuario,
+            'coches' => $cochesDelUsuario,
+            'valorados' => $cochesMasValorados,
+            'ultimos' => $ultimasValoraciones
+        ]);
     }
 }

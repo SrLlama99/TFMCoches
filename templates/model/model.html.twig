@@ -2,16 +2,16 @@
 
 {% block stylesheets %}
 	<style>
-		/* RECORDATORIO PARA MI DE CAMBIAR LOS COMENTARIOS AL INGLÉS */
-		/* Layout Principal */
+		/* REMINDER: CHANGE COMMENTS TO ENGLISH */
+		/* Main layout */
 		.main-grid {
 			display: grid;
-			grid-template-columns: 1fr 300px; /* Perfil estrecho a la derecha */
+			grid-template-columns: 1fr 300px; /* Narrow sidebar on the right */
 			gap: 30px;
 			align-items: start;
 		}
 
-		/* Perfil Lateral (Largo y Estrecho) */
+		/* Sidebar profile (tall and narrow) */
 		.profile-sidebar {
 			background: #fff;
 			border-radius: 20px;
@@ -20,7 +20,7 @@
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			min-height: 80vh; /* Mucho más largo */
+			min-height: 80vh; /* Much taller */
 		}
 
 		.profile-avatar {
@@ -32,7 +32,7 @@
 			margin-bottom: 20px;
 		}
 
-		/* Sección Principal (Izquierda) */
+		/* Main section (left) */
 		.content-main {
 			display: flex;
 			flex-direction: column;
@@ -48,12 +48,12 @@
 
 		.featured-photo {
 			width: 100%;
-			height: 500px; /* Altura fija para la foto principal */
+			height: 500px; /* Fixed height for featured photo */
 			object-fit: cover;
 			display: block;
 		}
 
-		/* Sección Comentarios Mejorada */
+		/* Improved comments section */
 		.comments-container {
 			background: #fff;
 			border-radius: 20px;
@@ -86,7 +86,7 @@
 			background: #eee;
 		}
 
-		/* Estrellas */
+		/* Star rating */
 		.rating-static {
 			display: flex;
 			gap: 2px;
@@ -99,7 +99,7 @@
 			fill: #ffca08;
 		}
 
-		/* Botón Cargar Más (AJAX) */
+		/* Load more button (AJAX) */
 		.load-more-btn {
 			display: block;
 			width: 100%;
@@ -112,7 +112,7 @@
 			border-radius: 10px;
 			cursor: pointer;
 		}
-		/* --- FORMULARIO CON ESTRELLAS --- */
+		/* --- STAR RATING FORM --- */
 		.rating-form-container {
 			background: #ffffff;
 			border-radius: 30px;
@@ -268,7 +268,7 @@
 		</div>
 	</div>
 
-	<!-- Modal: Formulario de valoración -->
+	<!-- Modal: Rating form -->
 	<div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
@@ -396,7 +396,7 @@ const wrapper = document.getElementById('comments-wrapper');
 							modalInstance.hide();
 						}
 
-						// Add Valoraciones to DOM
+						// Add ratings to DOM
 						const item = json.data;
 						const html = `\
 							<div class="comment-item">\

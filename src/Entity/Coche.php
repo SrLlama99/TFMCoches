@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Valoracion;
 use App\Entity\Modelo;
-use App\Entity\Motor; // Importamos la entidad Motor
+use App\Entity\Motor; // Import Motor entity
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
