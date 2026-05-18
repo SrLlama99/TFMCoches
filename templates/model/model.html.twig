@@ -176,7 +176,7 @@
 								<div class="comment-item">
 									<img src="https://via.placeholder.com/45" class="comment-avatar">
 									<div class="comment-content">
-										<h6 class="mb-0 fw-bold">{{ v.username }} <small class="text-muted small ms-2">{{ v.timeAgo }}</small></h6>
+										<h6 class="mb-0 fw-bold">{{ v.username }} <small class="text-muted small ms-2" data-timestamp="<?= $fecha->getTimestamp(); ?>"></small></h6>
 										<p class="text-muted small mb-1">{{ v.comentario }}</p>
 										<div class="rating-static">
 											{% for i in 1..5 %}
@@ -355,8 +355,41 @@
 	<script>
 		document.addEventListener('DOMContentLoaded', () => {
 		let commentOffset = {{ (valoraciones is defined) ? valoraciones|length : 0 }};
-const loadMoreBtn = document.getElementById('load-more-comments');
-const wrapper = document.getElementById('comments-wrapper');
+		const loadMoreBtn = document.getElementById('load-more-comments');
+		const wrapper = document.getElementById('comments-wrapper');
+
+		document.addEventListener("DOMContentLoaded", () => {
+    		const formatTimeAgo = (timestamp) => {
+        	const now = Math.floor(Date.now() / 1000);
+        	const diff = now - timestamp;
+
+        	if (diff < 0) return 'right now';
+        	if (diff < 60) return `${diff} seconds ago`;
+
+        	const min = Math.floor(diff / 60);
+        	if (min < 60) return `${min} minutes ago`;
+
+        	const hours = Math.floor(diff / 3600);
+        	if (hours < 24) return `${hours} hours ago`;
+
+        	const days = Math.floor(diff / 86400);
+        	if (days < 7) return `${days} days ago`;
+
+        	const weeks = Math.floor(days / 7);
+        	if (weeks < 5) return `${weeks} weeks ago`;
+
+        	const months = Math.floor(days / 30);
+        	if (months < 12) return `${months} months ago`;
+
+        	const years = Math.floor(days / 365);
+        	return `${years} years ago`;
+    	};
+
+    	
+    	document.querySelectorAll('.time-ago').forEach(el => {
+        const timestamp = parseInt(el.getAttribute('data-timestamp'), 10);
+        el.textContent = formatTimeAgo(timestamp);
+
 
 		// Toggle show Notas if the add to garage is active
 		const anadirGarajeCheckbox = document.getElementById('anadirGaraje');

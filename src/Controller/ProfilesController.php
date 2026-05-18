@@ -145,53 +145,6 @@ final class ProfilesController extends AbstractController
         ]);
     }
 
-    /**
-     * Returns a human-readable relative time string (e.g. "5 minutes ago").
-     */
-    private function formatTimeAgo($fecha): string
-    {
-        try {
-            $dt = $fecha instanceof \DateTimeInterface ? $fecha : new \DateTime((string) $fecha);
-        } catch (\Exception $e) {
-            return 'right now';
-        }
-
-        $now = new \DateTime();
-        $diff = $now->getTimestamp() - $dt->getTimestamp();
-        if ($diff < 60) {
-            $s = $diff;
-            return $s . ' seconds ago';
-        }
-
-        $min = (int) floor($diff / 60);
-        if ($min < 60) {
-            return $min . ' minutes ago';
-        }
-
-        $hours = (int) floor($diff / 3600);
-        if ($hours < 24) {
-            return $hours . ' hours ago';
-        }
-
-        $days = (int) floor($diff / 86400);
-        if ($days < 7) {
-            return $days . ' days ago';
-        }
-
-        $weeks = (int) floor($days / 7);
-        if ($weeks < 5) {
-            return $weeks . ' weeks ago';
-        }
-
-        $months = (int) floor($days / 30);
-        if ($months < 12) {
-            return $months . ' months ago';
-        }
-
-        $years = (int) floor($days / 365);
-        return $years . ' years ago';
-    }
-
     #[Route('/modelo/{modelId}/comments', name: 'model_comments')]
     public function comments(EntityManagerInterface $em, int $modelId, Request $request): JsonResponse
     {
