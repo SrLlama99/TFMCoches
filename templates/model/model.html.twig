@@ -176,7 +176,7 @@
 								<div class="comment-item">
 									<img src="https://via.placeholder.com/45" class="comment-avatar">
 									<div class="comment-content">
-										<h6 class="mb-0 fw-bold">{{ v.username }} <small class="text-muted small ms-2" data-timestamp="<?= $fecha->getTimestamp(); ?>"></small></h6>
+										<h6 class="mb-0 fw-bold">{{ v.username }} <small class="text-muted small ms-2 time-ago" data-timestamp="<?= $fecha->getTimestamp(); ?>"></small></h6>
 										<p class="text-muted small mb-1">{{ v.comentario }}</p>
 										<div class="rating-static">
 											{% for i in 1..5 %}
@@ -358,8 +358,7 @@
 		const loadMoreBtn = document.getElementById('load-more-comments');
 		const wrapper = document.getElementById('comments-wrapper');
 
-		document.addEventListener("DOMContentLoaded", () => {
-    		const formatTimeAgo = (timestamp) => {
+    	const formatTimeAgo = (timestamp) => {
         	const now = Math.floor(Date.now() / 1000);
         	const diff = now - timestamp;
 

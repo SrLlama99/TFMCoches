@@ -111,7 +111,6 @@ final class ProfilesController extends AbstractController
                     'comentario' => $v->getComentario(),
                     'estrellas' => $v->getEstrellas(),
                     'fecha' => $v->getFecha(),
-                    'timeAgo' => $this->formatTimeAgo($v->getFecha()),
                     'motor' => $motorName,
                     'color' => $color,
                     'anio' => $anio,
@@ -201,7 +200,6 @@ final class ProfilesController extends AbstractController
                 'comentario' => $v->getComentario(),
                 'estrellas' => $v->getEstrellas(),
                 'fecha' => $v->getFecha(),
-                'timeAgo' => $this->formatTimeAgo($v->getFecha()),
                 'motor' => $motorName,
                 'color' => $color,
                 'anio' => $anio,
@@ -215,7 +213,7 @@ final class ProfilesController extends AbstractController
     #[Route('/modelo/{modelId}/add-rating', name: 'model_add_rating', methods: ['POST'])]
     public function addRating(EntityManagerInterface $em, int $modelId, Request $request): JsonResponse
     {
-        // Require user to put a Valoracion (i will change the message in the future)
+        // Require user to put a Valoracion 
         $user = $this->getUser();
         if (!$user) {
             return new JsonResponse(['error' => 'Unauthorized'], 401);
@@ -537,7 +535,6 @@ final class ProfilesController extends AbstractController
                     'estrellas' => $v->getEstrellas(),
                     'comentario' => $v->getComentario(),
                     'fecha' => $v->getFecha(),
-                    'timeAgo' => $this->formatTimeAgo($v->getFecha()),
                 ],
             ];
         }

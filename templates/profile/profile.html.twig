@@ -292,7 +292,7 @@
 							<div class="comment-item">
 								<img src="{{ last.marca.urlLogo }}" class="comment-avatar" alt="Avatar">
 								<div class="comment-body">
-									<span class="comment-author">{{ last.modelo.modeloNombre }}<small class="text-muted small ms-2">{{ last.valoracion.timeAgo }}</small>
+									<span class="comment-author">{{ last.modelo.modeloNombre }}<small class="text-muted small ms-2 time-ago" data-timestamp="<?= $fecha->getTimestamp(); ?>"></small>
 									</span>
 									{% if last.valoracion.comentario is not null or last.valoracion.comentario != "" %}
 										<p class="comment-text">{{ last.valoracion.comentario }}</p>
@@ -455,10 +455,73 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="editProfileModalLabel">Add review</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="ajax-editProfile-form" enctype="multipart/form-data">
+						<div class="row g-4">
+							<div class="col-md-6">
+								<label class="form-label small fw-bold">Username:</label>
+								<input type="text" name="username" class="form-control border-0 bg-light p-3" style="border-radius: 15px;" placeholder="Ex: {{usuario.userName}}">
+							</div>
+							<div class="col-md-6">
+								<label class="form-label small fw-bold">Email:</label>
+								<input type="text" name="email" class="form-control border-0 bg-light p-3" style="border-radius: 15px;" placeholder="Ex: {{usuario.Email}}">
+							</div>
+							<div class="col-md-6">
+								<label class="form-label small fw-bold">Profile pic:</label>
+								<input type="file" id="garajeImage" name="garaje_image" class="form-control" accept="image/*">
+							</div>
+							<div class="col-12">
+								<button type="submit" id="submit-form-btn" class="btn btn-primary w-100 py-3 fw-bold" style="border-radius: 18px;">Post review</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<script>
 		document.addEventListener('DOMContentLoaded', () => {
+
+			document.addEventListener("DOMContentLoaded", () => {
+    		const formatTimeAgo = (timestamp) => {
+        	const now = Math.floor(Date.now() / 1000);
+        	const diff = now - timestamp;
+
+        	if (diff < 0) return 'right now';
+        	if (diff < 60) return `${diff} seconds ago`;
+
+        	const min = Math.floor(diff / 60);
+        	if (min < 60) return `${min} minutes ago`;
+
+        	const hours = Math.floor(diff / 3600);
+        	if (hours < 24) return `${hours} hours ago`;
+
+        	const days = Math.floor(diff / 86400);
+        	if (days < 7) return `${days} days ago`;
+
+        	const weeks = Math.floor(days / 7);
+        	if (weeks < 5) return `${weeks} weeks ago`;
+
+        	const months = Math.floor(days / 30);
+        	if (months < 12) return `${months} months ago`;
+
+        	const years = Math.floor(days / 365);
+        	return `${years} years ago`;
+    	};
+
+    	
+    	document.querySelectorAll('.time-ago').forEach(el => {
+        const timestamp = parseInt(el.getAttribute('data-timestamp'), 10);
+        el.textContent = formatTimeAgo(timestamp);
 const galerias = document.querySelectorAll('.gallery-wrapper');
 galerias.forEach(galeria => {
 const contenedor = galeria.querySelector('.scroll-contenedor');
