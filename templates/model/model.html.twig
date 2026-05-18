@@ -176,7 +176,7 @@
 								<div class="comment-item">
 									<img src="https://via.placeholder.com/45" class="comment-avatar">
 									<div class="comment-content">
-										<h6 class="mb-0 fw-bold">{{ v.username }} <small class="text-muted small ms-2 time-ago" data-timestamp="<?= $fecha->getTimestamp(); ?>"></small></h6>
+										<h6 class="mb-0 fw-bold">{{ v.username }} <small class="text-muted small ms-2 time-ago" data-timestamp="{{ v.fecha|date('U') }}"></small></h6>
 										<p class="text-muted small mb-1">{{ v.comentario }}</p>
 										<div class="rating-static">
 											{% for i in 1..5 %}
@@ -358,7 +358,35 @@
 		const loadMoreBtn = document.getElementById('load-more-comments');
 		const wrapper = document.getElementById('comments-wrapper');
 
-    	const formatTimeAgo = (timestamp) => {
+    	/**
+     * Parse server date formats like "YYYY-MM-DD HH:MM:SS" into UNIX seconds.
+     * Returns integer seconds or null if parsing fails.
+     */
+    	const parseServerDateToUnix = (dateStr) => {
+    		if (!dateStr) return null;
+    		// If it's already a number (string of digits), treat as UNIX seconds
+    		if (/^\d+$/.test(String(dateStr).trim())) {
+    			return parseInt(dateStr, 10);
+    		}
+    		// Try YYYY-MM-DD HH:MM:SS
+    		const m = String(dateStr).trim().match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2}):(\d{2})$/);
+    		if (m) {
+    			const year = parseInt(m[1], 10);
+    			const month = parseInt(m[2], 10) - 1;
+    			const day = parseInt(m[3], 10);
+    			const hour = parseInt(m[4], 10);
+    			const minute = parseInt(m[5], 10);
+    			const second = parseInt(m[6], 10);
+    			// Use UTC to avoid timezone inconsistencies
+    			return Math.floor(Date.UTC(year, month, day, hour, minute, second) / 1000);
+    		}
+    		// Fallback to Date parsing
+    		const d = new Date(dateStr);
+    		if (!isNaN(d.getTime())) return Math.floor(d.getTime() / 1000);
+    		return null;
+    	};
+
+		const formatTimeAgo = (timestamp) => {
         	const now = Math.floor(Date.now() / 1000);
         	const diff = now - timestamp;
 
@@ -385,10 +413,20 @@
     	};
 
     	
-    	document.querySelectorAll('.time-ago').forEach(el => {
-        const timestamp = parseInt(el.getAttribute('data-timestamp'), 10);
-        el.textContent = formatTimeAgo(timestamp);
-
+		document.querySelectorAll('.time-ago').forEach(el => {
+			let timestamp = parseInt(el.getAttribute('data-timestamp'), 10);
+			if (!timestamp || isNaN(timestamp)) {
+				// attempt to parse as server date string from data attribute
+				const raw = el.getAttribute('data-timestamp');
+				const parsed = parseServerDateToUnix(raw);
+				timestamp = parsed;
+			}
+			if (timestamp && !isNaN(timestamp)) {
+				el.textContent = formatTimeAgo(timestamp);
+			} else {
+				el.textContent = '';
+			}
+		});
 
 		// Toggle show Notas if the add to garage is active
 		const anadirGarajeCheckbox = document.getElementById('anadirGaraje');
@@ -432,11 +470,14 @@
 
 						// Add ratings to DOM
 						const item = json.data;
+						// If server returns a fecha use it, otherwise use client's current time
+						const _ts = parseServerDateToUnix(item.fecha) || Math.floor(Date.now()/1000);
+						const timeAgo = item.timeAgo || formatTimeAgo(_ts);
 						const html = `\
 							<div class="comment-item">\
 								<img src="https://via.placeholder.com/45" class="comment-avatar">\
 								<div class="comment-content">\
-									<h6 class="mb-0 fw-bold">${item.username} <small class="text-muted small ms-2">${item.timeAgo}</small></h6>\
+									<h6 class="mb-0 fw-bold">${item.username} <small class="text-muted small ms-2 time-ago" data-timestamp="${_ts || ''}">${timeAgo}</small></h6>\
 									<p class="text-muted small mb-1">${item.comentario}</p>\
 									<div class="rating-static">\
 										${[1,2,3,4,5].map(i => `<svg class="${i <= item.estrellas ? 'gold' : ''}" viewbox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>`).join('')}\
@@ -486,11 +527,13 @@ loadMoreBtn.innerText = 'Loading...';
 					}
 
 					items.forEach(item => {
+						const _ts = parseServerDateToUnix(item.fecha);
+						const timeAgo = item.timeAgo || (_ts ? formatTimeAgo(_ts) : '');
 						const html = `\
 							<div class="comment-item" style="opacity: 0; transform: translateY(10px); transition: all 0.3s">\
 								<img src="https://via.placeholder.com/45" class="comment-avatar">\
 								<div class="comment-content">\
-									<h6 class="mb-0 fw-bold">${item.username} <small class="text-muted small ms-2">${item.timeAgo}</small></h6>\
+									<h6 class="mb-0 fw-bold">${item.username} <small class="text-muted small ms-2 time-ago" data-timestamp="${_ts || ''}">${timeAgo}</small></h6>\
 									<p class="text-muted small mb-1">${item.comentario}</p>\
 									<div class="rating-static">\
 										${[1,2,3,4,5].map(i => `<svg class="${i <= item.estrellas ? 'gold' : ''}" viewbox="0 0 24 24"><path d=\"M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\"></path></svg>`).join('')}\

@@ -125,14 +125,6 @@
 			object-fit: contain;
 		}
 
-		.banda-inferior {
-			background: #ffffff;
-			color: #333;
-			padding: 15px;
-			border-top: 1px solid #eee;
-			text-align: center;
-		}
-
 		.texto-detalle {
 			font-size: 0.85rem;
 			line-height: 1.4;
@@ -292,7 +284,7 @@
 							<div class="comment-item">
 								<img src="{{ last.marca.urlLogo }}" class="comment-avatar" alt="Avatar">
 								<div class="comment-body">
-									<span class="comment-author">{{ last.modelo.modeloNombre }}<small class="text-muted small ms-2 time-ago" data-timestamp="<?= $fecha->getTimestamp(); ?>"></small>
+									<span class="comment-author">{{ last.modelo.modeloNombre }}<small class="text-muted small ms-2 time-ago" data-timestamp="{{ last.valoracion.fecha|date('U') }}"></small>
 									</span>
 									{% if last.valoracion.comentario is not null or last.valoracion.comentario != "" %}
 										<p class="comment-text">{{ last.valoracion.comentario }}</p>
@@ -472,7 +464,7 @@
 							</div>
 							<div class="col-md-6">
 								<label class="form-label small fw-bold">Email:</label>
-								<input type="text" name="email" class="form-control border-0 bg-light p-3" style="border-radius: 15px;" placeholder="Ex: {{usuario.Email}}">
+								<input type="text" name="email" class="form-control border-0 bg-light p-3" style="border-radius: 15px;" placeholder="Ex: {{usuario.userMail}}">
 							</div>
 							<div class="col-md-6">
 								<label class="form-label small fw-bold">Profile pic:</label>
@@ -488,10 +480,8 @@
 		</div>
 	</div>
 
-	<script>
+		<script>
 		document.addEventListener('DOMContentLoaded', () => {
-
-			document.addEventListener("DOMContentLoaded", () => {
     		const formatTimeAgo = (timestamp) => {
         	const now = Math.floor(Date.now() / 1000);
         	const diff = now - timestamp;
@@ -520,9 +510,10 @@
 
     	
     	document.querySelectorAll('.time-ago').forEach(el => {
-        const timestamp = parseInt(el.getAttribute('data-timestamp'), 10);
-        el.textContent = formatTimeAgo(timestamp);
-const galerias = document.querySelectorAll('.gallery-wrapper');
+		const timestamp = parseInt(el.getAttribute('data-timestamp'), 10);
+		el.textContent = formatTimeAgo(timestamp);
+	});
+	const galerias = document.querySelectorAll('.gallery-wrapper');
 galerias.forEach(galeria => {
 const contenedor = galeria.querySelector('.scroll-contenedor');
 const btnAdelante = galeria.querySelector('.btn-adelante');
