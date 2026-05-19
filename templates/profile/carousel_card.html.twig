@@ -1,0 +1,29 @@
+<div class="custom-item">
+    {% block link %}{% endblock %}
+    <div class="card-gallery">
+        <div class="img-container-rel">
+            <img src="{% block image %}https://res.cloudinary.com/unix-center/image/upload/c_limit,dpr_3.0,f_auto,fl_progressive,g_center,h_580,q_75,w_906/tnt1sdreuccr9iqjyewf.jpg{% endblock %}" class="img-square">
+            <div class="texto-traslucido">
+                <span>{% block title %}Title{% endblock %}</span>
+                <img src="{% block logo %}{{ asset('images/default-logo.png') }}{% endblock %}" class="img-mini-overlay">
+            </div>
+        </div>
+        <div class="banda-inferior">
+            <div class="rating-static">
+                {% set s = block('stars') %}
+                {% if s > 0 %}
+                    {% for i in 1..s %}
+                        <svg class="gold" viewbox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>
+                    {% endfor %}
+                {% endif %}
+
+                {% if s < 5 %}
+                    {% for i in (s + 1)..5 %}
+                        <svg class="grey" viewbox="0 0 24 24" style="fill: #e8e8e8;"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% block closeLink %}{% endblock %}
+</div>

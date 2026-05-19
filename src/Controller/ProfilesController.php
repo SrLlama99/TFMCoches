@@ -546,4 +546,66 @@ final class ProfilesController extends AbstractController
             'ultimos' => $ultimasValoraciones
         ]);
     }
+
+    #[Route('/profile/{name}/update', name: 'profile_update', methods: ['POST'])]
+    public function updateProfile(EntityManagerInterface $em, string $name, Request $request): JsonResponse
+    {
+        $user = $this->getUser();
+        if (! $user) {
+            return new JsonResponse(['success' => false, 'error' => 'Unauthorized'], 401);
+        }
+
+        $usersRepo = $em->getRepository(Users::class);
+        $usuario = $usersRepo->findOneBy(['UserName' => strtolower($name)]);
+        if (! $usuario) {
+            return new JsonResponse(['success' => false, 'error' => 'Usuario no encontrado'], 404);
+        }
+
+        // Ensure the logged user is updating their own profile
+        $currentId = method_exists($user, 'getUserId') ? $user->getUserId() : (method_exists($user, 'getId') ? $user->getId() : null);
+        $targetId = method_exists($usuario, 'getUserId') ? $usuario->getUserId() : (method_exists($usuario, 'getId') ? $usuario->getId() : null);
+        if ($currentId === null || $targetId === null || $currentId !== $targetId) {
+            return new JsonResponse(['success' => false, 'error' => 'Forbidden'], 403);
+        }
+
+        $username = trim($request->request->get('username', ''));
+        $email = trim($request->request->get('email', ''));
+
+        $oldName = $usuario->getUserName();
+
+        if ($username) {
+            $usuario->setUserName($username);
+        }
+        if ($email) {
+            $usuario->setUserMail($email);
+        }
+
+        // Handle uploaded profile image if provided
+        try {
+            $file = $request->files->get('garaje_image');
+            if ($file) {
+                $uploadDir = $this->getParameter('kernel.project_dir') . '/public/assets/images/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+                $ext = $file->guessExtension() ?: 'bin';
+                $newName = 'profile_' . ($targetId ?? time()) . '_' . time() . '.' . $ext;
+                $file->move($uploadDir, $newName);
+                // Optional: $profileUrl = '/assets/images/' . $newName; — entity has no field to persist
+            }
+        } catch (\Exception $e) {
+            // ignore file errors but continue
+        }
+
+        $em->persist($usuario);
+        $em->flush();
+
+        $response = ['success' => true, 'username' => $usuario->getUserName(), 'email' => $usuario->getUserMail()];
+        // If username changed, instruct client to redirect to the new profile URL
+        if ($oldName !== $usuario->getUserName()) {
+            $response['redirect'] = $this->generateUrl('profile', ['name' => strtolower($usuario->getUserName())]);
+        }
+
+        return new JsonResponse($response);
+    }
 }

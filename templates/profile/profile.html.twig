@@ -1,266 +1,14 @@
 {% extends "skeleton.html.twig" %}
 
 {% block stylesheets %}
-	<style>
-		.gallery-section {
-			max-width: 1000px;
-			margin: 0 auto;
-		}
-
-		.carousel-flex-layout {
-			display: flex;
-			align-items: center;
-			gap: 15px;
-		}
-
-		/* CAROUSEL ENGINE */
-		.custom-scroll-container {
-			display: flex !important;
-			overflow: hidden;
-			scroll-behavior: smooth;
-			width: 100%;
-			padding: 20px 0;
-		}
-
-		.no-smooth {
-			scroll-behavior: auto !important;
-		}
-
-		.custom-item {
-			flex: 0 0 100%;
-			min-width: 100%;
-			padding: 0 10px;
-			box-sizing: border-box;
-		}
-
-		@media(min-width: 768px) {
-			.custom-item {
-				flex: 0 0 33.333%;
-				min-width: 33.333%;
-			}
-		}
-
-		/* PROFILE AND COMMENTS */
-		.profile-card-custom {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			text-align: center;
-		}
-
-		.comments-section {
-			background: #f8f9fa;
-			border-radius: 18px;
-			padding: 20px;
-			max-height: 400px;
-			overflow-y: auto;
-		}
-
-		.comment-bubble {
-			background: white;
-			padding: 12px 15px;
-			border-radius: 12px;
-			margin-bottom: 12px;
-			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-			border-left: 4px solid #007bff;
-		}
-
-		.comment-author {
-			font-weight: bold;
-			font-size: 0.85rem;
-			display: block;
-			margin-bottom: 3px;
-		}
-
-		.comment-text {
-			font-size: 0.9rem;
-			color: #555;
-			margin: 0;
-		}
-
-		/* GALLERY CARDS */
-		.card-gallery {
-			background: #fff;
-			border-radius: 18px;
-			overflow: hidden;
-			box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-			display: flex;
-			flex-direction: column;
-			height: 100%;
-			transition: transform 0.3s ease;
-		}
-
-		.img-container-rel {
-			position: relative;
-			width: 100%;
-			aspect-ratio: 1 / 1;
-		}
-
-		.img-square {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			display: block;
-		}
-
-		.texto-traslucido {
-			position: absolute;
-			bottom: 0;
-			width: 100%;
-			background: rgba(0, 0, 0, 0.7);
-			color: white;
-			padding: 10px 15px;
-			backdrop-filter: blur(8px);
-			font-size: 0.85rem;
-			font-weight: 600;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
-
-		.img-mini-overlay {
-			width: 22px;
-			height: 22px;
-			object-fit: contain;
-		}
-
-		.texto-detalle {
-			font-size: 0.85rem;
-			line-height: 1.4;
-			margin: 0;
-		}
-
-		/* NAVIGATION BUTTONS */
-		.nav-btn {
-			background: #222;
-			color: white;
-			border: none;
-			width: 48px;
-			height: 48px;
-			border-radius: 50%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			cursor: pointer;
-			transition: all 0.2s;
-			flex-shrink: 0;
-		}
-
-		.nav-btn:hover {
-			background: #000;
-			transform: scale(1.1);
-		}
-
-		.arrow {
-			border: solid white;
-			border-width: 0 3px 3px 0;
-			display: inline-block;
-			padding: 4px;
-		}
-		.right {
-			transform: rotate(-45deg);
-		}
-		.left {
-			transform: rotate(135deg);
-		}
-
-		.comments-section {
-			background: #ffffff;
-			border-radius: 18px;
-			max-height: 450px;
-			overflow-y: auto;
-			padding-right: 5px;
-		}
-
-		/* Comment container */
-		.comment-item {
-			display: flex;
-			align-items: flex-start;
-			gap: 12px;
-			padding: 15px;
-			margin-bottom: 15px;
-			background: #fdfdfd;
-			border-radius: 15px;
-			border: 1px solid #eee;
-			transition: all 0.3s ease;
-		}
-
-		.comment-item:hover {
-			background: #fafafa;
-		}
-
-		/* Text body */
-		.comment-body {
-			flex-grow: 1;
-		}
-
-		.comment-author {
-			font-weight: 700;
-			font-size: 0.9rem;
-			color: #222;
-			margin-bottom: 2px;
-			display: block;
-		}
-
-		.comment-text {
-			font-size: 0.88rem;
-			color: #555;
-			margin: 0;
-			line-height: 1.4;
-		}
-
-		/* Scrollbar customization */
-		.comments-section::-webkit-scrollbar {
-			width: 6px;
-		}
-		.comments-section::-webkit-scrollbar-thumb {
-			background: #ccc;
-			border-radius: 10px;
-		}
-
-		/* Read-only Stars Component */
-		.rating-static {
-			display: flex;
-			justify-content: center; /* Centered in the carousel */
-			gap: 0.2rem;
-			margin: 5px 0;
-		}
-
-		.rating-static svg {
-			width: 1.1rem;
-			height: 1.1rem;
-			fill: #e8e8e8; /* Gray for empty stars */
-		}
-
-		.rating-static .gold {
-			fill: #ffca08; /* Gold for filled stars */
-			filter: drop-shadow(0 0 2px rgba(255, 202, 8, 0.3));
-		}
-
-		/* Bottom band adjustment for better star display */
-		.banda-inferior {
-			background: #ffffff;
-			padding: 12px;
-			border-top: 1px solid #eee;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-
-		.comment-avatar {
-			width: 50px;
-			height: 50px;
-			object-fit: contain; /* Keeps the image from being cropped */
-			background-color: #f8f9fa;
-			flex-shrink: 0;
-			border-radius: 8px;
-			border: 1px solid #eee;
-			padding: 4px; /* Small inner padding for logos */
-		}
-	</style>
+	<link rel="stylesheet" href="{{ asset('styles/profile.css') }}">
 {% endblock %}
-
+{% block javascripts %}
+	{% block importmap %}
+		{{ importmap('app') }}
+	{% endblock %}
+	<script src="{{ asset('profile.js') }}"></script>
+{% endblock %}
 {% block main %}
 	<div class="container py-5 min-vh-100">
 		<div class="row">
@@ -271,177 +19,151 @@
 					</div>
 					<h3 class="fw-bold">{{ usuario.UserName }}</h3>
 					{% if usuario.userId == app.user.UserId %}
-					<button class="btn btn-primary w-100 mt-2" style="max-width: 200px;">Edit profile</button>
+						<button id="edit-profile-btn" class="btn btn-primary w-100 mt-2" style="max-width: 200px;" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit profile</button>
+					{% endif %}
+					{% if is_granted('ROLE_ADMIN') %}
+						<a href="#" class="delete-account-link mt-2" style="max-width:200px;display:block;margin-left:auto;margin-right:auto;">Delete account</a>
 					{% endif %}
 				</div>
 
-				<div class="card shadow-sm border-0 p-4">
-					<h5 class="fw-bold mb-4 text-primary">Last reviews made by
+				<div class="card shadow-sm border-0 p-4 card-comments">
+					<h5 class="fw-bold mb-4">Last reviews made by
 						{{ usuario.UserName }}</h5>
 					<div class="comments-section">
 						{% if ultimos %}
-						{% for last in ultimos %}
-							<div class="comment-item">
-								<img src="{{ last.marca.urlLogo }}" class="comment-avatar" alt="Avatar">
-								<div class="comment-body">
-									<span class="comment-author">{{ last.modelo.modeloNombre }}<small class="text-muted small ms-2 time-ago" data-timestamp="{{ last.valoracion.fecha|date('U') }}"></small>
-									</span>
-									{% if last.valoracion.comentario is not null or last.valoracion.comentario != "" %}
-										<p class="comment-text">{{ last.valoracion.comentario }}</p>
-									{% endif %}
-									<div class="rating-static">
-										{% if last.valoracion.estrellas > 0 %}
-											{% for i in 1..last.valoracion.estrellas %}
-												<svg class="gold" viewbox="0 0 24 24">
-													<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-												</svg>
-											{% endfor %}
+							{% for last in ultimos %}
+								<div class="comment-item">
+									<img src="{{ last.marca.urlLogo }}" class="comment-avatar" alt="Avatar">
+									<div class="comment-body">
+										<span class="comment-author">{{ last.modelo.modeloNombre }}<small class="text-muted small ms-2 time-ago" data-timestamp="{{ last.valoracion.fecha|date('U') }}"></small>
+										</span>
+										{% if last.valoracion.comentario is not null or last.valoracion.comentario != "" %}
+											<p class="comment-text">{{ last.valoracion.comentario }}</p>
 										{% endif %}
+										<div class="rating-static">
+											{% if last.valoracion.estrellas > 0 %}
+												{% for i in 1..last.valoracion.estrellas %}
+													<svg class="gold" viewbox="0 0 24 24">
+														<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+													</svg>
+												{% endfor %}
+											{% endif %}
 
-										{% if last.valoracion.estrellas < 5 %}
-											{% for i in (last.valoracion.estrellas + 1)..5 %}
-												<svg class="grey" viewbox="0 0 24 24" style="fill: #e8e8e8;">
-													<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-												</svg>
-											{% endfor %}
-										{% endif %}
-									</div>
-									<div class="small text-muted mt-1">
-										{% if last.coche.motor.nombreMotor %}
-											<span class="me-2">
-												<strong>Engine:</strong>
-												{{ last.coche.motor.nombreMotor }}</span>
-										{% endif %}
-										{% if last.coche.cocheColor %}
-											<span class="me-2">
-												<strong>Color:</strong>
-												{{ last.coche.cocheColor }}</span>
-										{% endif %}
-										{% if last.coche.cocheAnio %}
-											<span class="me-2">
-												<strong>Year:</strong>
-												{{ last.coche.cocheAnio }}</span>
-										{% endif %}
-										{% if last.coche.cocheTransmision %}
-											<span class="me-2">
-												<strong>Transmission:</strong>
-												{{ last.coche.cocheTransmision }}</span>
-										{% endif %}
+											{% if last.valoracion.estrellas < 5 %}
+												{% for i in (last.valoracion.estrellas + 1)..5 %}
+													<svg class="grey" viewbox="0 0 24 24" style="fill: #e8e8e8;">
+														<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+													</svg>
+												{% endfor %}
+											{% endif %}
+										</div>
+										<div class="small text-muted mt-1">
+											{% if last.coche.motor.nombreMotor %}
+												<span class="me-2">
+													<strong>Engine:</strong>
+													{{ last.coche.motor.nombreMotor }}</span>
+											{% endif %}
+											{% if last.coche.cocheColor %}
+												<span class="me-2">
+													<strong>Color:</strong>
+													{{ last.coche.cocheColor }}</span>
+											{% endif %}
+											{% if last.coche.cocheAnio %}
+												<span class="me-2">
+													<strong>Year:</strong>
+													{{ last.coche.cocheAnio }}</span>
+											{% endif %}
+											{% if last.coche.cocheTransmision %}
+												<span class="me-2">
+													<strong>Transmission:</strong>
+													{{ last.coche.cocheTransmision }}</span>
+											{% endif %}
+										</div>
 									</div>
 								</div>
-							</div>
-						{% endfor %}
+							{% endfor %}
 						{% else %}
-						<p>The user has not posted any reviews</p>
+							<p>The user has not posted any reviews</p>
 						{% endif %}
 					</div>
 				</div>
 			</div>
 
 			<div class="col-lg-8">
-				<div class="gallery-section mb-5">
+				<div class="gallery-section mb-5 cars-in-garage-section">
 					<h2 class="mb-4 fw-bold text-center">Cars in garage</h2>
 					<div class="carousel-flex-layout gallery-wrapper">
 						{% if coches %}
-						<button class="nav-btn btn-atras">
-							<i class="arrow left"></i>
-						</button>
+							<button class="nav-btn btn-atras">
+								<i class="arrow left"></i>
+							</button>
 
-						<div class="custom-scroll-container scroll-contenedor">
-							{% for car in coches %}
-								<div class="custom-item">
-									<div class="card-gallery">
-										<div class="img-container-rel">
-											<img src="https://res.cloudinary.com/unix-center/image/upload/c_limit,dpr_3.0,f_auto,fl_progressive,g_center,h_580,q_75,w_906/tnt1sdreuccr9iqjyewf.jpg" class="img-square">
-											<div class="texto-traslucido">
-												<span>{{ car.modelo.modeloNombre }}</span>
-												<img src="{{ car.marca.urlLogo }}" class="img-mini-overlay">
-											</div>
-										</div>
-										<div class="banda-inferior">
-											<div class="rating-static">
-												{% if car.valoracion.estrellas > 0 %}
-													{% for i in 1..car.valoracion.estrellas %}
-														<svg class="gold" viewbox="0 0 24 24">
-															<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-														</svg>
-													{% endfor %}
-												{% endif %}
+							<div class="custom-scroll-container scroll-contenedor">
+								{% for car in coches %}
+									{% embed 'profile/carousel_card.html.twig' %}
+										{% block image %}https://res.cloudinary.com/unix-center/image/upload/c_limit,dpr_3.0,f_auto,fl_progressive,g_center,h_580,q_75,w_906/tnt1sdreuccr9iqjyewf.jpg
+										{% endblock %}
+										{% block title %}
+											{{ car.modelo.modeloNombre }}
+										{% endblock %}
+										{% block logo %}
+											{{ car.marca.urlLogo }}
+										{% endblock %}
+										{% block stars %}
+											{{ car.valoracion.estrellas|default(0) }}
+										{% endblock %}
+									{% endembed %}
+								{% endfor %}
+							</div>
 
-												{% if car.valoracion.estrellas < 5 %}
-													{% for i in (car.valoracion.estrellas + 1)..5 %}
-														<svg class="grey" viewbox="0 0 24 24" style="fill: #e8e8e8;">
-															<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-														</svg>
-													{% endfor %}
-												{% endif %}
-											</div>
-										</div>
-									</div>
-								</div>
-							{% endfor %}
-						</div>
-
-						<button class="nav-btn btn-adelante">
-							<i class="arrow right"></i>
-						</button>
+							<button class="nav-btn btn-adelante">
+								<i class="arrow right"></i>
+							</button>
 						{% else %}
-						<p class="text-center">The user has not stored any cars in the garage.</p>
+							<p class="text-center">The user has not stored any cars in the garage.</p>
 						{% endif %}
 					</div>
 				</div>
 
-				<div class="gallery-section mb-5">
+				<div class="gallery-section mb-5 most-rated-section">
 					<h2 class="mb-4 fw-bold text-center">Most rated by
 						{{usuario.UserName}}</h2>
 					<div class="carousel-flex-layout gallery-wrapper">
 						{% if valorados%}
-						<button class="nav-btn btn-atras">
-							<i class="arrow left"></i>
-						</button>
+							<button class="nav-btn btn-atras">
+								<i class="arrow left"></i>
+							</button>
 
-						<div class="custom-scroll-container scroll-contenedor">
-							{% for value in valorados %}
-								<div class="custom-item">
-								<a href="{{ path('marca', { name: value.marca.nombreMarca, id: value.modelo.modeloId }) }}">
-									<div class="card-gallery">
-										<div class="img-container-rel">
-											<img src="{{ value.modelo.fotoModelo }}" class="img-square">
-											<div class="texto-traslucido">
-												<span>{{ value.modelo.modeloNombre }}</span>
-												<img src="{{ value.marca.urlLogo }}" class="img-mini-overlay">
-											</div>
-										</div>
-										<div class="banda-inferior">
-											<div class="rating-static">
-												{% if value.valoracion.estrellas > 0 %}
-													{% for i in 1..value.valoracion.estrellas %}
-														<svg class="gold" viewbox="0 0 24 24">
-															<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-														</svg>
-													{% endfor %}
-												{% endif %}
+							<div class="custom-scroll-container scroll-contenedor">
+								{% for value in valorados %}
+									
+									{% embed 'profile/carousel_card.html.twig' %}
+										{% block link %}<a href={{ path('marca', {name: value.marca.nombreMarca, id: value.modelo.modeloId }) }}>{% endblock %}
+										{% block image %}
+											{{ value.modelo.fotoModelo }}
+										{% endblock %}
+										{% block title %}
+											{{ value.modelo.modeloNombre }}
+										{% endblock %}
+										{% block logo %}
+											{{ value.marca.urlLogo }}
+										{% endblock %}
+										{% block stars %}
+											{{ value.valoracion.estrellas|default(0) }}
+										{% endblock %}
+										{% block url %}
+											{{ path('marca', { name: value.marca.nombreMarca, id: value.modelo.modeloId }) }}
+										{% endblock %}
+										{% block closeLink %}</a>{% endblock %}
+									{% endembed %}
+								{% endfor %}
+							</div>
 
-												{% if value.valoracion.estrellas < 5 %}
-													{% for i in (value.valoracion.estrellas + 1)..5 %}
-														<svg class="grey" viewbox="0 0 24 24" style="fill: #e8e8e8;">
-															<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-														</svg>
-													{% endfor %}
-												{% endif %}
-											</div>
-										</div>
-									</div>
-								</div>
-								</a>
-							{% endfor %}
-						</div>
-
-						<button class="nav-btn btn-adelante">
-							<i class="arrow right"></i>
-						</button>
+							<button class="nav-btn btn-adelante">
+								<i class="arrow right"></i>
+							</button>
 						{% else %}
-						<p>The user has not rated any car.</p>
+							<p>The user has not rated any car.</p>
 						{% endif %}
 					</div>
 				</div>
@@ -449,115 +171,35 @@
 		</div>
 
 		<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="editProfileModalLabel">Add review</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<form id="ajax-editProfile-form" enctype="multipart/form-data">
-						<div class="row g-4">
-							<div class="col-md-6">
-								<label class="form-label small fw-bold">Username:</label>
-								<input type="text" name="username" class="form-control border-0 bg-light p-3" style="border-radius: 15px;" placeholder="Ex: {{usuario.userName}}">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="editProfileModalLabel">Edit profile</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form id="ajax-editProfile-form" enctype="multipart/form-data" data-update-url="{{ path('profile_update', {'name': usuario.UserName}) }}">
+							<div class="row g-4">
+								<div class="col-md-6">
+									<label class="form-label small fw-bold">Username:</label>
+									<input type="text" name="username" class="form-control border-0 bg-light p-3" style="border-radius: 15px;" value="{{ usuario.UserName }}" required>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label small fw-bold">Email:</label>
+									<input type="email" name="email" class="form-control border-0 bg-light p-3" style="border-radius: 15px;" value="{{ usuario.UserMail }}" required>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label small fw-bold">Profile pic:</label>
+									<input type="file" id="garajeImage" name="garaje_image" class="form-control" accept="image/*">
+								</div>
+								<div class="col-12">
+									<button type="submit" id="submit-form-btn" class="btn btn-primary w-100 py-3 fw-bold" style="border-radius: 18px;">Save changes</button>
+									<a href="#" class="delete-account-link">Delete account</a>
+								</div>
 							</div>
-							<div class="col-md-6">
-								<label class="form-label small fw-bold">Email:</label>
-								<input type="text" name="email" class="form-control border-0 bg-light p-3" style="border-radius: 15px;" placeholder="Ex: {{usuario.userMail}}">
-							</div>
-							<div class="col-md-6">
-								<label class="form-label small fw-bold">Profile pic:</label>
-								<input type="file" id="garajeImage" name="garaje_image" class="form-control" accept="image/*">
-							</div>
-							<div class="col-12">
-								<button type="submit" id="submit-form-btn" class="btn btn-primary w-100 py-3 fw-bold" style="border-radius: 18px;">Post review</button>
-							</div>
-						</div>
-					</form>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-
-		<script>
-		document.addEventListener('DOMContentLoaded', () => {
-    		const formatTimeAgo = (timestamp) => {
-        	const now = Math.floor(Date.now() / 1000);
-        	const diff = now - timestamp;
-
-        	if (diff < 0) return 'right now';
-        	if (diff < 60) return `${diff} seconds ago`;
-
-        	const min = Math.floor(diff / 60);
-        	if (min < 60) return `${min} minutes ago`;
-
-        	const hours = Math.floor(diff / 3600);
-        	if (hours < 24) return `${hours} hours ago`;
-
-        	const days = Math.floor(diff / 86400);
-        	if (days < 7) return `${days} days ago`;
-
-        	const weeks = Math.floor(days / 7);
-        	if (weeks < 5) return `${weeks} weeks ago`;
-
-        	const months = Math.floor(days / 30);
-        	if (months < 12) return `${months} months ago`;
-
-        	const years = Math.floor(days / 365);
-        	return `${years} years ago`;
-    	};
-
-    	
-    	document.querySelectorAll('.time-ago').forEach(el => {
-		const timestamp = parseInt(el.getAttribute('data-timestamp'), 10);
-		el.textContent = formatTimeAgo(timestamp);
-	});
-	const galerias = document.querySelectorAll('.gallery-wrapper');
-galerias.forEach(galeria => {
-const contenedor = galeria.querySelector('.scroll-contenedor');
-const btnAdelante = galeria.querySelector('.btn-adelante');
-const btnAtras = galeria.querySelector('.btn-atras');
-
-btnAdelante.addEventListener('click', () => {
-const item = contenedor.querySelector('.custom-item');
-if (! item) 
-return;
-
-
-
-const itemWidth = item.offsetWidth;
-contenedor.scrollBy({left: itemWidth, behavior: 'smooth'});
-setTimeout(() => {
-const primero = contenedor.firstElementChild;
-contenedor.appendChild(primero);
-contenedor.classList.add('no-smooth');
-contenedor.scrollLeft -= itemWidth;
-contenedor.classList.remove('no-smooth');
-}, 500);
-});
-
-btnAtras.addEventListener('click', () => {
-const item = contenedor.querySelector('.custom-item');
-if (! item) 
-return;
-
-
-
-const itemWidth = item.offsetWidth;
-const ultimo = contenedor.lastElementChild;
-contenedor.classList.add('no-smooth');
-contenedor.prepend(ultimo);
-contenedor.scrollLeft += itemWidth;
-contenedor.classList.remove('no-smooth');
-setTimeout(() => {
-contenedor.scrollBy({
-left: - itemWidth,
-behavior: 'smooth'
-});
-}, 10);
-});
-});
-});
-	</script>
-{% endblock %}
+	{% endblock %}
