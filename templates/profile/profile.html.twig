@@ -7,7 +7,7 @@
 	{% block importmap %}
 		{{ importmap('app') }}
 	{% endblock %}
-	<script src="{{ asset('profile.js') }}"></script>
+	<script type="module" src="{{ asset('profile.js') }}"></script>
 {% endblock %}
 {% block main %}
 	<div class="container py-5 min-vh-100">
@@ -202,4 +202,23 @@
 				</div>
 			</div>
 		</div>
+		<!-- Confirm delete modal -->
+		<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered">
+			  <div class="modal-content">
+				  <div class="modal-header">
+					  <h5 class="modal-title" id="confirmDeleteModalLabel">Are you sure?</h5>
+					  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				  </div>
+				  <div class="modal-body text-center">
+					  <p class="mb-4">Are you sure you want to delete the account?</p>
+					  <div class="d-flex justify-content-center gap-2">
+						  <a href="#" id="confirm-delete-yes" class="btn btn-primary py-3 fw-bold delete-account-link">Yes</a>
+						  <a href="#" id="confirm-delete-no" class="btn btn-secondary py-3 fw-bold delete-account-link2" data-bs-dismiss="modal" >No</a>
+					  </div>
+				  </div>
+			  </div>
+		  </div>
+	  </div>
+
 	{% endblock %}

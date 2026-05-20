@@ -285,8 +285,9 @@ final class ProfilesController extends AbstractController
 
                 // Process uploaded photos (if any) and collect filenames to store in DB
                 $photoNames = [];
-                $movedFiles = [];
-                if (!empty($_FILES["photos"]["name"])) {
+                // Use Symfony's UploadedFile handling instead of raw $_FILES keys
+                $uploadedFiles = $request->files->get('garaje_image');
+                if (!empty($uploadedFiles) && is_array($uploadedFiles)) {
                     $allowed = ["png", "jpg", "jpeg", "webp"];
 
                     // Use absolute path to public folder
@@ -295,18 +296,26 @@ final class ProfilesController extends AbstractController
                         mkdir($uploadDir, 0755, true);
                     }
 
-                    foreach ($_FILES["photos"]["name"] as $key => $val) {
-                        $originalName = $_FILES["photos"]["name"][$key];
-                        $tmpName      = $_FILES["photos"]["tmp_name"][$key];
-                        $extension    = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+                    foreach ($uploadedFiles as $key => $file) {
+                        if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
+                            $originalName = $file->getClientOriginalName();
+                            $extension = strtolower($file->getClientOriginalExtension());
 
-                        if (in_array($extension, $allowed)) {
-                            $newName = (method_exists($user, 'getUserId') ? $user->getUserId() : (method_exists($user, 'getId') ? $user->getId() : 'user')) . "_" . time() . "_" . $key . "." . $extension;
-                            $targetPath = $uploadDir . $newName;
-
-                            if (is_uploaded_file($tmpName) && move_uploaded_file($tmpName, $targetPath)) {
-                                $photoNames[] = $newName; // filename
-                                $movedFiles[] = $targetPath; // absolute path
+                            if (in_array($extension, $allowed)) {
+                                $userId = method_exists($user, 'getUserId') ? $user->getUserId() : (method_exists($user, 'getId') ? $user->getId() : 'user');
+                                $cocheId = method_exists($coche, 'getCocheId') ? $coche->getCocheId() : (method_exists($coche, 'getId') ? $coche->getId() : 'coche');
+                                $timestamp = time();
+                                $newName = sprintf('%s_%s_%s_%s.%s', $userId, $cocheId, $timestamp, $key, $extension);
+                                try {
+                                    $targetPath = $uploadDir . $newName;
+                                    // If file already exists, skip moving to avoid duplicates
+                                    if (!file_exists($targetPath)) {
+                                        $file->move($uploadDir, $newName);
+                                    }
+                                    $photoNames[] = $newName;
+                                } catch (\Exception $e) {
+                                    
+                                }
                             }
                         }
                     }
@@ -314,14 +323,14 @@ final class ProfilesController extends AbstractController
 
                 // Persist garaje and create FotoGaraje rows for each uploaded photo
                 $em->persist($garaje);
+                $em->flush();
 
                 if (!empty($photoNames)) {
                     foreach ($photoNames as $fname) {
                         $foto = new FotoGaraje();
                         $foto->setPoseedor($user);
                         $foto->setCoche($coche->getcocheId());
-                        // store web-accessible path
-                        $foto->setUrl('/assets/images/' . $fname);
+                        $foto->setUrl($fname);
                         $em->persist($foto);
                     }
                 }
