@@ -1,0 +1,9 @@
+{% extends 'skeleton.html.twig' %}
+
+{% block title %}Página no encontrada{% endblock %}
+
+{% block main %}
+    <h1>404 - Página no encontrada</h1>
+    <p>Lo sentimos, la página que buscas no existe.</p>
+    <a href="{{ path('home') }}">Volver al inicio</a>
+{% endblock %}
