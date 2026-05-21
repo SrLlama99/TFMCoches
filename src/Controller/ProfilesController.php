@@ -82,11 +82,13 @@ final class ProfilesController extends AbstractController
 
             $valoraciones = array_map(function ($v) use ($usersRepo) {
                 $username = 'Usuario';
+                $profilePic = '';
                 // obtain username if exists
                 if (method_exists($v, 'getIdUsuario')) {
                     $user = $usersRepo->find($v->getIdUsuario());
                     if ($user) {
                         $username = $user->getUserName();
+                        $profilePic = $user->getProfilePic();
                     }
                 }
 
@@ -108,6 +110,7 @@ final class ProfilesController extends AbstractController
 
                 return [
                     'username' => $username,
+                    'profilePic' => $profilePic,
                     'comentario' => $v->getComentario(),
                     'estrellas' => $v->getEstrellas(),
                     'fecha' => $v->getFecha(),

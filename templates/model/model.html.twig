@@ -236,7 +236,7 @@
 							{% for v in valoraciones %}
 								<div class="comment-item">
 									<a href="{{ path('profile', {name: v.username}) }}">
-									<img src="https://via.placeholder.com/45" class="comment-avatar">
+									<img src="{{ asset('images/avatar/' ~ v.profilePic) }}" class="comment-avatar">
 									</a>
 									<div class="comment-content">
 										<a href="{{ path('profile', {name: v.username}) }}">

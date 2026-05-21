@@ -15,7 +15,7 @@
 			<div class="col-lg-4 mb-4">
 				<div class="card shadow-sm border-0 profile-card-custom p-4 mb-4">
 					<div class="ratio ratio-1x1 mb-3" style="width: 120px;">
-						<img src="https://img.a.transfermarkt.technology/portrait/big/8198-1748102259.jpg?lm=1" class="rounded-circle object-fit-cover shadow-sm">
+						<img src="{{ asset('images/avatar/' ~ usuario.profilePic) }}" class="rounded-circle object-fit-cover shadow-sm">
 					</div>
 					<h3 class="fw-bold">{{ usuario.UserName }}</h3>
 					{% if usuario.userId == app.user.UserId %}

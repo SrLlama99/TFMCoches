@@ -31,6 +31,9 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', name: 'admin')]
     private $Admin;
 
+    #[ORM\Column(type: 'string', name: '')]
+    private $profilePic;
+
     public function getUserId()
     {
         return $this->UserId;
@@ -82,6 +85,16 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAdmin($Admin)
     {
         $this->Admin = $Admin;
+    }
+
+    public function getProfilePic()
+    {
+        return $this->profilePic;
+    }
+
+    public function setProfilePic($profilePic)
+    {
+        $this->profilePic = $profilePic;
     }
 
     public function getRoles(): array
