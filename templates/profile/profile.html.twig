@@ -1,543 +1,252 @@
 {% extends "skeleton.html.twig" %}
 
 {% block stylesheets %}
-	<style>
-		.gallery-section {
-			max-width: 1000px;
-			margin: 0 auto;
-		}
-
-		.carousel-flex-layout {
-			display: flex;
-			align-items: center;
-			gap: 15px;
-		}
-
-		/* MOTOR DEL CARRUSEL */
-		.custom-scroll-container {
-			display: flex !important;
-			overflow: hidden;
-			scroll-behavior: smooth;
-			width: 100%;
-			padding: 20px 0;
-		}
-
-		.no-smooth {
-			scroll-behavior: auto !important;
-		}
-
-		.custom-item {
-			flex: 0 0 100%;
-			min-width: 100%;
-			padding: 0 10px;
-			box-sizing: border-box;
-		}
-
-		@media(min-width: 768px) {
-			.custom-item {
-				flex: 0 0 33.333%;
-				min-width: 33.333%;
-			}
-		}
-
-		/* PERFIL Y COMENTARIOS */
-		.profile-card-custom {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			text-align: center;
-		}
-
-		.comments-section {
-			background: #f8f9fa;
-			border-radius: 18px;
-			padding: 20px;
-			max-height: 400px;
-			overflow-y: auto;
-		}
-
-		.comment-bubble {
-			background: white;
-			padding: 12px 15px;
-			border-radius: 12px;
-			margin-bottom: 12px;
-			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-			border-left: 4px solid #007bff;
-		}
-
-		.comment-author {
-			font-weight: bold;
-			font-size: 0.85rem;
-			display: block;
-			margin-bottom: 3px;
-		}
-
-		.comment-text {
-			font-size: 0.9rem;
-			color: #555;
-			margin: 0;
-		}
-
-		/* TARJETAS DE LA GALERÍA */
-		.card-gallery {
-			background: #fff;
-			border-radius: 18px;
-			overflow: hidden;
-			box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-			display: flex;
-			flex-direction: column;
-			height: 100%;
-			transition: transform 0.3s ease;
-		}
-
-		.img-container-rel {
-			position: relative;
-			width: 100%;
-			aspect-ratio: 1 / 1;
-		}
-
-		.img-square {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			display: block;
-		}
-
-		.texto-traslucido {
-			position: absolute;
-			bottom: 0;
-			width: 100%;
-			background: rgba(0, 0, 0, 0.7);
-			color: white;
-			padding: 10px 15px;
-			backdrop-filter: blur(8px);
-			font-size: 0.85rem;
-			font-weight: 600;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
-
-		.img-mini-overlay {
-			width: 22px;
-			height: 22px;
-			object-fit: contain;
-		}
-
-		.banda-inferior {
-			background: #ffffff;
-			color: #333;
-			padding: 15px;
-			border-top: 1px solid #eee;
-			text-align: center;
-		}
-
-		.texto-detalle {
-			font-size: 0.85rem;
-			line-height: 1.4;
-			margin: 0;
-		}
-
-		/* BOTONES NAVEGACIÓN */
-		.nav-btn {
-			background: #222;
-			color: white;
-			border: none;
-			width: 48px;
-			height: 48px;
-			border-radius: 50%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			cursor: pointer;
-			transition: all 0.2s;
-			flex-shrink: 0;
-		}
-
-		.nav-btn:hover {
-			background: #000;
-			transform: scale(1.1);
-		}
-
-		.arrow {
-			border: solid white;
-			border-width: 0 3px 3px 0;
-			display: inline-block;
-			padding: 4px;
-		}
-		.right {
-			transform: rotate(-45deg);
-		}
-		.left {
-			transform: rotate(135deg);
-		}
-
-		.comments-section {
-			background: #ffffff;
-			border-radius: 18px;
-			max-height: 450px;
-			overflow-y: auto;
-			padding-right: 5px;
-		}
-
-		/* Contenedor del comentario */
-		.comment-item {
-			display: flex;
-			align-items: flex-start;
-			gap: 12px;
-			padding: 15px;
-			margin-bottom: 15px;
-			background: #fdfdfd;
-			border-radius: 15px;
-			border: 1px solid #eee;
-			transition: all 0.3s ease;
-		}
-
-		.comment-item:hover {
-			transform: translateX(5px);
-			background: #f8f9ff;
-			border-color: #007bff;
-		}
-
-		/* Cuerpo del texto */
-		.comment-body {
-			flex-grow: 1;
-		}
-
-		.comment-author {
-			font-weight: 700;
-			font-size: 0.9rem;
-			color: #222;
-			margin-bottom: 2px;
-			display: block;
-		}
-
-		.comment-text {
-			font-size: 0.88rem;
-			color: #555;
-			margin: 0;
-			line-height: 1.4;
-		}
-
-		/* Personalización de la barra de scroll */
-		.comments-section::-webkit-scrollbar {
-			width: 6px;
-		}
-		.comments-section::-webkit-scrollbar-thumb {
-			background: #ccc;
-			border-radius: 10px;
-		}
-
-		/* Componente de Estrellas Solo Lectura */
-		.rating-static {
-			display: flex;
-			justify-content: center; /* Centrado en el carrusel */
-			gap: 0.2rem;
-			margin: 5px 0;
-		}
-
-		.rating-static svg {
-			width: 1.1rem;
-			height: 1.1rem;
-			fill: #e8e8e8; /* Gris para estrellas vacías */
-		}
-
-		.rating-static .gold {
-			fill: #ffca08; /* Dorado para estrellas llenas */
-			filter: drop-shadow(0 0 2px rgba(255, 202, 8, 0.3));
-		}
-
-		/* Ajuste de la banda inferior para que las estrellas luzcan mejor */
-		.banda-inferior {
-			background: #ffffff;
-			padding: 12px;
-			border-top: 1px solid #eee;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-
-		.comment-avatar {
-			width: 50px;
-			height: 50px;
-			object-fit: contain; /* Esto hace que la imagen se adapte sin cortarse */
-			background-color: #f8f9fa;
-			flex-shrink: 0;
-			border-radius: 8px;
-			border: 1px solid #eee;
-			padding: 4px; /* Un poco de margen interno para logos */
-		}
-	</style>
+	<link rel="stylesheet" href="{{ asset('styles/profile.css') }}">
 {% endblock %}
-
-{% block body %}
-	<div class="container py-5">
+{% block javascripts %}
+	{% block importmap %}
+		{{ importmap('app') }}
+	{% endblock %}
+	<script type="module" src="{{ asset('profile.js') }}"></script>
+{% endblock %}
+{% block main %}
+	<div class="container py-5 min-vh-100">
 		<div class="row">
 			<div class="col-lg-4 mb-4">
 				<div class="card shadow-sm border-0 profile-card-custom p-4 mb-4">
 					<div class="ratio ratio-1x1 mb-3" style="width: 120px;">
-						<img src="https://img.a.transfermarkt.technology/portrait/big/8198-1748102259.jpg?lm=1" class="rounded-circle object-fit-cover shadow-sm">
+						<img src="{{ asset('assets/images/avatar/' ~ usuario.profilePic) }}" class="rounded-circle object-fit-cover shadow-sm" alt="Profile picture">
 					</div>
 					<h3 class="fw-bold">{{ usuario.UserName }}</h3>
-					<button class="btn btn-primary w-100 mt-2" style="max-width: 200px;">Editar perfil</button>
+
+					<!-- Garage item modal: show notes and photos, allow upload/delete -->
+					{% set canEditGarage = (app.user and usuario.userId is defined and app.user.UserId is defined and usuario.userId == app.user.UserId) or is_granted('ROLE_ADMIN') %}
+					<div class="modal fade" id="garageModal" tabindex="-1" aria-labelledby="garageModalLabel" aria-hidden="true" data-can-edit="{{ canEditGarage ? '1' : '0' }}">
+						<div class="modal-dialog modal-dialog-centered modal-lg">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="garageModalLabel">Car notes & photos</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<div class="mb-3">
+										<h6 class="fw-bold">Notes</h6>
+										<p id="garage-notes" class="small text-muted"></p>
+									</div>
+									<div class="mb-3">
+										<h6 class="fw-bold">Photos</h6>
+										<div id="garage-photos" class="d-flex flex-wrap gap-2"></div>
+									</div>
+									{% if canEditGarage %}
+									<div class="mb-3">
+										<label class="form-label small fw-bold">Upload more photos</label>
+										<input type="file" id="garage-photos-input" name="photos[]" multiple class="form-control">
+									</div>
+									{% endif %}
+								</div>
+								<div class="modal-footer">
+									<input type="hidden" id="garage-coche-id" value="">
+									{% if canEditGarage %}
+										<button type="button" id="garage-upload-btn" class="btn btn-primary py-3 fw-bold" style="border-radius: 18px;">Upload</button>
+									{% endif %}
+									<button type="button" class="btn btn-secondary py-3 fw-bold" data-bs-dismiss="modal" style="border-radius: 18px;">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% if app.user and usuario.userId is defined and app.user.UserId is defined and usuario.userId == app.user.UserId %}
+						<button id="edit-profile-btn" class="btn btn-primary w-100 mt-2" style="max-width: 200px;" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit profile</button>
+					{% endif %}
+					{% if is_granted('ROLE_ADMIN') %}
+						<a href="#" class="delete-account-link mt-2" style="max-width:200px;display:block;margin-left:auto;margin-right:auto;">Delete account</a>
+					{% endif %}
 				</div>
 
-				<div class="card shadow-sm border-0 p-4">
-					<h5 class="fw-bold mb-4 text-primary">Comentarios recibidos</h5>
+				<div class="card shadow-sm border-0 p-4 card-comments">
+					<h5 class="fw-bold mb-4">Last reviews made by
+						{{ usuario.UserName }}</h5>
 					<div class="comments-section">
+						{% if ultimos %}
+							{% for last in ultimos %}
+								<div class="comment-item">
+									<img src="{{ last.marca.urlLogo }}" class="comment-avatar" alt="Avatar">
+									<div class="comment-body">
+										<span class="comment-author">{{ last.modelo.modeloNombre }}<small class="text-muted small ms-2 time-ago" data-timestamp="{{ last.valoracion.fecha|date('U') }}"></small>
+										</span>
+										{% if last.valoracion.comentario is not null or last.valoracion.comentario != "" %}
+											<p class="comment-text">{{ last.valoracion.comentario }}</p>
+										{% endif %}
+										<div class="rating-static">
+											{% if last.valoracion.estrellas > 0 %}
+												{% for i in 1..last.valoracion.estrellas %}
+													<svg class="gold" viewbox="0 0 24 24">
+														<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+													</svg>
+												{% endfor %}
+											{% endif %}
 
-						<div class="comment-item">
-							<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/960px-Volkswagen_logo_2019.svg.png" class="comment-avatar" alt="Avatar">
-							<div class="comment-body">
-								<span class="comment-author">Golf</span>
-								<p class="comment-text">Coche práctico y barato perfecto para principiantes.</p>
-								<div class="rating-static">
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
+											{% if last.valoracion.estrellas < 5 %}
+												{% for i in (last.valoracion.estrellas + 1)..5 %}
+													<svg class="grey" viewbox="0 0 24 24" style="fill: #e8e8e8;">
+														<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+													</svg>
+												{% endfor %}
+											{% endif %}
+										</div>
+										<div class="small text-muted mt-1">
+											{% if last.coche.motor.nombreMotor %}
+												<span class="me-2">
+													<strong>Engine:</strong>
+													{{ last.coche.motor.nombreMotor }}</span>
+											{% endif %}
+											{% if last.coche.cocheColor %}
+												<span class="me-2">
+													<strong>Color:</strong>
+													{{ last.coche.cocheColor }}</span>
+											{% endif %}
+											{% if last.coche.cocheAnio %}
+												<span class="me-2">
+													<strong>Year:</strong>
+													{{ last.coche.cocheAnio }}</span>
+											{% endif %}
+											{% if last.coche.cocheTransmision %}
+												<span class="me-2">
+													<strong>Transmission:</strong>
+													{{ last.coche.cocheTransmision }}</span>
+											{% endif %}
+										</div>
+									</div>
 								</div>
-							</div>
-						</div>
-
-						<div class="comment-item">
-							<img src="https://makerworld.bblmw.com/makerworld/model/US8ec7b571d2726d/design/2025-03-23_23aae48e33ffe.png?x-oss-process=image/resize,w_1000/format,webp" class="comment-avatar" alt="Avatar">
-							<div class="comment-body">
-								<span class="comment-author">A4</span>
-								<p class="comment-text">Buen coche con gran manejo, es precioso.</p>
-								<div class="rating-static">
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-								</div>
-							</div>
-						</div>
-
-						<div class="comment-item">
-							<img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/SEAT_logo_%282012%29.png" class="comment-avatar" alt="Avatar">
-							<div class="comment-body">
-								<span class="comment-author">Ibiza</span>
-                                <div class="rating-static">
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg class="gold" viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-									<svg viewbox="0 0 24 24">
-										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-									</svg>
-								</div>
-							</div>
-						</div>
-
+							{% endfor %}
+						{% else %}
+							<p>The user has not posted any reviews</p>
+						{% endif %}
 					</div>
 				</div>
 			</div>
 
 			<div class="col-lg-8">
-				<div class="gallery-section mb-5">
-					<h2 class="mb-4 fw-bold text-center">Coches en el garaje</h2>
+				<div class="gallery-section mb-5 cars-in-garage-section">
+					<h2 class="mb-4 fw-bold text-center">Cars in garage</h2>
 					<div class="carousel-flex-layout gallery-wrapper">
-						<button class="nav-btn btn-atras">
-							<i class="arrow left"></i>
-						</button>
-						{{ forEach car in cochesUsu }}
-						<div class="custom-scroll-container scroll-contenedor">
-							<div class="custom-item">
-								<div class="card-gallery">
-									<div class="img-container-rel">
-										<img src="https://res.cloudinary.com/unix-center/image/upload/c_limit,dpr_3.0,f_auto,fl_progressive,g_center,h_580,q_75,w_906/tnt1sdreuccr9iqjyewf.jpg" class="img-square">
-										<div class="texto-traslucido">
-											<span>Lamborghini Huracan</span>
-											<img src="https://upload.wikimedia.org/wikipedia/nah/5/5c/Lamborghini_logo.png" class="img-mini-overlay">
-										</div>
-									</div>
-									<div class="banda-inferior">
-										<div class="rating-static">
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+						{% if coches %}
+							<button class="nav-btn btn-atras">
+								<i class="arrow left"></i>
+							</button>
 
-						<button class="nav-btn btn-adelante">
-							<i class="arrow right"></i>
-						</button>
+							<div class="custom-scroll-container scroll-contenedor">
+								{% for car in coches %}
+									{% embed 'profile/carousel_card.html.twig' with {'name': 'alberto'} %}
+										{% block link %}#" class="garage-card"
+										data-coche-id="{{ car.coche.getcocheId() }}"
+										data-notas="{{ car.garaje.getNotas()|e('html_attr') }}"
+										data-photos="{{ (car.photos|default([]))|json_encode()|e('html_attr') }}
+										{% endblock %}
+										{% block image %}{{ car.modelo.fotoModelo }}
+										{% endblock %}
+										{% block title %}
+											{{ car.modelo.modeloNombre }}
+										{% endblock %}
+										{% block logo %}
+											{{ car.marca.urlLogo }}
+										{% endblock %}
+										{% block stars %}
+											{{ car.valoracion.estrellas|default(0) }}
+										{% endblock %}
+									{% endembed %}
+								{% endfor %}
+							</div>
+
+							<button class="nav-btn btn-adelante">
+								<i class="arrow right"></i>
+							</button>
+						{% else %}
+							<p class="text-center">The user has not stored any cars in the garage.</p>
+						{% endif %}
 					</div>
 				</div>
 
-				<div class="gallery-section mb-5">
-					<h2 class="mb-4 fw-bold text-center">Galería Pro 2</h2>
+				<div class="gallery-section mb-5 most-rated-section">
+					<h2 class="mb-4 fw-bold text-center">Most rated by
+						{{usuario.UserName}}</h2>
 					<div class="carousel-flex-layout gallery-wrapper">
-						<button class="nav-btn btn-atras">
-							<i class="arrow left"></i>
-						</button>
+						{% if valorados %}
+							<button class="nav-btn btn-atras">
+								<i class="arrow left"></i>
+							</button>
 
-						<div class="custom-scroll-container scroll-contenedor">
-							<div class="custom-item">
-								<div class="card-gallery">
-									<div class="img-container-rel">
-										<img src="https://images.ecestaticos.com/mXiaMzhISsDQH7Ki2YqTyi3XcCc=/0x0:0x0/1200x900/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F36a%2Fe15%2F4ac%2F36ae154acded8663e9bd0402a78ab17f.jpg" class="img-square">
-										<div class="texto-traslucido">
-											<span>CATEGORÍA X</span>
-											<img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" class="img-mini-overlay">
-										</div>
-									</div>
-									<div class="banda-inferior">
-										<div class="rating-static">
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-										</div>
-									</div>
-								</div>
+							<div class="custom-scroll-container scroll-contenedor">
+								{% for value in valorados %}
+									{% embed 'profile/carousel_card.html.twig' %}
+										{% block link %}{{ path('marca', {name: value.marca.nombreMarca, id: value.modelo.modeloId}) }}{% endblock %}
+										{% block image %}{{ value.modelo.fotoModelo }}{% endblock %}
+										{% block title %}{{ value.modelo.modeloNombre }}{% endblock %}
+										{% block logo %}{{ value.marca.urlLogo }}{% endblock %}
+										{% block stars %}{{ value.valoracion.estrellas|default(0) }}{% endblock %}
+									{% endembed %}
+								{% endfor %}
 							</div>
-							<div class="custom-item">
-								<div class="card-gallery">
-									<div class="img-container-rel">
-										<img src="https://images.ecestaticos.com/mXiaMzhISsDQH7Ki2YqTyi3XcCc=/0x0:0x0/1200x900/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F36a%2Fe15%2F4ac%2F36ae154acded8663e9bd0402a78ab17f.jpg" class="img-square">
-										<div class="texto-traslucido">
-											<span>CATEGORÍA Y</span>
-											<img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" class="img-mini-overlay">
-										</div>
-									</div>
-									<div class="banda-inferior">
-										<div class="rating-static">
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg class="gold" viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-											<svg viewbox="0 0 24 24">
-												<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-											</svg>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
 
-						<button class="nav-btn btn-adelante">
-							<i class="arrow right"></i>
-						</button>
+							<button class="nav-btn btn-adelante">
+								<i class="arrow right"></i>
+							</button>
+						{% else %}
+							<p>The user has not rated any car.</p>
+						{% endif %}
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<script>
-		document.addEventListener('DOMContentLoaded', () => {
-const galerias = document.querySelectorAll('.gallery-wrapper');
-galerias.forEach(galeria => {
-const contenedor = galeria.querySelector('.scroll-contenedor');
-const btnAdelante = galeria.querySelector('.btn-adelante');
-const btnAtras = galeria.querySelector('.btn-atras');
+		<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="editProfileModalLabel">Edit profile</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form id="ajax-editProfile-form" enctype="multipart/form-data" data-update-url="{{ path('profile_update', {'name': usuario.UserName}) }}">
+							<div class="row g-4">
+								<div class="col-md-6">
+									<label class="form-label small fw-bold">Username:</label>
+									<input type="text" name="username" class="form-control border-0 bg-light p-3" style="border-radius: 15px;" value="{{ usuario.UserName }}" required>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label small fw-bold">Email:</label>
+									<input type="email" name="email" class="form-control border-0 bg-light p-3" style="border-radius: 15px;" value="{{ usuario.UserMail }}" required>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label small fw-bold">Profile pic:</label>
+									<input type="file" id="garajeImage" name="garaje_image" class="form-control" accept="image/*">
+								</div>
+								<div class="col-12">
+									<button type="submit" id="submit-form-btn" class="btn btn-primary w-100 py-3 fw-bold" style="border-radius: 18px;">Save changes</button>
+									<a href="#" class="delete-account-link">Delete account</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Confirm delete modal -->
+		<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="confirmDeleteModalLabel">Are you sure?</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body text-center">
+						<p class="mb-4">Are you sure you want to delete the account?</p>
+						<div class="d-flex justify-content-center gap-2">
+							<a href="#" id="confirm-delete-yes" class="btn btn-primary py-3 fw-bold delete-account-link">Yes</a>
+							<a href="#" id="confirm-delete-no" class="btn btn-secondary py-3 fw-bold delete-account-link2" data-bs-dismiss="modal">No</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-btnAdelante.addEventListener('click', () => {
-const item = contenedor.querySelector('.custom-item');
-if (! item) 
-return;
-
-
-
-const itemWidth = item.offsetWidth;
-contenedor.scrollBy({left: itemWidth, behavior: 'smooth'});
-setTimeout(() => {
-const primero = contenedor.firstElementChild;
-contenedor.appendChild(primero);
-contenedor.classList.add('no-smooth');
-contenedor.scrollLeft -= itemWidth;
-contenedor.classList.remove('no-smooth');
-}, 500);
-});
-
-btnAtras.addEventListener('click', () => {
-const item = contenedor.querySelector('.custom-item');
-if (! item) 
-return;
-
-
-
-const itemWidth = item.offsetWidth;
-const ultimo = contenedor.lastElementChild;
-contenedor.classList.add('no-smooth');
-contenedor.prepend(ultimo);
-contenedor.scrollLeft += itemWidth;
-contenedor.classList.remove('no-smooth');
-setTimeout(() => {
-contenedor.scrollBy({
-left: - itemWidth,
-behavior: 'smooth'
-});
-}, 10);
-});
-});
-});
-	</script>
-{% endblock %}
+	{% endblock %}

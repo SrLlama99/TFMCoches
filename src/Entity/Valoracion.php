@@ -10,6 +10,7 @@ use App\Entity\Coche;
 class Valoracion
 {
     #[ORM\Id]
+    #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', name: 'id')]
     private $idValoracion;
 
@@ -83,5 +84,15 @@ class Valoracion
     public function setFecha($fecha)
     {
         $this->fecha = $fecha;
+    }
+
+    public function getIdUsuario()
+    {
+        return $this->idUsuario;
+    }
+
+    public function setIdUsuario($idUsuario)
+    {
+        $this->idUsuario = $idUsuario;
     }
 }

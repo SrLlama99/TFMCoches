@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ asset('styles/login.css') }}">
+</head>
+<body>
+<div class="container">
+    <div class="left">
+        <img src="{{ asset('/images/cars.png') }}" class="cars-img">
+    </div>
+
+    <div class="right">
+        <div class="login-box">
+            <h1>TFG</h1>
+
+            <form method="post" action="{{ path('app_login') }}">
+                <label>Correo de una cuenta registrada:</label>
+                <input type="text" id="username" name="_username" />
+
+                <label>Contraseña:</label>
+                <input type="password" id="password" name="_password" />
+
+                {% if error %}
+                    <mark>Usuario o contraseña incorrectos</mark>
+                {% endif %}
+
+                <a class="recuperar" href="#">¿Has olvidado tu contraseña?</a>
+
+                <input class="boton-login" type="submit" value="Iniciar sesión">
+            </form>
+
+            <div class="crear-cuenta">
+                ¿No tienes cuenta? 
+                <a href="#">Crear Cuenta</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

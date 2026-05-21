@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Valoracion;
 use App\Entity\Modelo;
+use App\Entity\Motor; // Import Motor entity
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -13,14 +14,16 @@ use Doctrine\Common\Collections\Collection;
 class Coche
 {
     #[ORM\Id]
+    #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', name: 'id')]
     private $cocheId;
 
     #[ORM\ManyToOne(targetEntity: Modelo::class, inversedBy: 'coches')]
     #[ORM\JoinColumn(name: 'modelo', referencedColumnName: 'id', nullable: false)]
     private $modelo;
-
-    #[ORM\Column(type: "integer", name: "motor")]
+    
+    #[ORM\ManyToOne(targetEntity: Motor::class)]
+    #[ORM\JoinColumn(name: 'motor', referencedColumnName: 'id', nullable: false)]
     private $motor;
 
     #[ORM\Column(type: "string", name: "color")]
@@ -61,14 +64,15 @@ class Coche
         return $this;
     }
 
-    public function getMotor()
+    public function getMotor(): ?Motor
     {
         return $this->motor;
     }
 
-    public function setMotor($motor)
+    public function setMotor(?Motor $motor): self
     {
         $this->motor = $motor;
+        return $this;
     }
 
     public function getCocheColor()
