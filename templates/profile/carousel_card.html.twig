@@ -1,5 +1,5 @@
 <div class="custom-item">
-    {% block link %}{% endblock %}
+    <a href="{% block link %}{% endblock %}">
     <div class="card-gallery">
         <div class="img-container-rel">
             <img src="{% block image %}https://res.cloudinary.com/unix-center/image/upload/c_limit,dpr_3.0,f_auto,fl_progressive,g_center,h_580,q_75,w_906/tnt1sdreuccr9iqjyewf.jpg{% endblock %}" class="img-square">
@@ -25,5 +25,5 @@
             </div>
         </div>
     </div>
-    {% block closeLink %}{% endblock %}
+    </a>
 </div>

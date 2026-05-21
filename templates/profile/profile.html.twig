@@ -136,23 +136,22 @@
 
 							<div class="custom-scroll-container scroll-contenedor">
 								{% for car in coches %}
-									{% embed 'profile/carousel_card.html.twig' %}
-										{% block link %}
-											<a href="#" class="garage-card" data-coche-id="{{ car.coche.getcocheId() }}" data-notas="{{ car.garaje.getNotas()|e('html_attr') }}" data-photos="{{ (car.photos|default([]))|json_encode()|e('html_attr') }}">
-											{% endblock %}
-											{% block image %}https://res.cloudinary.com/unix-center/image/upload/c_limit,dpr_3.0,f_auto,fl_progressive,g_center,h_580,q_75,w_906/tnt1sdreuccr9iqjyewf.jpg
-											{% endblock %}
-											{% block title %}
-												{{ car.modelo.modeloNombre }}
-											{% endblock %}
-											{% block logo %}
-												{{ car.marca.urlLogo }}
-											{% endblock %}
-											{% block stars %}
-												{{ car.valoracion.estrellas|default(0) }}
-											{% endblock %}
-											{% block closeLink %}
-											</a>
+									{% embed 'profile/carousel_card.html.twig' with {'name': 'alberto'} %}
+										{% block link %}#" class="garage-card"
+										data-coche-id="{{ car.coche.getcocheId() }}"
+										data-notas="{{ car.garaje.getNotas()|e('html_attr') }}"
+										data-photos="{{ (car.photos|default([]))|json_encode()|e('html_attr') }}
+										{% endblock %}
+										{% block image %}{{ car.modelo.fotoModelo }}
+										{% endblock %}
+										{% block title %}
+											{{ car.modelo.modeloNombre }}
+										{% endblock %}
+										{% block logo %}
+											{{ car.marca.urlLogo }}
+										{% endblock %}
+										{% block stars %}
+											{{ car.valoracion.estrellas|default(0) }}
 										{% endblock %}
 									{% endembed %}
 								{% endfor %}
@@ -171,36 +170,19 @@
 					<h2 class="mb-4 fw-bold text-center">Most rated by
 						{{usuario.UserName}}</h2>
 					<div class="carousel-flex-layout gallery-wrapper">
-						{% if valorados%}
+						{% if valorados %}
 							<button class="nav-btn btn-atras">
 								<i class="arrow left"></i>
 							</button>
 
 							<div class="custom-scroll-container scroll-contenedor">
 								{% for value in valorados %}
-
 									{% embed 'profile/carousel_card.html.twig' %}
-										{% block link %}
-											<a href={{ path('marca', {name: value.marca.nombreMarca, id: value.modelo.modeloId } ) }}>
-											{% endblock %}
-											{% block image %}
-												{{ value.modelo.fotoModelo }}
-											{% endblock %}
-											{% block title %}
-												{{ value.modelo.modeloNombre }}
-											{% endblock %}
-											{% block logo %}
-												{{ value.marca.urlLogo }}
-											{% endblock %}
-											{% block stars %}
-												{{ value.valoracion.estrellas|default(0) }}
-											{% endblock %}
-											{% block url %}
-												{{ path('marca', { name: value.marca.nombreMarca, id: value.modelo.modeloId }) }}
-											{% endblock %}
-											{% block closeLink %}
-											</a>
-										{% endblock %}
+										{% block link %}{{ path('marca', {name: value.marca.nombreMarca, id: value.modelo.modeloId}) }}{% endblock %}
+										{% block image %}{{ value.modelo.fotoModelo }}{% endblock %}
+										{% block title %}{{ value.modelo.modeloNombre }}{% endblock %}
+										{% block logo %}{{ value.marca.urlLogo }}{% endblock %}
+										{% block stars %}{{ value.valoracion.estrellas|default(0) }}{% endblock %}
 									{% endembed %}
 								{% endfor %}
 							</div>
