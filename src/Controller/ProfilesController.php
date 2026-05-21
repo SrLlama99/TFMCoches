@@ -40,7 +40,7 @@ final class ProfilesController extends AbstractController
             // Check that the id of the model is from the brand of the link
             $marcaId = $marca?->getIdMarca() ?? null;
 
-            if ($marcaId === null || $model->getMarca() !== $marcaId) {
+            if ($marcaId === null || $model->getMarca()->getIdMarca() !== $marcaId) {
                 throw $this->createNotFoundException('El modelo no pertenece a la marca indicada');
             }
 
@@ -405,7 +405,7 @@ final class ProfilesController extends AbstractController
             // Get brand from the model: it may be an entity or an id
             $marca = null;
             if ($modelo) {
-                $marcaVal = is_object($modelo) ? ($modelo->getMarca() ?? null) : $modelo;
+                $marcaVal = is_object($modelo) ? ($modelo->getMarca()->getIdMarca() ?? null) : $modelo;
                 if (is_object($marcaVal)) {
                     $marca = $marcaVal;
                 } elseif ($marcaVal) {
@@ -485,7 +485,7 @@ final class ProfilesController extends AbstractController
 
             $vmarca = null;
             if ($vmodelo) {
-                $marcaVal = is_object($vmodelo) ? ($vmodelo->getMarca() ?? null) : $vmodelo;
+                $marcaVal = is_object($vmodelo) ? ($vmodelo->getMarca()->getIdMarca() ?? null) : $vmodelo;
                 if (is_object($marcaVal)) {
                     $vmarca = $marcaVal;
                 } elseif ($marcaVal) {
@@ -528,7 +528,7 @@ final class ProfilesController extends AbstractController
 
             $vmarca = null;
             if ($vmodelo) {
-                $marcaVal = is_object($vmodelo) ? ($vmodelo->getMarca() ?? null) : $vmodelo;
+                $marcaVal = is_object($vmodelo) ? ($vmodelo->getMarca()->getIdMarca() ?? null) : $vmodelo;
                 if (is_object($marcaVal)) {
                     $vmarca = $marcaVal;
                 } elseif ($marcaVal) {

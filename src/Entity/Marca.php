@@ -2,6 +2,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'marca')]
@@ -20,6 +22,21 @@ class Marca
     #[ORM\Column(type: 'string', name: 'logourl')]
     private $urlLogo;
 
+    #[ORM\OneToMany(targetEntity: Modelo::class, mappedBy: 'marca')]
+    private Collection $modelos;
+    
+    public function __construct()
+    {
+        $this->modelos = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection<int, Modelo>
+     */
+    public function getModelos(): Collection
+    {
+        return $this->modelos;
+    }
     public function getIdMarca() { 
         return $this->idMarca; 
     }

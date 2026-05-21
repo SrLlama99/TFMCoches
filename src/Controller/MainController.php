@@ -17,7 +17,7 @@ final class MainController extends AbstractController
 
         $modelosEM = $em->getRepository(Modelo::class);
 
-        $mostRated = $modelosEM->findByMostRated();
+        $mostRated = $modelosEM->findByMostRated(10);
         $mostLiked = $modelosEM->findByBest(3);
         $mostHated = $modelosEM->findByWorst(3);
         // $topFromBrands= $modelos->findBestOfBrands();

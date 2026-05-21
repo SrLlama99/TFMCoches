@@ -21,7 +21,7 @@ class ModeloRepository extends ServiceEntityRepository
     {
         if ($brand) { //This bs returns the best from the brand provided
             return $this->getEntityManager()->createQueryBuilder()
-                ->select('m', 'AVG(v.estrellas) as media')
+                ->select('m as modelo', 'AVG(v.estrellas) as media')
                 ->from(\App\Entity\Modelo::class, 'm')
                 ->join(\App\Entity\Valoracion::class, 'v', 'WITH', 'm.modeloId = v.idCoche')
                 ->groupBy('m.modeloId')
@@ -33,7 +33,7 @@ class ModeloRepository extends ServiceEntityRepository
         }
         return
             $this->getEntityManager()->createQueryBuilder()
-            ->select('m', 'AVG(v.estrellas) as media')
+            ->select('m as modelo', 'AVG(v.estrellas) as media')
             ->from(\App\Entity\Modelo::class, 'm')
             ->join(\App\Entity\Valoracion::class, 'v', 'WITH', 'm.modeloId = v.idCoche')
             ->groupBy('m.modeloId')

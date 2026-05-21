@@ -15,9 +15,10 @@ class Modelo
     #[ORM\Column(type:'integer', name:'id')]
     private $modeloId;
 
-    #[ORM\Column(type:'integer', name:'marca')]
-    private $marca;
-
+    #[ORM\ManyToOne(targetEntity: Marca::class, inversedBy: 'modelos')]
+    #[ORM\JoinColumn(name: 'marca', referencedColumnName: 'id')]
+    private Marca $marca;
+    
     #[ORM\Column(type: "string", name: "nombre")]
     private $modeloNombre;
 
@@ -59,35 +60,35 @@ class Modelo
         return (int) round($sumaNotas / $totalValoraciones);
     }
 
-    public function getModeloId() { 
+    public function getModeloId(): int { 
         return $this->modeloId; 
     }
 
-    public function setmodeloId($modeloId){
+    public function setmodeloId(int $modeloId){
         $this->modeloId = $modeloId;
     }
 
-    public function getMarca() { 
+    public function getMarca(): Marca { 
         return $this->marca; 
     }
 
-    public function setMarca($marca) { 
+    public function setMarca(Marca $marca) { 
         $this->marca = $marca; 
     }
 
-    public function getmodeloNombre() { 
+    public function getmodeloNombre(): string { 
         return $this->modeloNombre; 
     }
 
-    public function setnombreModelo($modeloNombre) { 
+    public function setnombreModelo(string $modeloNombre) { 
         $this->modeloNombre = $modeloNombre; 
     }
 
-    public function getfotoModelo(){
+    public function getfotoModelo(): ?string{
         return $this->fotoModelo;
     }
 
-    public function setfotoModelo($fotoModelo){
+    public function setfotoModelo(string $fotoModelo){
         $this->fotoModelo = $fotoModelo;
     }
 }
