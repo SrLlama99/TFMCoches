@@ -31,7 +31,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', name: 'admin')]
     private $Admin;
 
-    #[ORM\Column(type: 'string', name: '')]
+    #[ORM\Column(type: 'string', name: 'foto')]
     private $profilePic;
 
     public function getUserId()

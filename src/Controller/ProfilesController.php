@@ -38,11 +38,7 @@ final class ProfilesController extends AbstractController
             }
 
             // Check that the id of the model is from the brand of the link
-            if ($marca && method_exists($marca, 'getIdMarca')) {
-                $marcaId = $marca->getIdMarca();
-            } else {
-                $marcaId = null;
-            }
+            $marcaId = $marca?->getIdMarca() ?? null;
 
             if ($marcaId === null || $model->getMarca() !== $marcaId) {
                 throw $this->createNotFoundException('El modelo no pertenece a la marca indicada');
@@ -84,8 +80,9 @@ final class ProfilesController extends AbstractController
                 $username = 'Usuario';
                 $profilePic = '';
                 // obtain username if exists
-                if (method_exists($v, 'getIdUsuario')) {
-                    $user = $usersRepo->find($v->getIdUsuario());
+                $userId = $v?->getIdUsuario() ?? null;
+                if ($userId) {
+                    $user = $usersRepo->find($userId);
                     if ($user) {
                         $username = $user->getUserName();
                         $profilePic = $user->getProfilePic();
@@ -98,14 +95,12 @@ final class ProfilesController extends AbstractController
                 $anio = null;
                 $transmision = null;
 
-                if (method_exists($v, 'getIdCoche')) {
-                    $coche = $v->getIdCoche();
-                    if ($coche) {
-                        $motorName = method_exists($coche, 'getMotor') && $coche->getMotor() ? $coche->getMotor()->getNombreMotor() : null;
-                        $color = method_exists($coche, 'getCocheColor') ? $coche->getCocheColor() : null;
-                        $anio = method_exists($coche, 'getCocheAnio') ? $coche->getCocheAnio() : null;
-                        $transmision = method_exists($coche, 'getCocheTransmision') ? $coche->getCocheTransmision() : null;
-                    }
+                $coche = $v?->getIdCoche() ?? null;
+                if (is_object($coche)) {
+                    $motorName = $coche->getMotor()?->getNombreMotor() ?? null;
+                    $color = $coche->getCocheColor() ?? null;
+                    $anio = $coche->getCocheAnio() ?? null;
+                    $transmision = $coche->getCocheTransmision() ?? null;
                 }
 
                 return [
@@ -175,27 +170,25 @@ final class ProfilesController extends AbstractController
 
         $data = array_map(function ($v) use ($usersRepo) {
             $username = 'Usuario';
-            if (method_exists($v, 'getIdUsuario')) {
-                $user = $usersRepo->find($v->getIdUsuario());
+            $userId = $v?->getIdUsuario() ?? null;
+            if ($userId) {
+                $user = $usersRepo->find($userId);
                 if ($user) {
                     $username = $user->getUserName();
                 }
             }
 
-            $coche = null;
+            $coche = $v?->getIdCoche() ?? null;
             $motorName = null;
             $color = null;
             $anio = null;
             $transmision = null;
 
-            if (method_exists($v, 'getIdCoche')) {
-                $coche = $v->getIdCoche();
-                if ($coche) {
-                    $motorName = method_exists($coche, 'getMotor') && $coche->getMotor() ? $coche->getMotor()->getNombreMotor() : null;
-                    $color = method_exists($coche, 'getCocheColor') ? $coche->getCocheColor() : null;
-                    $anio = method_exists($coche, 'getCocheAnio') ? $coche->getCocheAnio() : null;
-                    $transmision = method_exists($coche, 'getCocheTransmision') ? $coche->getCocheTransmision() : null;
-                }
+            if (is_object($coche)) {
+                $motorName = $coche->getMotor()?->getNombreMotor() ?? null;
+                $color = $coche->getCocheColor() ?? null;
+                $anio = $coche->getCocheAnio() ?? null;
+                $transmision = $coche->getCocheTransmision() ?? null;
             }
 
             return [
@@ -272,7 +265,7 @@ final class ProfilesController extends AbstractController
             }
 
             $valoracion = new Valoracion();
-            $valoracion->setIdUsuario(method_exists($user, 'getUserId') ? $user->getUserId() : (method_exists($user, 'getId') ? $user->getId() : null));
+            $valoracion->setIdUsuario($user?->getUserId());
             $valoracion->setIdCoche($coche);
             $valoracion->setEstrellas($puntuacion);
             $valoracion->setComentario($comentario ?: '');
@@ -282,7 +275,7 @@ final class ProfilesController extends AbstractController
 
             if ($anadirGaraje === 1) {
                 $garaje = new \App\Entity\cocheGaraje();
-                $garaje->setUsuario(method_exists($user, 'getUserId') ? $user->getUserId() : (method_exists($user, 'getId') ? $user->getId() : null));
+                $garaje->setUsuario($user?->getUserId());
                 $garaje->setCoche($coche->getcocheId());
                 $garaje->setNotas($notasPropietario ?: '');
 
@@ -305,8 +298,8 @@ final class ProfilesController extends AbstractController
                             $extension = strtolower($file->getClientOriginalExtension());
 
                             if (in_array($extension, $allowed)) {
-                                $userId = method_exists($user, 'getUserId') ? $user->getUserId() : (method_exists($user, 'getId') ? $user->getId() : 'user');
-                                $cocheId = method_exists($coche, 'getCocheId') ? $coche->getCocheId() : (method_exists($coche, 'getId') ? $coche->getId() : 'coche');
+                                $userId = $user?->getUserId();
+                                $cocheId = is_object($coche) ? ($coche->getCocheId() ?? $coche->getId() ?? 'coche') : ($coche ?? 'coche');
                                 $timestamp = time();
                                 $newName = sprintf('%s_%s_%s_%s.%s', $userId, $cocheId, $timestamp, $key, $extension);
                                 try {
@@ -348,7 +341,7 @@ final class ProfilesController extends AbstractController
         $response = [
             'success' => true,
             'data' => [
-                'username' => method_exists($user, 'getUserName') ? $user->getUserName() : 'Usuario',
+                'username' => $user?->getUserName(),
                 'comentario' => $comentario,
                 'estrellas' => $puntuacion,
                 'timeAgo' => 'just now',
@@ -379,12 +372,7 @@ final class ProfilesController extends AbstractController
 
         // Handle possible inconsistency: in some places the Users entity is stored,
         // elsewhere the user id is stored in `cocheGaraje.usuario`.
-        $usuarioId = null;
-        if (method_exists($usuario, 'getUserId')) {
-            $usuarioId = $usuario->getUserId();
-        } elseif (method_exists($usuario, 'getId')) {
-            $usuarioId = $usuario->getId();
-        }
+        $usuarioId = $usuario?->getUserId();
 
         // `cocheGaraje` does not define associations (stores IDs). We retrieve records
         // using the user id and then resolve entities manually.
@@ -409,18 +397,15 @@ final class ProfilesController extends AbstractController
             }
 
             // Get model: it may be an entity or an id
-            $modelo = null;
-            if (method_exists($coche, 'getModelo')) {
-                $modelo = $coche->getModelo();
-                if ($modelo && !is_object($modelo)) {
-                    $modelo = $modelRepo->find($modelo);
-                }
+            $modelo = $coche?->getModelo() ?? null;
+            if ($modelo && !is_object($modelo)) {
+                $modelo = $modelRepo->find($modelo);
             }
 
             // Get brand from the model: it may be an entity or an id
             $marca = null;
-            if ($modelo && method_exists($modelo, 'getMarca')) {
-                $marcaVal = $modelo->getMarca();
+            if ($modelo) {
+                $marcaVal = is_object($modelo) ? ($modelo->getMarca() ?? null) : $modelo;
                 if (is_object($marcaVal)) {
                     $marca = $marcaVal;
                 } elseif ($marcaVal) {
@@ -450,6 +435,23 @@ final class ProfilesController extends AbstractController
             ];
         }
 
+        // Load photos for each cocheGaraje entry so templates can show them
+        $fotoRepo = $em->getRepository(FotoGaraje::class);
+        foreach ($cochesDelUsuario as &$entry) {
+            $cocheEntity = $entry['coche'];
+            $cocheId = is_object($cocheEntity) ? ($cocheEntity->getcocheId() ?? null) : null;
+            $photos = [];
+            if ($cocheId !== null) {
+                $fotoEntities = $fotoRepo->findBy(['poseedor' => $usuario, 'coche' => $cocheId]);
+                foreach ($fotoEntities as $f) {
+                    if (is_object($f)) {
+                        $photos[] = ['id' => $f->getId(), 'url' => $f->getUrl()];
+                    }
+                }
+            }
+            $entry['photos'] = $photos;
+        }
+
         // --- Most-rated cars by this user ---
         $cochesMasValorados = [];
         $seen = [];
@@ -470,22 +472,20 @@ final class ProfilesController extends AbstractController
             }
             if (!$vcoche) continue;
 
-            $cid = method_exists($vcoche, 'getcocheId') ? $vcoche->getcocheId() : (method_exists($vcoche, 'getId') ? $vcoche->getId() : null);
+            $cid = $vcoche?->getcocheId() ?? $vcoche?->getId() ?? null;
             if ($cid === null) continue;
             if (in_array($cid, $seen, true)) continue;
             $seen[] = $cid;
 
             $vmodelo = null;
-            if (method_exists($vcoche, 'getModelo')) {
-                $vmodelo = $vcoche->getModelo();
-                if ($vmodelo && !is_object($vmodelo)) {
-                    $vmodelo = $modelRepo->find($vmodelo);
-                }
+            $vmodelo = $vcoche?->getModelo() ?? null;
+            if ($vmodelo && !is_object($vmodelo)) {
+                $vmodelo = $modelRepo->find($vmodelo);
             }
 
             $vmarca = null;
-            if ($vmodelo && method_exists($vmodelo, 'getMarca')) {
-                $marcaVal = $vmodelo->getMarca();
+            if ($vmodelo) {
+                $marcaVal = is_object($vmodelo) ? ($vmodelo->getMarca() ?? null) : $vmodelo;
                 if (is_object($marcaVal)) {
                     $vmarca = $marcaVal;
                 } elseif ($marcaVal) {
@@ -521,17 +521,14 @@ final class ProfilesController extends AbstractController
             }
             if (!$vcoche) continue;
 
-            $vmodelo = null;
-            if (method_exists($vcoche, 'getModelo')) {
-                $vmodelo = $vcoche->getModelo();
-                if ($vmodelo && !is_object($vmodelo)) {
-                    $vmodelo = $modelRepo->find($vmodelo);
-                }
+            $vmodelo = $vcoche?->getModelo() ?? null;
+            if ($vmodelo && !is_object($vmodelo)) {
+                $vmodelo = $modelRepo->find($vmodelo);
             }
 
             $vmarca = null;
-            if ($vmodelo && method_exists($vmodelo, 'getMarca')) {
-                $marcaVal = $vmodelo->getMarca();
+            if ($vmodelo) {
+                $marcaVal = is_object($vmodelo) ? ($vmodelo->getMarca() ?? null) : $vmodelo;
                 if (is_object($marcaVal)) {
                     $vmarca = $marcaVal;
                 } elseif ($marcaVal) {
@@ -559,6 +556,84 @@ final class ProfilesController extends AbstractController
         ]);
     }
 
+    #[Route('/garaje/{cocheId}/add-photos', name: 'garaje_add_photos', methods: ['POST'])]
+    public function addGarajePhotos(EntityManagerInterface $em, int $cocheId, Request $request): JsonResponse
+    {
+        $user = $this->getUser();
+        if (!$user) return new JsonResponse(['success' => false, 'error' => 'Unauthorized'], 401);
+
+        $files = $request->files->get('photos');
+        if (empty($files)) return new JsonResponse(['success' => false, 'error' => 'No files provided'], 400);
+
+        $uploaded = [];
+        $persisted = [];
+        $uploadDir = $this->getParameter('kernel.project_dir') . '/public/assets/images/';
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+
+        foreach ($files as $idx => $file) {
+            if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
+                $ext = strtolower($file->getClientOriginalExtension());
+                $allowed = ['png','jpg','jpeg','webp'];
+                if (!in_array($ext, $allowed)) continue;
+                $newName = 'garaje_' . $user->getUserId() . '_' . $cocheId . '_' . time() . $idx . $ext;
+                    try {
+                        $file->move($uploadDir, $newName);
+                        $foto = new FotoGaraje();
+                        $foto->setPoseedor($user);
+                        $foto->setCoche($cocheId);
+                        $foto->setUrl($newName);
+                        $em->persist($foto);
+                        $uploaded[] = $newName;
+                        $persisted[] = $foto;
+                    } catch (\Exception $e) {
+                        // skip failed
+                    }
+            }
+        }
+        $em->flush();
+
+        $uploadedInfo = [];
+        foreach ($persisted as $p) {
+            if (is_object($p)) {
+                $uploadedInfo[] = ['id' => $p->getId(), 'url' => $p->getUrl(), 'urlPublic' => '/assets/images/' . $p->getUrl()];
+            }
+        }
+
+        return new JsonResponse(['success' => true, 'uploaded' => $uploadedInfo]);
+    }
+
+    #[Route('/garaje/photo/{photoId}/delete', name: 'garaje_delete_photo', methods: ['POST'])]
+    public function deleteGarajePhoto(EntityManagerInterface $em, int $photoId, Request $request): JsonResponse
+    {
+        $user = $this->getUser();
+        if (!$user) return new JsonResponse(['success' => false, 'error' => 'Unauthorized'], 401);
+
+        $fotoRepo = $em->getRepository(FotoGaraje::class);
+        $foto = $fotoRepo->find($photoId);
+        if (!$foto) return new JsonResponse(['success' => false, 'error' => 'Not found'], 404);
+
+        // Check owner
+        $poseedor = $foto->getPoseedor();
+        $poseedorId = is_object($poseedor) ? ($poseedor->getUserId() ?? $poseedor->getId() ?? null) : null;
+        $userId = $user->getUserId(); 
+        if ($poseedorId !== $userId) {
+            return new JsonResponse(['success' => false, 'error' => 'Forbidden'], 403);
+        }
+
+        $fileName = $foto->getUrl();
+        try {
+            $em->remove($foto);
+            $em->flush();
+            // remove file from disk
+            $path = $this->getParameter('kernel.project_dir') . '/public/assets/images/' . $fileName;
+            if (file_exists($path)) @unlink($path);
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+
+        return new JsonResponse(['success' => true, 'deleted' => $photoId]);
+    }
+
     #[Route('/profile/{name}/update', name: 'profile_update', methods: ['POST'])]
     public function updateProfile(EntityManagerInterface $em, string $name, Request $request): JsonResponse
     {
@@ -574,13 +649,13 @@ final class ProfilesController extends AbstractController
         }
 
         // Ensure the logged user is updating their own profile
-        $currentId = method_exists($user, 'getUserId') ? $user->getUserId() : (method_exists($user, 'getId') ? $user->getId() : null);
-        $targetId = method_exists($usuario, 'getUserId') ? $usuario->getUserId() : (method_exists($usuario, 'getId') ? $usuario->getId() : null);
+        $currentId = $user?->getUserId();
+        $targetId = $usuario?->getUserId();
         if ($currentId === null || $targetId === null || $currentId !== $targetId) {
             return new JsonResponse(['success' => false, 'error' => 'Forbidden'], 403);
         }
 
-        $username = trim($request->request->get('username', ''));
+        $username = strtolower(trim($request->request->get('username', '')));
         $email = trim($request->request->get('email', ''));
 
         $oldName = $usuario->getUserName();
@@ -596,23 +671,26 @@ final class ProfilesController extends AbstractController
         try {
             $file = $request->files->get('garaje_image');
             if ($file) {
-                $uploadDir = $this->getParameter('kernel.project_dir') . '/public/assets/images/';
+                $uploadDir = $this->getParameter('kernel.project_dir') . '/public/assets/images/avatar';
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0755, true);
                 }
                 $ext = $file->guessExtension() ?: 'bin';
                 $newName = 'profile_' . ($targetId ?? time()) . '_' . time() . '.' . $ext;
                 $file->move($uploadDir, $newName);
-                // Optional: $profileUrl = '/assets/images/' . $newName; — entity has no field to persist
+                $usuario->setProfilePic($newName);
             }
         } catch (\Exception $e) {
-            // ignore file errors but continue
+
         }
 
         $em->persist($usuario);
         $em->flush();
 
         $response = ['success' => true, 'username' => $usuario->getUserName(), 'email' => $usuario->getUserMail()];
+        $response['profilePic'] = $usuario?->getProfilePic() ?? null;
+        // provide a full public URL for convenience in the client
+        $response['profilePicUrl'] = $response['profilePic'] ? '/assets/images/avatar/' . $response['profilePic'] : null;
         // If username changed, instruct client to redirect to the new profile URL
         if ($oldName !== $usuario->getUserName()) {
             $response['redirect'] = $this->generateUrl('profile', ['name' => strtolower($usuario->getUserName())]);

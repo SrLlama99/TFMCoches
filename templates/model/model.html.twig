@@ -216,6 +216,11 @@
 	</style>
 {% endblock %}
 
+{% block javascripts %}
+	{% block importmap %}{{ importmap('app') }}{% endblock %}
+	<script type="module" src="{{ asset('model.js') }}"></script>
+{% endblock %}
+
 {% block main %}
 	<div class="container py-5 min-vh-100">
 		<div
@@ -236,7 +241,7 @@
 							{% for v in valoraciones %}
 								<div class="comment-item">
 									<a href="{{ path('profile', {name: v.username}) }}">
-									<img src="{{ asset('images/avatar/' ~ v.profilePic) }}" class="comment-avatar">
+									<img src="{{ asset('assets/images/avatar/' ~ v.profilePic) }}" class="comment-avatar">
 									</a>
 									<div class="comment-content">
 										<a href="{{ path('profile', {name: v.username}) }}">
@@ -268,6 +273,25 @@
 					</button>
 				</div>
 			</div>
+
+				<!-- Confirm delete modal -->
+				<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+			 	 <div class="modal-dialog modal-dialog-centered">
+			 	 	 <div class="modal-content">
+			 	 	 	 <div class="modal-header">
+			 	 	 	 	 <h5 class="modal-title" id="confirmDeleteModalLabel">Are you sure?</h5>
+			 	 	 	 	 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			 	 	 	 </div>
+			 	 	 	 <div class="modal-body text-center">
+			 	 	 	 	 <p class="mb-4">Are you sure?</p>
+			 	 	 	 	 <div class="d-flex justify-content-center gap-2">
+			 	 	 	 	 	 <a href="#" id="confirm-delete-yes" class="btn btn-primary py-3 fw-bold" style="border-radius:18px;">Si</a>
+			 	 	 	 	 	 <a href="#" id="confirm-delete-no" class="btn btn-secondary py-3 fw-bold" data-bs-dismiss="modal" style="border-radius:18px;">No</a>
+			 	 	 	 	 </div>
+			 	 	 	 </div>
+			 	 	 </div>
+			 	 </div>
+			 	</div>
 
 			<aside class="profile-sidebar">
 				<a href="{{ path('marca', {'name': marca.nombreMarca, 'id': null}) }}">
@@ -326,7 +350,7 @@
 				</div>
 
 				{% if is_granted('ROLE_ADMIN') %}
-				<button class="btn btn-primary w-100 mt-auto">Delete model</button>
+				<a href="#" class="btn btn-primary w-100 mt-auto delete-model-link">Delete model</a>
 				{% endif %}
 				{% if app.user %}
 				<button type="button" class="btn btn-outline-primary w-100 mt-3" data-bs-toggle="modal" data-bs-target="#ratingModal">Add Review</button>

@@ -15,10 +15,46 @@
 			<div class="col-lg-4 mb-4">
 				<div class="card shadow-sm border-0 profile-card-custom p-4 mb-4">
 					<div class="ratio ratio-1x1 mb-3" style="width: 120px;">
-						<img src="{{ asset('images/avatar/' ~ usuario.profilePic) }}" class="rounded-circle object-fit-cover shadow-sm">
+						<img src="{{ asset('assets/images/avatar/' ~ usuario.profilePic) }}" class="rounded-circle object-fit-cover shadow-sm" alt="Profile picture">
 					</div>
 					<h3 class="fw-bold">{{ usuario.UserName }}</h3>
-					{% if usuario.userId == app.user.UserId %}
+
+					<!-- Garage item modal: show notes and photos, allow upload/delete -->
+					{% set canEditGarage = (app.user and usuario.userId is defined and app.user.UserId is defined and usuario.userId == app.user.UserId) or is_granted('ROLE_ADMIN') %}
+					<div class="modal fade" id="garageModal" tabindex="-1" aria-labelledby="garageModalLabel" aria-hidden="true" data-can-edit="{{ canEditGarage ? '1' : '0' }}">
+						<div class="modal-dialog modal-dialog-centered modal-lg">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="garageModalLabel">Car notes & photos</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<div class="mb-3">
+										<h6 class="fw-bold">Notes</h6>
+										<p id="garage-notes" class="small text-muted"></p>
+									</div>
+									<div class="mb-3">
+										<h6 class="fw-bold">Photos</h6>
+										<div id="garage-photos" class="d-flex flex-wrap gap-2"></div>
+									</div>
+									{% if canEditGarage %}
+									<div class="mb-3">
+										<label class="form-label small fw-bold">Upload more photos</label>
+										<input type="file" id="garage-photos-input" name="photos[]" multiple class="form-control">
+									</div>
+									{% endif %}
+								</div>
+								<div class="modal-footer">
+									<input type="hidden" id="garage-coche-id" value="">
+									{% if canEditGarage %}
+										<button type="button" id="garage-upload-btn" class="btn btn-primary py-3 fw-bold" style="border-radius: 18px;">Upload</button>
+									{% endif %}
+									<button type="button" class="btn btn-secondary py-3 fw-bold" data-bs-dismiss="modal" style="border-radius: 18px;">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% if app.user and usuario.userId is defined and app.user.UserId is defined and usuario.userId == app.user.UserId %}
 						<button id="edit-profile-btn" class="btn btn-primary w-100 mt-2" style="max-width: 200px;" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit profile</button>
 					{% endif %}
 					{% if is_granted('ROLE_ADMIN') %}
@@ -101,16 +137,22 @@
 							<div class="custom-scroll-container scroll-contenedor">
 								{% for car in coches %}
 									{% embed 'profile/carousel_card.html.twig' %}
-										{% block image %}https://res.cloudinary.com/unix-center/image/upload/c_limit,dpr_3.0,f_auto,fl_progressive,g_center,h_580,q_75,w_906/tnt1sdreuccr9iqjyewf.jpg
-										{% endblock %}
-										{% block title %}
-											{{ car.modelo.modeloNombre }}
-										{% endblock %}
-										{% block logo %}
-											{{ car.marca.urlLogo }}
-										{% endblock %}
-										{% block stars %}
-											{{ car.valoracion.estrellas|default(0) }}
+										{% block link %}
+											<a href="#" class="garage-card" data-coche-id="{{ car.coche.getcocheId() }}" data-notas="{{ car.garaje.getNotas()|e('html_attr') }}" data-photos="{{ (car.photos|default([]))|json_encode()|e('html_attr') }}">
+											{% endblock %}
+											{% block image %}https://res.cloudinary.com/unix-center/image/upload/c_limit,dpr_3.0,f_auto,fl_progressive,g_center,h_580,q_75,w_906/tnt1sdreuccr9iqjyewf.jpg
+											{% endblock %}
+											{% block title %}
+												{{ car.modelo.modeloNombre }}
+											{% endblock %}
+											{% block logo %}
+												{{ car.marca.urlLogo }}
+											{% endblock %}
+											{% block stars %}
+												{{ car.valoracion.estrellas|default(0) }}
+											{% endblock %}
+											{% block closeLink %}
+											</a>
 										{% endblock %}
 									{% endembed %}
 								{% endfor %}
@@ -136,25 +178,29 @@
 
 							<div class="custom-scroll-container scroll-contenedor">
 								{% for value in valorados %}
-									
+
 									{% embed 'profile/carousel_card.html.twig' %}
-										{% block link %}<a href={{ path('marca', {name: value.marca.nombreMarca, id: value.modelo.modeloId }) }}>{% endblock %}
-										{% block image %}
-											{{ value.modelo.fotoModelo }}
+										{% block link %}
+											<a href={{ path('marca', {name: value.marca.nombreMarca, id: value.modelo.modeloId } ) }}>
+											{% endblock %}
+											{% block image %}
+												{{ value.modelo.fotoModelo }}
+											{% endblock %}
+											{% block title %}
+												{{ value.modelo.modeloNombre }}
+											{% endblock %}
+											{% block logo %}
+												{{ value.marca.urlLogo }}
+											{% endblock %}
+											{% block stars %}
+												{{ value.valoracion.estrellas|default(0) }}
+											{% endblock %}
+											{% block url %}
+												{{ path('marca', { name: value.marca.nombreMarca, id: value.modelo.modeloId }) }}
+											{% endblock %}
+											{% block closeLink %}
+											</a>
 										{% endblock %}
-										{% block title %}
-											{{ value.modelo.modeloNombre }}
-										{% endblock %}
-										{% block logo %}
-											{{ value.marca.urlLogo }}
-										{% endblock %}
-										{% block stars %}
-											{{ value.valoracion.estrellas|default(0) }}
-										{% endblock %}
-										{% block url %}
-											{{ path('marca', { name: value.marca.nombreMarca, id: value.modelo.modeloId }) }}
-										{% endblock %}
-										{% block closeLink %}</a>{% endblock %}
 									{% endembed %}
 								{% endfor %}
 							</div>
@@ -204,21 +250,21 @@
 		</div>
 		<!-- Confirm delete modal -->
 		<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-		  <div class="modal-dialog modal-dialog-centered">
-			  <div class="modal-content">
-				  <div class="modal-header">
-					  <h5 class="modal-title" id="confirmDeleteModalLabel">Are you sure?</h5>
-					  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				  </div>
-				  <div class="modal-body text-center">
-					  <p class="mb-4">Are you sure you want to delete the account?</p>
-					  <div class="d-flex justify-content-center gap-2">
-						  <a href="#" id="confirm-delete-yes" class="btn btn-primary py-3 fw-bold delete-account-link">Yes</a>
-						  <a href="#" id="confirm-delete-no" class="btn btn-secondary py-3 fw-bold delete-account-link2" data-bs-dismiss="modal" >No</a>
-					  </div>
-				  </div>
-			  </div>
-		  </div>
-	  </div>
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="confirmDeleteModalLabel">Are you sure?</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body text-center">
+						<p class="mb-4">Are you sure you want to delete the account?</p>
+						<div class="d-flex justify-content-center gap-2">
+							<a href="#" id="confirm-delete-yes" class="btn btn-primary py-3 fw-bold delete-account-link">Yes</a>
+							<a href="#" id="confirm-delete-no" class="btn btn-secondary py-3 fw-bold delete-account-link2" data-bs-dismiss="modal">No</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
 	{% endblock %}
