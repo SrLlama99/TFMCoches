@@ -1,0 +1,38 @@
+{% extends 'skeleton.html.twig' %}
+
+{% block title %}
+    500 - Internal Server Error
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/error500.css') }}">
+{% endblock %}
+
+{% block main %}
+
+<div class="error-container">
+
+    <div class="error-card">
+
+        <h1 class="error-code">
+            500
+        </h1>
+
+        <h2 class="error-title">
+            Something went wrong
+        </h2>
+
+        <p class="error-text">
+            An unexpected error occurred on the server.
+            Please try again later.
+        </p>
+
+        <a href="{{ path('home') }}" class="error-button">
+            Back to Home
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}
