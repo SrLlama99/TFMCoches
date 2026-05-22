@@ -50,6 +50,12 @@
     border-radius: 18px;
     color: #D6D5C9 !important;
     padding: 1rem;
+    border: var(--border) !important;
+}
+
+.card.profile-card-custom,
+.card.card-comments {
+    border: var(--border) !important;
 }
 
 .card-comments {
@@ -58,7 +64,27 @@
     border-radius: 18px;
     padding: 1rem;
     box-shadow: none !important;
-    border: 1px solid rgba(214,213,201,0.04);
+    border: var(--border) !important;
+}
+
+.comments-section > a,
+.comments-section a {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+.comments-section > a:hover,
+.comments-section a:hover {
+    text-decoration: none !important;
+}
+
+.comments-section > a {
+    display: block;
+    border-radius: 15px;
+}
+
+.comments-section a:hover .comment-item,
+.comments-section a:focus .comment-item {
+    background: #902923;
 }
 
 .comments-section {
@@ -80,10 +106,6 @@
     border-radius: 15px;
     border: 1px solid #902923;
     transition: all 0.3s ease;
-}
-
-.comment-item:hover {
-    background: rgba(255,255,255,0.02);
 }
 
 .comment-body {
@@ -225,7 +247,7 @@
 .modal-content {
     background: #0A100D !important;
     color: #D6D5C9 !important;
-    border: none !important;
+    border: var(--border) !important;
     border-radius: 18px !important;
     box-shadow: 0 8px 30px rgba(0,0,0,0.4) !important;
 }
@@ -299,5 +321,23 @@
 .banda-inferior { background: #ffffff; padding: 12px; border-top: 1px solid #eee; display: flex; justify-content: center; align-items: center; }
 
 .card { background-color: #0A100D }
+
+/* Small circular delete button for photos */
+.photo-delete-btn {
+    width: 20px !important;
+    height: 20px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+    border-width: 1px !important;
+    box-shadow: none !important;
+}
+.photo-delete-btn:hover {
+    transform: scale(1.05);
+}
 
 

@@ -282,7 +282,13 @@
 						<h3 class="fw-bold bi bi-globe2 fs-2 d-flex align-items-center">{{ marca.nombreMarca }}</h3>
 					</a>
 					{% if is_granted('ROLE_ADMIN') %}
-					<button class="btn btn-primary w-100 mt-2" style="max-width: 200px;">Edit Brand</button>
+					<div class="d-flex gap-2 w-100 mt-2" style="max-width: 360px;">
+						<button class="btn btn-primary flex-grow-1">Edit Brand</button>
+						<!-- Botón que abre el modal de confirmación -->
+						<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteMarcaModal">
+							Borrar marca
+						</button>
+					</div>
 					{% endif %}
 				</div>
 
@@ -290,53 +296,43 @@
 
 			<div class="col-12">
 				<div class="gallery-section mb-5">
-					<h2 class="mb-4 fw-bold text-center">Models of the brand:</h2>
+					<h2 class="mb-4 fw-bold text-center text-white">Models of the brand:</h2>
 					<div class="carousel-flex-layout gallery-wrapper">
 						<button class="nav-btn btn-atras">
 							<i class="arrow left"></i>
 						</button>
 						<div class="custom-scroll-container scroll-contenedor">
 							{% for model in modelos %}
-								<div class="custom-item">
-								<a href="{{ path('marca', { name: marca.nombreMarca, id: model.modeloId }) }}">
-									<div class="card-gallery">
-										<div class="img-container-rel">
-											<img src="{{ model.fotoModelo }}" class="img-square">
-											<div class="texto-traslucido">
-												<span>{{ model.modeloNombre }}</span>
-												<img src='{{ marca.urlLogo }}' class="img-mini-overlay">
-											</div>
-										</div>
-										<div class="banda-inferior">
-											<div class="rating-static">
-												{% set estrellasMedia = model.mediaValoraciones %}
-
-												{% if estrellasMedia > 0 %}
-													{% for i in 1..estrellasMedia %}
-														<svg class="gold" viewbox="0 0 24 24">
-															<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-														</svg>
-													{% endfor %}
-												{% endif %}
-
-												{% if estrellasMedia < 5 %}
-													{% for i in (estrellasMedia + 1)..5 %}
-														<svg class="grey" viewbox="0 0 24 24" style="fill: #e8e8e8;">
-															<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-														</svg>
-													{% endfor %}
-												{% endif %}
-											</div>
-										</div>
-									</div>
-									</a>
-								</div>
+								{% embed 'profile/carousel_card.html.twig' %}
+									{% block link %}{{ path('marca', { name: marca.nombreMarca, id: model.modeloId }) }}{% endblock %}
+									{% block image %}{{ model.fotoModelo }}{% endblock %}
+									{% block title %}{{ model.modeloNombre }}{% endblock %}
+									{% block logo %}{{ marca.urlLogo }}{% endblock %}
+									{% block stars %}{{ model.mediaValoraciones|default(0) }}{% endblock %}
+								{% endembed %}
 							{% endfor %}
 						</div>
 						<button class="nav-btn btn-adelante">
 							<i class="arrow right"></i>
 						</button>
 					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="confirmDeleteMarcaModal" tabindex="-1" aria-labelledby="confirmDeleteMarcaLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmDeleteMarcaLabel">Confirmar borrado</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					Are you sure you want to delete "{{ marca.nombreMarca }}"?
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+					<a href="#" class="btn btn-danger" id="confirm-delete-marca" data-bs-dismiss="modal" role="button">Sí, borrar</a>
 				</div>
 			</div>
 		</div>

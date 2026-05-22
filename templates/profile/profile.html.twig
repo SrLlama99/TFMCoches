@@ -13,13 +13,13 @@
 	<div class="container py-5 min-vh-100">
 		<div class="row">
 			<div class="col-lg-4 mb-4">
-				<div class="card shadow-sm border-0 profile-card-custom p-4 mb-4">
+				<div class="card shadow-sm border-0 profile-card-custom p-4 mb-4 border">
 					<div class="ratio ratio-1x1 mb-3" style="width: 120px;">
 						<img src="{{ asset('assets/images/avatar/' ~ usuario.profilePic) }}" class="rounded-circle object-fit-cover shadow-sm" alt="Profile picture">
 					</div>
 					<h3 class="fw-bold">{{ usuario.UserName }}</h3>
 
-					<!-- Garage item modal: show notes and photos, allow upload/delete -->
+					<!-- Cars in garage modal -->
 					{% set canEditGarage = (app.user and usuario.userId is defined and app.user.UserId is defined and usuario.userId == app.user.UserId) or is_granted('ROLE_ADMIN') %}
 					<div class="modal fade" id="garageModal" tabindex="-1" aria-labelledby="garageModalLabel" aria-hidden="true" data-can-edit="{{ canEditGarage ? '1' : '0' }}">
 						<div class="modal-dialog modal-dialog-centered modal-lg">
@@ -47,9 +47,8 @@
 								<div class="modal-footer">
 									<input type="hidden" id="garage-coche-id" value="">
 									{% if canEditGarage %}
-										<button type="button" id="garage-upload-btn" class="btn btn-primary py-3 fw-bold" style="border-radius: 18px;">Upload</button>
+										<button type="button" id="garage-upload-btn" class="btn btn-light py-3 fw-bold" style="border-radius: 18px;">Upload</button>
 									{% endif %}
-									<button type="button" class="btn btn-secondary py-3 fw-bold" data-bs-dismiss="modal" style="border-radius: 18px;">Close</button>
 								</div>
 							</div>
 						</div>
@@ -68,6 +67,7 @@
 					<div class="comments-section">
 						{% if ultimos %}
 							{% for last in ultimos %}
+							<a href={{ path('marca', {name: last.marca.nombreMarca, id: last.modelo.modeloId })}}>
 								<div class="comment-item">
 									<img src="{{ last.marca.urlLogo }}" class="comment-avatar" alt="Avatar">
 									<div class="comment-body">
@@ -87,7 +87,7 @@
 
 											{% if last.valoracion.estrellas < 5 %}
 												{% for i in (last.valoracion.estrellas + 1)..5 %}
-													<svg class="grey" viewbox="0 0 24 24" style="fill: #e8e8e8;">
+													<svg class="grey" viewbox="0 0 24 24">
 														<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
 													</svg>
 												{% endfor %}
@@ -102,7 +102,7 @@
 											{% if last.coche.cocheColor %}
 												<span class="me-2">
 													<strong>Color:</strong>
-													{{ last.coche.cocheColor }}</span>
+													{{ last.coche.cocheColor }}</span><br>
 											{% endif %}
 											{% if last.coche.cocheAnio %}
 												<span class="me-2">
@@ -117,6 +117,7 @@
 										</div>
 									</div>
 								</div>
+								</a>
 							{% endfor %}
 						{% else %}
 							<p>The user has not posted any reviews</p>
@@ -127,7 +128,7 @@
 
 			<div class="col-lg-8">
 				<div class="gallery-section mb-5 cars-in-garage-section">
-					<h2 class="mb-4 fw-bold text-center">Cars in garage</h2>
+					<h2 class="mb-4 fw-bold text-center text-white">Cars in garage</h2>
 					<div class="carousel-flex-layout gallery-wrapper">
 						{% if coches %}
 							<button class="nav-btn btn-atras">
@@ -167,7 +168,7 @@
 				</div>
 
 				<div class="gallery-section mb-5 most-rated-section">
-					<h2 class="mb-4 fw-bold text-center">Most rated by
+					<h2 class="mb-4 fw-bold text-center text-white">Most rated by
 						{{usuario.UserName}}</h2>
 					<div class="carousel-flex-layout gallery-wrapper">
 						{% if valorados %}

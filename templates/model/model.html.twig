@@ -8,6 +8,16 @@
 			background-color: #0A100D !important;
 			color: #d6ddda !important;
 			border-radius: 16px !important;
+			border: var(--border) !important;
+		}
+
+		#confirmDeleteModal .modal-content .btn,
+		#confirmDeleteModal .modal-content .btn.btn-primary,
+		#confirmDeleteModal .modal-content .btn.btn-secondary {
+			min-width: 180px !important;
+			padding: 0.5rem 1rem !important; 
+			height: auto !important;
+			font-size: 0.95rem !important;
 		}
 		.modal-content .modal-header,
 		.modal-content .modal-body,
@@ -38,8 +48,7 @@
 			color: #0A100D !important;
 		}
 
-		.modal-content .btn.btn-primary,
-		.modal-content {
+		.modal-content .btn.btn-primary {
 			background-color: #d6ddda !important;
 			color: #0A100D !important;
 			border: none !important;
@@ -80,6 +89,7 @@
 			align-items: center;
 			min-height: 80vh;
 			color: #d6ddda;
+			border: var(--border) !important;
 		}
 
 		.profile-avatar {
@@ -101,7 +111,9 @@
 
 		.featured-photo-container {
 			width: 100%;
-			border-radius: 20px;
+			border: 1px solid #eee;
+			position: relative; /* allow absolute-positioned delete button */
+			overflow: visible;
 			overflow: hidden;
 			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 		}
@@ -112,6 +124,32 @@
 			object-fit: cover;
 			display: block;
 		}
+		/* Admin delete button inside comment */
+		.delete-comment-btn {
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			width: 28px;
+			height: 28px;
+			border-radius: 50%;
+			padding: 0;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 12px;
+			background: #fff;
+			border: 1px solid rgba(144,34,35,0.12);
+			color: #902923;
+			box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+			z-index: 20;
+			cursor: pointer;
+			line-height: 1;
+		}
+
+		.delete-comment-btn:hover {
+			transform: scale(1.05);
+			box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+		}
 
 		/* Comments section */
 		.comments-container {
@@ -120,6 +158,7 @@
 			padding: 25px;
 			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 			color: #d6ddda;
+			border: var(--border) !important;
 		}
 
 		.comments-list {
@@ -133,8 +172,22 @@
 			padding: 15px;
 			border-bottom: 1px solid #f0f0f0;
 			transition: background 0.2s;
+			position: relative;
+			overflow: visible;
 		}
 
+		.comments-list a.username-link {
+			display: inline-block;
+			text-decoration: none !important;
+			color: inherit !important;
+			border-bottom: 2px solid transparent;
+			padding-bottom: 2px;
+			transition: border-color 0.12s ease;
+		}
+		.comments-list a.username-link:hover {
+			border-bottom-color: #ffffff !important;
+			text-decoration: none !important;
+		}
 		.comment-item:hover {
 			background: #902923;
 		}
@@ -145,6 +198,12 @@
 			border-radius: 8px;
 			object-fit: contain;
 			background: #eee;
+		}
+
+		.comments-list a,
+		.comments-list a:hover {
+			text-decoration: none !important;
+			color: inherit !important;
 		}
 
 		/* Star rating */
@@ -160,7 +219,6 @@
 			fill: #ffca08;
 		}
 
-		/* Load more button (AJAX) */
 		.load-more-btn {
 			display: block;
 			width: 100%;
@@ -172,6 +230,29 @@
 			font-weight: 600;
 			border-radius: 10px;
 			cursor: pointer;
+		}
+
+		#load-more-comments:hover,
+		.load-more-btn:hover {
+			background-color: #902923 !important;
+			color: white !important;
+			border: 1px solid white !important;
+			text-decoration: none !important;
+		}
+
+		.comments-list::-webkit-scrollbar {
+    		width: 6px;
+		}
+		.comments-list::-webkit-scrollbar-thumb {
+    		background: rgba(214,213,201,0.18);
+    		border-radius: 10px;
+		}
+
+		.btn-outline-danger.btn-light.text-danger[data-bs-toggle="modal"][data-bs-target="#ratingModal"]:hover,
+		.btn-outline-danger.btn-light.text-danger[data-bs-toggle="modal"][data-bs-target="#ratingModal"]:focus {
+			background-color: rgba(237, 189, 189, 0.95) !important; /* almost-white with light red */
+			color: white !important;
+			border-color: rgba(144,34,35,0.12) !important;
 		}
 		/* --- STAR RATING FORM --- */
 		.rating-form-container {
@@ -240,13 +321,10 @@
 						{% if valoraciones is defined and valoraciones|length > 0 %}
 							{% for v in valoraciones %}
 								<div class="comment-item">
-									<a href="{{ path('profile', {name: v.username}) }}">
 									<img src="{{ asset('assets/images/avatar/' ~ v.profilePic) }}" class="comment-avatar">
-									</a>
 									<div class="comment-content">
-										<a href="{{ path('profile', {name: v.username}) }}">
-										<h6 class="mb-0 fw-bold">{{ v.username }} <small class="text-muted small ms-2 time-ago" data-timestamp="{{ v.fecha|date('U') }}"></small></h6></a>
-										<p class="text-muted small mb-1">{{ v.comentario }}</p>
+										<h6 class="mb-0 fw-bold"><a href="{{ path('profile', {name: v.username}) }}" class="username-link">{{ v.username }}</a> <small class="text-white small ms-2 time-ago" data-timestamp="{{ v.fecha|date('U') }}"></small></h6>
+										<p class="text-white small mb-1">{{ v.comentario }}</p>
 										<div class="rating-static">
 											{% for i in 1..5 %}
 												<svg class="{{ i <= v.estrellas ? 'gold' : '' }}" viewbox="0 0 24 24">
@@ -254,17 +332,20 @@
 												</svg>
 											{% endfor %}
 										</div>
-										<div class="small text-muted mt-1">
+										<div class="small text-white mt-1">
 											{% if v.motor %}<span class="me-2"><strong>Engine:</strong> {{ v.motor }}</span>{% endif %}
 											{% if v.color %}<span class="me-2"><strong>Color:</strong> {{ v.color }}</span>{% endif %}
 											{% if v.anio %}<span class="me-2"><strong>Year:</strong> {{ v.anio }}</span>{% endif %}
 											{% if v.transmision %}<span class="me-2"><strong>Transmission:</strong> {{ v.transmision }}</span>{% endif %}
 										</div>
 									</div>
+									{% if is_granted('ROLE_ADMIN') %}
+										<button class="delete-comment-btn" data-delete-url="{{ path('valoracion_delete', {'id': v.id}) }}" aria-label="Delete comment">✕</button>
+									{% endif %}
 								</div>
 							{% endfor %}
 						{% else %}
-							<p class="text-muted small">There are no comments yet.</p>
+							<p class="text-white small">There are no comments yet.</p>
 						{% endif %}
 					</div>
 
@@ -283,10 +364,10 @@
 			 	 	 	 	 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			 	 	 	 </div>
 			 	 	 	 <div class="modal-body text-center">
-			 	 	 	 	 <p class="mb-4">Are you sure?</p>
+			 	 	 	 	 <p class="mb-4">Are you sure you want to delete this model?</p>
 			 	 	 	 	 <div class="d-flex justify-content-center gap-2">
-			 	 	 	 	 	 <a href="#" id="confirm-delete-yes" class="btn btn-primary py-3 fw-bold" style="border-radius:18px;">Si</a>
-			 	 	 	 	 	 <a href="#" id="confirm-delete-no" class="btn btn-secondary py-3 fw-bold" data-bs-dismiss="modal" style="border-radius:18px;">No</a>
+			 	 	 	 	 	 <a href="#" id="confirm-delete-yes" class="btn btn-danger py-3 fw-bold" style="border-radius:18px;">Yes</a>
+			 	 	 	 	 	 <a href="#" id="confirm-delete-no" class="btn btn-light py-3 fw-bold" data-bs-dismiss="modal" style="border-radius:18px;">No</a>
 			 	 	 	 	 </div>
 			 	 	 	 </div>
 			 	 	 </div>
@@ -298,11 +379,11 @@
 					<img src="{{ marca.urlLogo }}" alt="Avatar" class="profile-avatar">
 				</a>
 				<h3 class="fw-bold mb-1">{{model.modeloNombre}}</h3>
-				<p class="text-muted small">{{marca.nombreMarca}}</p>
+				<p class="small text-white">{{marca.nombreMarca}}</p>
 
 				<div class="w-100 mt-4">
 					<div class="mb-3 border-bottom pb-2">
-						<span class="d-block fw-bold small text-primary text-uppercase">Average rating</span>
+						<span class="d-block fw-bold small text-white text-uppercase">Average rating</span>
 						<div class="rating-static">
 							{% set estrellasMedia = model.mediaValoraciones %}
 
@@ -316,7 +397,7 @@
 
 							{% if estrellasMedia < 5 %}
 								{% for i in (estrellasMedia + 1)..5 %}
-									<svg class="grey" viewbox="0 0 24 24" style="fill: #e8e8e8;">
+									<svg class="grey" viewbox="0 0 24 24">
 										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
 									</svg>
 								{% endfor %}
@@ -324,25 +405,25 @@
 						</div>
 					</div>
 					<div class="mb-3 border-bottom pb-2">
-						<span class="d-block fw-bold small text-primary text-uppercase">Engines</span>
+						<span class="d-block fw-bold small text-white text-uppercase">Engines</span>
 						{% for nombre in listaMotores %}
 							<span>{{ nombre }}</span><br>
 						{% endfor %}
 					</div>
 					<div class="mb-3 border-bottom pb-2">
-						<span class="d-block fw-bold small text-primary text-uppercase">Colors</span>
+						<span class="d-block fw-bold small text-white text-uppercase">Colors</span>
                         {% for color in listaColores %}
 						<span>{{color}}</span><br>
                         {% endfor %}
 					</div>
 					<div class="mb-3 border-bottom pb-2">
-						<span class="d-block fw-bold small text-primary text-uppercase">Years</span>
+						<span class="d-block fw-bold small text-white text-uppercase">Years</span>
                         {% for year in listaAnios %}
 						<span>{{year}}</span><br>
                         {% endfor %}
 					</div>
                     <div class="mb-3 border-bottom pb-2">
-						<span class="d-block fw-bold small text-primary text-uppercase">Transmission</span>
+						<span class="d-block fw-bold small text-white text-uppercase">Transmission</span>
                         {% for transmission in listaTransmisiones %}
 						<span>{{transmission}}</span><br>
                         {% endfor %}
@@ -350,10 +431,10 @@
 				</div>
 
 				{% if is_granted('ROLE_ADMIN') %}
-				<a href="#" class="btn btn-primary w-100 mt-auto delete-model-link">Delete model</a>
+				<a href="#" class="btn btn-danger w-100 mt-auto delete-model-link">Delete model</a>
 				{% endif %}
 				{% if app.user %}
-				<button type="button" class="btn btn-outline-primary w-100 mt-3" data-bs-toggle="modal" data-bs-target="#ratingModal">Add Review</button>
+				<button type="button" class="btn btn-outline-danger btn-light text-danger w-100 mt-3" data-bs-toggle="modal" data-bs-target="#ratingModal">Add Review</button>
 				{% endif %}
 			</aside>
 
@@ -427,7 +508,7 @@
 								<div class="mt-3">
 									<label class="form-label small fw-bold">Images of your car (optional)</label>
 									<input type="file" id="garajeImage" name="garaje_image[]" class="form-control" accept="image/*" multiple>
-									<div class="form-text small text-muted">You can upload multiple images (jpg, png...).</div>
+									<div class="form-text small text-white">You can upload multiple images (jpg, png...).</div>
 								</div>
 							</div>
 							<div class="col-12">
@@ -442,6 +523,14 @@
 
 	<script>
 		document.addEventListener('DOMContentLoaded', () => {
+
+		// Template path to a profile; replace __USERNAME__ with encoded username
+		const profilePathTemplate = "{{ path('profile', {'name': '__USERNAME__'}) }}";
+		const isAdmin = {{ is_granted('ROLE_ADMIN') ? '1' : '0' }};
+		const makeDeleteBtn = (id) => {
+			if (!isAdmin) return '';
+			return `<button class="delete-comment-btn" data-delete-url="{{ path('valoracion_delete', {'id': '__ID__'}) }}">✕</button>`.replace('__ID__', id);
+		};
 		let commentOffset = {{ (valoraciones is defined) ? valoraciones|length : 0 }};
 		const loadMoreBtn = document.getElementById('load-more-comments');
 		const wrapper = document.getElementById('comments-wrapper');
@@ -558,6 +647,7 @@
 
 						// Add ratings to DOM
 						const item = json.data;
+						const userHref = profilePathTemplate.replace('__USERNAME__', encodeURIComponent(item.username));
 						// If server returns a fecha use it, otherwise use client's current time
 						const _ts = parseServerDateToUnix(item.fecha) || Math.floor(Date.now()/1000);
 						const timeAgo = item.timeAgo || formatTimeAgo(_ts);
@@ -565,18 +655,19 @@
 							<div class="comment-item">\
 								<img src="https://via.placeholder.com/45" class="comment-avatar">\
 								<div class="comment-content">\
-									<h6 class="mb-0 fw-bold">${item.username} <small class="text-muted small ms-2 time-ago" data-timestamp="${_ts || ''}">${timeAgo}</small></h6>\
-									<p class="text-muted small mb-1">${item.comentario}</p>\
+									<h6 class="mb-0 fw-bold"><a href="${userHref}" class="username-link">${item.username}</a> <small class="text-white small ms-2 time-ago" data-timestamp="${_ts || ''}">${timeAgo}</small></h6>\
+									<p class="text-white small mb-1">${item.comentario}</p>\
 									<div class="rating-static">\
 										${[1,2,3,4,5].map(i => `<svg class="${i <= item.estrellas ? 'gold' : ''}" viewbox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>`).join('')}\
 									</div>\
-									<div class="small text-muted mt-1">\
-										${item.motor ? `<span class="me-2"><strong>Engine:</strong> ${item.motor}</span>` : ''}\
-										${item.color ? `<span class="me-2"><strong>Color:</strong> ${item.color}</span>` : ''}\
-										${item.anio ? `<span class="me-2"><strong>Year:</strong> ${item.anio}</span>` : ''}\
-										${item.transmision ? `<span class="me-2"><strong>Transmission:</strong> ${item.transmision}</span>` : ''}\
+									<div class="small text-white mt-1">\
+										${item.motor ? `<span class="me-2 text-white"><strong>Engine:</strong> ${item.motor}</span>` : ''}\
+										${item.color ? `<span class="me-2 text-white"><strong>Color:</strong> ${item.color}</span>` : ''}\
+										${item.anio ? `<span class="me-2 text-white"><strong>Year:</strong> ${item.anio}</span>` : ''}\
+										${item.transmision ? `<span class="me-2 text-white"><strong>Transmission:</strong> ${item.transmision}</span>` : ''}\
 									</div>\
 								</div>\
+							${makeDeleteBtn(item.id || '')}\\
 							</div>`;
 
 						wrapper.insertAdjacentHTML('afterbegin', html);
@@ -601,6 +692,121 @@
 			});
 		}
 
+		// Handle click on delete comment buttons (delegation)
+		let currentDeleteTarget = null;
+		const confirmModalEl = document.getElementById('confirmDeleteModal');
+		const confirmYes = document.getElementById('confirm-delete-yes');
+
+		// Modal helpers (use Bootstrap if available, otherwise minimal fallback)
+		function showModal(el) {
+			if (!el) return;
+			if (typeof bootstrap !== 'undefined') {
+				const modal = new bootstrap.Modal(el);
+				modal.show();
+				return;
+			}
+			el.classList.add('show');
+			el.style.display = 'block';
+			el.removeAttribute('aria-hidden');
+			el.setAttribute('aria-modal', 'true');
+			el.setAttribute('role', 'dialog');
+			const backdrop = document.createElement('div');
+			backdrop.className = 'modal-backdrop fade show';
+			backdrop.dataset._isBack = '1';
+			document.body.appendChild(backdrop);
+			document.body.classList.add('modal-open');
+		}
+
+		function hideModal(el) {
+			if (!el) return;
+			if (typeof bootstrap !== 'undefined') {
+				const inst = bootstrap.Modal.getInstance(el);
+				if (inst) inst.hide(); else {
+					// try to instantiate then hide
+					const m = new bootstrap.Modal(el);
+					m.hide();
+				}
+				return;
+			}
+			el.classList.remove('show');
+			el.style.display = 'none';
+			el.setAttribute('aria-hidden', 'true');
+			el.removeAttribute('aria-modal');
+			el.removeAttribute('role');
+			const back = document.querySelector('.modal-backdrop[data-_is-back]') || document.querySelector('.modal-backdrop');
+			if (back && back.parentNode) back.parentNode.removeChild(back);
+			document.body.classList.remove('modal-open');
+		}
+
+		// Single handler for confirm Yes button that reads the delete URL from dataset
+		if (confirmYes && !confirmYes.dataset.handlerAttached) {
+			confirmYes.addEventListener('click', (e) => {
+				e.preventDefault();
+				const deleteUrl = confirmYes.dataset.deleteUrl;
+				if (!deleteUrl) return;
+				confirmYes.classList.add('disabled');
+				fetch(deleteUrl, { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+					.then(r => r.json())
+					.then(j => {
+						if (j.success) {
+							if (currentDeleteTarget && currentDeleteTarget.parentNode) {
+								currentDeleteTarget.parentNode.removeChild(currentDeleteTarget);
+							}
+							hideModal(confirmModalEl);
+						} else {
+							alert(j.error || 'Error deleting comment');
+						}
+					})
+					.catch(err => { console.error(err); alert('Error deleting comment'); })
+					.finally(() => { confirmYes.classList.remove('disabled'); });
+			});
+			confirmYes.dataset.handlerAttached = '1';
+		}
+
+		// Close button handler for modal (No)
+		const confirmNo = document.getElementById('confirm-delete-no');
+		if (confirmNo && !confirmNo.dataset.handlerAttached) {
+			confirmNo.addEventListener('click', (e) => { e.preventDefault(); hideModal(confirmModalEl); });
+			confirmNo.dataset.handlerAttached = '1';
+		}
+
+		// Ensure top-right close button also hides modal when Bootstrap isn't present
+		if (confirmModalEl) {
+			const closeBtn = confirmModalEl.querySelector('.btn-close');
+			if (closeBtn && !closeBtn.dataset.handlerAttached) {
+				closeBtn.addEventListener('click', (e) => { e.preventDefault(); hideModal(confirmModalEl); });
+				closeBtn.dataset.handlerAttached = '1';
+			}
+		}
+
+		document.addEventListener('click', (ev) => {
+			// robust ancestor search: handles clicks on text nodes
+			let node = ev.target;
+			let btn = null;
+			while (node && node !== document) {
+				if (node.nodeType === 1 && node.classList && node.classList.contains('delete-comment-btn')) { btn = node; break; }
+				node = node.parentNode;
+			}
+			if (!btn) return;
+			ev.preventDefault();
+			const deleteUrl = btn.getAttribute('data-delete-url');
+			currentDeleteTarget = btn.closest ? btn.closest('.comment-item') : (function(){ let n=btn; while(n && n.classList && !n.classList.contains('comment-item')) n = n.parentNode; return n; })();
+
+			// update modal text
+			const bodyP = confirmModalEl ? confirmModalEl.querySelector('.modal-body p') : null;
+			console.debug('delete-comment clicked, deleteUrl=', deleteUrl, 'confirmModalEl=', !!confirmModalEl);
+			if (bodyP) bodyP.textContent = 'Are you sure you want to delete this comment?';
+
+			// set the dataset on the confirm button so the shared handler can read it
+			if (confirmYes) {
+				confirmYes.dataset.deleteUrl = deleteUrl;
+			}
+
+			// show modal
+			// open the modal using helper (Bootstrap if available, otherwise our fallback)
+			if (confirmModalEl) showModal(confirmModalEl);
+		});
+
 loadMoreBtn.addEventListener('click', () => {
 loadMoreBtn.innerText = 'Loading...';
 			// Fetch from the endpoint that gives JSON
@@ -617,22 +823,24 @@ loadMoreBtn.innerText = 'Loading...';
 					items.forEach(item => {
 						const _ts = parseServerDateToUnix(item.fecha);
 						const timeAgo = item.timeAgo || (_ts ? formatTimeAgo(_ts) : '');
+						const userHref = profilePathTemplate.replace('__USERNAME__', encodeURIComponent(item.username));
 						const html = `\
 							<div class="comment-item" style="opacity: 0; transform: translateY(10px); transition: all 0.3s">\
 								<img src="https://via.placeholder.com/45" class="comment-avatar">\
 								<div class="comment-content">\
-									<h6 class="mb-0 fw-bold">${item.username} <small class="text-muted small ms-2 time-ago" data-timestamp="${_ts || ''}">${timeAgo}</small></h6>\
-									<p class="text-muted small mb-1">${item.comentario}</p>\
+									<h6 class="mb-0 fw-bold"><a href="${userHref}" class="username-link">${item.username}</a> <small class="text-white small ms-2 time-ago" data-timestamp="${_ts || ''}">${timeAgo}</small></h6>\
+									<p class="text-white small mb-1">${item.comentario}</p>\
 									<div class="rating-static">\
 										${[1,2,3,4,5].map(i => `<svg class="${i <= item.estrellas ? 'gold' : ''}" viewbox="0 0 24 24"><path d=\"M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\"></path></svg>`).join('')}\
 									</div>\
-									<div class="small text-muted mt-1">\
+									<div class="small text-white mt-1">\
 										${item.motor ? `<span class="me-2"><strong>Engine:</strong> ${item.motor}</span>` : ''}\
 										${item.color ? `<span class="me-2"><strong>Color:</strong> ${item.color}</span>` : ''}\
 										${item.anio ? `<span class="me-2"><strong>Year:</strong> ${item.anio}</span>` : ''}\
 										${item.transmision ? `<span class="me-2"><strong>Transmission:</strong> ${item.transmision}</span>` : ''}\
 									</div>\
 								</div>\
+							${makeDeleteBtn(item.id || '')}\\
 							</div>`;
 
 						wrapper.insertAdjacentHTML('beforeend', html);

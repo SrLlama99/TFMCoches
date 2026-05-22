@@ -104,6 +104,7 @@ final class ProfilesController extends AbstractController
                 }
 
                 return [
+                    'id' => $v->getIdValoracion(),
                     'username' => $username,
                     'profilePic' => $profilePic,
                     'comentario' => $v->getComentario(),
@@ -192,6 +193,7 @@ final class ProfilesController extends AbstractController
             }
 
             return [
+                'id' => $v->getIdValoracion(),
                 'username' => $username,
                 'comentario' => $v->getComentario(),
                 'estrellas' => $v->getEstrellas(),
@@ -341,7 +343,7 @@ final class ProfilesController extends AbstractController
         $response = [
             'success' => true,
             'data' => [
-                'username' => $user?->getUserName(),
+                'id' => $valoracion->getIdValoracion(),
                 'comentario' => $comentario,
                 'estrellas' => $puntuacion,
                 'timeAgo' => 'just now',
@@ -355,6 +357,30 @@ final class ProfilesController extends AbstractController
         return new JsonResponse($response);
     }
 
+    #[Route('/valoracion/{id}/delete', name: 'valoracion_delete', methods: ['POST'])]
+    public function deleteValoracion(EntityManagerInterface $em, int $id): JsonResponse
+    {
+        $user = $this->getUser();
+        // Only admins may delete valoraciones
+        if (! $this->isGranted('ROLE_ADMIN')) {
+            return new JsonResponse(['success' => false, 'error' => 'Forbidden'], 403);
+        }
+
+        $repo = $em->getRepository(Valoracion::class);
+        $v = $repo->find($id);
+        if (! $v) {
+            return new JsonResponse(['success' => false, 'error' => 'Not found'], 404);
+        }
+
+        try {
+            $em->remove($v);
+            $em->flush();
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+
+        return new JsonResponse(['success' => true, 'deleted' => $id]);
+    }
     #[Route('/profile/{name}', name: 'profile')]
     public function profile(EntityManagerInterface $em, string $name): Response
     {

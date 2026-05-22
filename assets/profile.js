@@ -219,16 +219,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         wrapper.appendChild(img);
                         if (canEdit) {
                             const del = document.createElement('button');
-                            del.className = 'btn btn-sm btn-danger position-absolute';
+                            del.className = 'btn-danger position-absolute photo-delete-btn';
                             del.style.top = '6px';
                             del.style.right = '6px';
-                            del.textContent = 'Delete';
+                            del.style.width = '28px';
+                            del.style.height = '28px';
+                            del.style.padding = '0';
+                            del.style.borderRadius = '50%';
+                            del.style.display = 'flex';
+                            del.style.alignItems = 'center';
+                            del.style.justifyContent = 'center';
+                            del.style.fontSize = '0.85rem';
+                            del.textContent = '✕';
                             del.dataset.photoId = p.id || '';
                             del.addEventListener('click', async (ev) => {
                                 ev.stopPropagation();
                                 const pid = del.dataset.photoId;
                                 if (!pid) return;
-                                if (!confirm('Delete this photo?')) return;
                                 try {
                                     const resp = await fetch('/garaje/photo/' + pid + '/delete', { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' } });
                                     const json = await resp.json();
@@ -250,7 +257,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             });
                             wrapper.appendChild(del);
                         }
-                        photosContainer.appendChild(wrapper);
                         photosContainer.appendChild(wrapper);
                     });
                 }
@@ -295,14 +301,21 @@ document.addEventListener('DOMContentLoaded', () => {
                             const canEditNow = garageModalEl.dataset.canEdit === '1';
                             if (canEditNow) {
                                 const del = document.createElement('button');
-                                del.className = 'btn btn-sm btn-danger position-absolute';
+                                del.className = 'btn-danger position-absolute photo-delete-btn';
                                 del.style.top = '6px';
                                 del.style.right = '6px';
-                                del.textContent = 'Delete';
+                                del.style.width = '28px';
+                                del.style.height = '28px';
+                                del.style.padding = '0';
+                                del.style.borderRadius = '50%';
+                                del.style.display = 'flex';
+                                del.style.alignItems = 'center';
+                                del.style.justifyContent = 'center';
+                                del.style.fontSize = '0.85rem';
+                                del.textContent = '✕';
                                 del.dataset.photoId = u.id;
                                 del.addEventListener('click', async (ev) => {
                                     ev.stopPropagation();
-                                    if (!confirm('Delete this photo?')) return;
                                     try {
                                             const r2 = await fetch('/garaje/photo/' + u.id + '/delete', { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' } });
                                             const j2 = await r2.json();
