@@ -16,7 +16,7 @@
     </div>
     <div class="right">
         <div class="login-box">
-            <h1>TFG</h1>
+            <img src="{{ asset('/images/logo.png') }}" class="logo-img">
 
             <form method="post" action="{{ path('app_login') }}">
                 <input type="text" id="username" name="_username" placeholder="Email of an already existing account" required />
@@ -44,13 +44,9 @@
     </div>
 </div>
 <div class="container2">
-    <div class="left2">
-        <img src="{{ asset('/images/cars2.png') }}" class="cars-img2">
-    </div>
-
     <div class="right2">
         <div class="login-box">
-            <h1>TFG</h1>
+            <img src="{{ asset('/images/logo.png') }}" class="logo-img">
             <label for="crearCuenta">Go back to login ->
             </label>
             <form method="post" action="{{ path('precesaCuentaNueva') }}">
@@ -75,15 +71,14 @@
 
         </div>
     </div>
+    <div class="left2">
+        <img src="{{ asset('/images/cars2.png') }}" class="cars-img2">
+    </div>
 </div>
 <div class="container3">
-    <div class="left2">
-        <img src="{{ asset('/images/cars3.png') }}" class="cars-img2">
-    </div>
-
     <div class="right2">
         <div class="login-box">
-            <h1>TFG</h1>
+            <img src="{{ asset('/images/logo.png') }}" class="logo-img">
             <label for="contraseñaOlvidada">Go back to login ->
             </label>
             <form method="post" action="{{ path('procesaPass1') }}">
@@ -98,6 +93,9 @@
             </form>
 
         </div>
+    </div>
+    <div class="left2">
+        <img src="{{ asset('/images/cars3.png') }}" class="cars-img2">
     </div>
 </div>
 </body>

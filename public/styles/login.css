@@ -16,6 +16,20 @@ body{
     min-height:100vh;
 }
 
+.container2 {
+    display: none; 
+    grid-template-columns: 40% 60%; 
+    height: 100dvh;
+    overflow: hidden;
+}
+
+.container3{
+    display: none; 
+    grid-template-columns: 40% 60%; 
+    height: 100dvh;
+    overflow: hidden;
+}
+
 .left{
     position:relative;
     overflow:visible;
@@ -33,6 +47,10 @@ body{
     left:50%;
     transform:translateX(-50%);
     width:120%;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 2;
+    animation: entradaSuave 1s ease-out forwards;
 }
 
 @keyframes entradaSuave {
@@ -49,42 +67,19 @@ body{
 @keyframes entradaSuave2 {
     from {
         opacity: 0;
-        transform: translate(calc(34% + 100px), 25%);
+        transform: translateX(40%) translateY(40px); 
     }
-
     to {
         opacity: 1;
-        transform: translate(-34%, 25%);
+        transform: translateX(-55%) translateY(0); 
     }
 }
 
-.cars-img {
-    position: absolute;
-
-    left: 50%;
-    bottom: 80px;
-
-    width: 160%;
-
-    transform: translateX(-55%);
-
-    object-fit: contain;
-
-    pointer-events: none;
-    z-index: 2;
-
-    animation: entradaSuave 1s ease-out forwards;
-}
-
-.cars-img2{
-    position: absolute;
-    bottom: 25%;
-    left: 30%;
-    width: 170%;
-    max-width: 1000px;
-    pointer-events: none;
-    z-index: 2;
-    animation: entradaSuave2 1s ease-out forwards;
+.logo-img{
+    max-width: 60%;
+    max-height: 60%;
+    margin-left: 80px;
+    margin-bottom: 20px;
 }
 
 .right{
@@ -95,21 +90,33 @@ body{
     background:#e5e5e5;
 }
 .right2 {
-    width: 40%;
+    display: grid; 
+    place-items: center; 
+    position: relative;
+    z-index: 1;
     background-color: #e5e5e5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .login-box h1{
-        margin-bottom: 20px !important;
-    }
 }
 .left2 {
-    width: 60%;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.9) 100%);
-    background-color: #c40000;
     position: relative;
     overflow: visible;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.9) 100%);
+    background-color: #c40000;
+    display: flex;         
+    justify-content: center; 
+    align-items: flex-end; 
+    z-index: 10;
+}
+
+.left2 img{
+    position:absolute;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:120%;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 2;
+    animation: entradaSuave2 1s ease-out forwards;
 }
 
 .login-box{
@@ -212,31 +219,13 @@ label {
     cursor: pointer;
 }
 
-.container2 {
-    display: flex;
-    height: 100dvh;
-    overflow: hidden;
-    display: none;
-    flex-direction: row-reverse;
-    pointer-events: none;
-}
-
-.container3{
-    display: flex;
-    height: 100dvh;
-    overflow: hidden;
-    display: none;
-    flex-direction: row-reverse;
-    pointer-events: none;
-}
-
 #crearCuenta:checked~.container1 {
     display: none;
     pointer-events: none;
 }
 
 #crearCuenta:checked~.container2 {
-    display: flex;
+    display: grid;
     pointer-events: auto;
 }
 
@@ -250,7 +239,7 @@ label {
 }
 
 #contraseñaOlvidada:checked~.container3{
-    display: flex;
+    display: grid;
     pointer-events: auto;
 }
 
@@ -270,23 +259,13 @@ label {
 ========================= */
 @media screen and (max-width: 1024px) {
 
-    .left,
-    .left2 {
-        width: 50%;
-    }
-
-    .right,
-    .right2 {
-        width: 50%;
-        padding: 30px;
-    }
-
     .login-box {
         width: 90%;
     }
 
     .login-box h1 {
         font-size: 50px;
+        color:#e5e5e5;
     }
 
     .cars-img,
@@ -310,30 +289,48 @@ label {
 ========================= */
 @media screen and (max-width: 768px) {
 
-    .container1{
+    .container1,
+    .container2,
+    .container3,
+    .container4{
         grid-template-columns:1fr;
     }
 
-    .image-side{
+    .left,
+    .left2{
         position:absolute;
         inset:0;
         z-index:1;
+        background:
+        linear-gradient(
+            to bottom,
+            rgba(255,255,255,0.7),
+            rgb(0, 0, 0)
+        );
     }
 
-    .image-side img{
-        width:240%;
-        height:100%;
+    .left img,.left2 img{
+        width:100%;
+        height:90%;
         object-fit:cover;
-
         filter:blur(3px);
+        z-index: 1;
+        animation:none;
     }
-
-    .image-side::after{
+    .left, 
+    .left2 {
+        background: linear-gradient(
+            to bottom,
+            transparent 20%,
+            rgba(0,0,0,0.6)
+        );
+    }
+    .left::after, .left2::after{
         content:"";
 
         position:absolute;
         inset:0;
-
+        z-index: 2;
         background:
         linear-gradient(
             to bottom,
@@ -342,10 +339,9 @@ label {
         );
     }
 
-    .form-side{
+    .right, .right2{
         position:relative;
         z-index:2;
-
         background:transparent;
     }
 
@@ -354,7 +350,7 @@ label {
         max-width:420px;
     }
     a {
-        color: #9e2b25;
+        color: #e5e5e5;
         font-size: 15px;
         margin-bottom: 12px;
     }
@@ -365,16 +361,21 @@ label {
         height: 68px;
         border-radius: 22px;
         border: none;
-        background-color: #9e2b25;
-        color: white;
+        background-color: #e5e5e5;
+        color:  #9e2b25;
         padding: 0 20px;
         margin-bottom: 28px;
         font-size: 15px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
+    .container2 input[type="text"],
+    .container2 input[type="password"] {
+        margin-bottom: 10px; 
+    }
+
     input::placeholder {
-        color: rgba(255,255,255,0.9);
+        color: #9e2b25;
         font-style: normal;
     }
 
@@ -383,15 +384,23 @@ label {
         height: 52px;
         border-radius: 20px;
         margin-top: 25px;
-        background-color: #9e2b25;
-        color: white;
+        background-color: white;
+        color: #9e2b25;
         font-size: 18px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.25);
     }
 
+    label,
+    .crear-cuenta,
+    a {
+        color:#e5e5e5;
+        font-size: 20px;
+    }
+
     mark {
         text-align: center;
-        font-size: 13px;
+        color:#e5e5e5;
+        font-size: 20px;
         margin-bottom: 15px;
     }
 }
@@ -399,57 +408,34 @@ label {
    MÓVILES PEQUEÑOS
 ========================= */
 @media screen and (max-width: 480px) {
-
-    .left,
-    .left2 {
-        height: 30vh;
-        position: absolute;
-        z-index: 1;
-        overflow: hidden;
-    }
-
-    .right,
-    .right2 {
-        height: 70vh;
-        padding: 15px;
-        z-index: 3;
-    }
-
     .login-box {
         width: 100%;
         z-index: 4;
     }
 
     .login-box h1 {
-        font-size: 34px;
+        font-size: 100px;
         margin-bottom: 20px;
-    }
-
-    .cars-img,
-    .cars-img2 {
-        width: 180%;
-        bottom: -10px;
-         z-index: 1;
     }
 
     input[type="text"],
     input[type="password"] {
         padding: 12px;
-        font-size: 13px;
+        font-size: 20px;
         margin-bottom: 15px;
     }
 
     .boton-login {
         padding: 12px;
         border-radius: 15px;
-        font-size: 14px;
+        font-size: 20px;
     }
 
     label,
     .crear-cuenta,
     a,
     mark {
-        font-size: 12px;
+        font-size: 20px;
     }
 }
 
@@ -459,22 +445,17 @@ label {
 @media screen and (max-width: 360px) {
 
     .login-box h1 {
-        font-size: 28px;
+        font-size: 100px;
     }
 
     input[type="text"],
     input[type="password"] {
-        font-size: 12px;
+        font-size: 20px;
         padding: 10px;
     }
 
     .boton-login {
-        font-size: 13px;
+        font-size: 20px;
         padding: 10px;
-    }
-
-    .cars-img,
-    .cars-img2 {
-        width: 220%;
     }
 }
