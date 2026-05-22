@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,36 +7,95 @@
     <link rel="stylesheet" href="{{ asset('styles/login.css') }}">
 </head>
 <body>
-<div class="container">
+<input type="checkbox" id="crearCuenta" class="hidden-checkbox" {% if checked %}checked{% endif %}/>
+<input type="checkbox" id="contraseñaOlvidada" class="hidden-checkbox" {% if checked2 %}checked{% endif %}/>
+
+<div class="container1">
     <div class="left">
         <img src="{{ asset('/images/cars.png') }}" class="cars-img">
     </div>
-
     <div class="right">
         <div class="login-box">
-            <h1>TFG</h1>
+            <img src="{{ asset('/images/logo.png') }}" class="logo-img">
 
             <form method="post" action="{{ path('app_login') }}">
-                <label>Correo de una cuenta registrada:</label>
-                <input type="text" id="username" name="_username" />
+                <input type="text" id="username" name="_username" placeholder="Email of an already existing account" required />
 
-                <label>Contraseña:</label>
-                <input type="password" id="password" name="_password" />
+                <input type="password" id="password" name="_password" placeholder="Password" required />
 
-                {% if error %}
-                    <mark>Usuario o contraseña incorrectos</mark>
+                {% if loginError  %}
+                    <mark>you inserted your mail or password incorrecly</mark>
                 {% endif %}
 
-                <a class="recuperar" href="#">¿Has olvidado tu contraseña?</a>
+                {% if registerError == 5 %}
+                    <mark>Cuenta Creada Exitosamente</mark>
+                {% endif %}
+                
+                <label for="contraseñaOlvidada">Did you forget your password?</label>
 
                 <input class="boton-login" type="submit" value="Iniciar sesión">
             </form>
 
             <div class="crear-cuenta">
-                ¿No tienes cuenta? 
-                <a href="#">Crear Cuenta</a>
+                You don´t have an account? 
+                <label for="crearCuenta">Create one</label>
             </div>
         </div>
+    </div>
+</div>
+<div class="container2">
+    <div class="right2">
+        <div class="login-box">
+            <img src="{{ asset('/images/logo.png') }}" class="logo-img">
+            <label for="crearCuenta">Go back to login ->
+            </label>
+            <form method="post" action="{{ path('precesaCuentaNueva') }}">
+                <input type="text" name="usuName" placeholder="User Name" required>
+                <input type="text" name="usuGmail" placeholder="Email" required>
+                <input type="password" placeholder="Password" name="pass1" required>
+                <input type="password" name="pass2" placeholder="Repeat password" required>
+                {% if registerError == 1 %}
+                    <mark>The passwords does't match</mark>
+                {% endif %}
+                {% if registerError == 2 %}
+                    <mark>That mail is already on use</mark>
+                {% endif %}
+                {% if registerError == 3 %}
+                    <mark>That username is already on use</mark>
+                {% endif %}
+                {% if registerError == 4 %}
+                    <mark>You inserted the wrong code</mark>
+                {% endif %}
+                <input class="boton-login" type="submit" value="Create Account">
+            </form>
+
+        </div>
+    </div>
+    <div class="left2">
+        <img src="{{ asset('/images/cars2.png') }}" class="cars-img2">
+    </div>
+</div>
+<div class="container3">
+    <div class="right2">
+        <div class="login-box">
+            <img src="{{ asset('/images/logo.png') }}" class="logo-img">
+            <label for="contraseñaOlvidada">Go back to login ->
+            </label>
+            <form method="post" action="{{ path('procesaPass1') }}">
+                <input type="text" name="usuMail" placeholder="User Mail" required>
+                {% if registerError == 6 %}
+                    <mark>We couldn't find that mail</mark>
+                {% endif %}
+                {% if registerError == 7 %}
+                    <mark>We have save your new password</mark>
+                {% endif %}
+                <input class="boton-login" type="submit" value="Recover Password">
+            </form>
+
+        </div>
+    </div>
+    <div class="left2">
+        <img src="{{ asset('/images/cars3.png') }}" class="cars-img2">
     </div>
 </div>
 </body>

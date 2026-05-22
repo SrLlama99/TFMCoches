@@ -24,7 +24,7 @@ security:
             form_login:
                 login_path: app_login       # Ruta al controlador de login
                 check_path: app_login       # Ruta a la que se envían el POST del formulario de login
-                default_target_path: feed # Si hay autenticación correcta, el controlador a dónde se manda al usuario
+                default_target_path: home # Si hay autenticación correcta, el controlador a dónde se manda al usuario
             logout:
                 path: /logout               # Ruta inventada (y declarada aquí) para hacer el logout
                 target: app_login           # Si se le desloguea bien, a dónde se le manda

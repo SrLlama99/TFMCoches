@@ -1,0 +1,42 @@
+{% extends 'skeleton.html.twig' %}
+
+{% block title %}
+    401 - Unauthorized
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/error401.css') }}">
+{% endblock %}
+
+{% block main %}
+
+<div class="error-container">
+
+    <div class="error-card">
+
+        <h1 class="error-code">
+            401
+        </h1>
+
+        <h2 class="error-title">
+            Access denied
+        </h2>
+
+        <p class="error-text">
+            You are not authorized to access this page.
+            Please log in with the correct credentials and try again.
+        </p>
+
+        <a href="{{ path('login') }}" class="error-button">
+            Go to Login
+        </a>
+
+        <a href="{{ path('home') }}" class="error-button secondary">
+            Back to Home
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

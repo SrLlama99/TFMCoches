@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Cuenta</title>
+    <link rel="stylesheet" href="{{ asset('styles/login.css') }}">
+</head>
+<body>
+<input type="checkbox" id="crearCuenta" class="hidden-checkbox" checked />
+<div class="container2">
+    <div class="left2">
+        <img src="{{ asset('/images/cars2.png') }}" class="cars-img2">
+    </div>
+
+    <div class="right2">
+        <div class="login-box">
+            <h1>TFG</h1>
+            <a href="{{ path('app_login') }}">Go back to login -></a>
+            <form method="post" action="{{ path('procesaCuentaFinal') }}">
+            <label>Introduce el código mandado al mail:</label>
+            <input type="text" name="codeValidation">
+            {% if loginError == 1 %}
+                <mark>El codigo no coincide</mark>
+            {% endif %}
+            <input class="boton-login" type="submit" value="Crear Cuenta">
+        </form>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
