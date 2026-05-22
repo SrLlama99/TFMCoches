@@ -1,0 +1,93 @@
+{% extends "skeleton.html.twig" %}
+{% block title %}Home{% endblock %}
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('styles/profile.css') }}">
+{% endblock %}
+{% block javascripts %}
+	{% block importmap %}
+		{{ importmap('app') }}
+	{% endblock %}
+	<script type="module" src="{{ asset('profile.js') }}"></script>
+{% endblock %}
+{% block main %}
+	<div class="customnav p-3 gallery-wrapper">
+		<h1 class="h1 bi bi-bar-chart-line"> Most rated</h1>
+		{% if mostRated is defined %}
+		<div class="custom-scroll-container scroll-contenedor">
+			{% for rated in mostRated %}
+				{% embed 'profile/carousel_card.html.twig' %}
+					{% block link %}{{ path('marca', {name: rated.modelo.marca.nombreMarca, id: rated.modelo.modeloId}) }}{% endblock %}
+					{% block image %}{{ rated.modelo.fotoModelo }}{% endblock %}
+					{% block title %}{{ rated.modelo.modeloNombre }}{% endblock %}
+					{% block logo %}{{ rated.modelo.marca.urlLogo }}{% endblock %}
+					{% block stars %}
+						{{ rated.getMediaValoraciones|default(0) }}
+					{% endblock %}
+				{% endembed %}
+			{% else %}
+				<p class="text-center">There are no most rated cars</p>
+			{% endfor %}
+			</div>
+			<div class="d-flex justify-content-around">
+			<button class="nav-btn btn-atras"><i class="arrow left"></i></button>
+			<button class="nav-btn btn-adelante"><i class="arrow right"></i></button>
+			</div>
+		{% else %}
+			<p class="text-center">There has been an error. We're trying hard to fix it!</p>
+		{% endif %}
+	</div>
+
+	<div class="customnav p-3 my-2">
+		<h1 class="bi bi-star"> Most Liked</h1>
+		{% if mostLiked is defined %}
+			<div class="custom-scroll-container scroll-contenedor">
+			{% for liked in mostRated %}
+				{% embed 'profile/carousel_card.html.twig' %}
+					{% block link %}{{ path('marca', {name: liked.modelo.marca.nombreMarca, id: liked.modelo.modeloId}) }}" class=""{% endblock %}
+					{% block image %}{{ liked.modelo.fotoModelo }}{% endblock %}
+					{% block title %}{{ liked.modelo.modeloNombre }}{% endblock %}
+					{% block logo %}{{ liked.modelo.marca.urlLogo }}{% endblock %}
+					{% block stars %}
+						{{ liked.getMediaValoraciones|default(0) }}
+					{% endblock %}
+				{% endembed %}
+			{% else %}
+				<p class="text-center">There are no most liked cars</p>
+			{% endfor %}
+			</div>
+			<div class="d-flex d-md-none justify-content-around">
+			<button class="nav-btn btn-atras"><i class="arrow left"></i></button>
+			<button class="nav-btn btn-adelante"><i class="arrow right"></i></button>
+			</div>
+		{% else %}
+			<p class="text-center">There has been an error. We're trying hard to fix it!</p>
+		{% endif %}
+	</div>
+
+	<div class="customnav p-3">
+		{% if mostHated is defined %}
+			<h1 class="bi bi-hand-thumbs-down"> Most Hated</h1>
+			<div class="custom-scroll-container scroll-contenedor">
+			{% for hated in mostHated %}
+				{% embed 'profile/carousel_card.html.twig' %}
+					{% block link %}{{ path('marca', {name: hated.modelo.marca.nombreMarca, id: hated.modelo.modeloId}) }}" class=""{% endblock %}
+					{% block image %}{{ hated.modelo.fotoModelo }}{% endblock %}
+					{% block title %}{{ hated.modelo.modeloNombre }}{% endblock %}
+					{% block logo %}{{ hated.modelo.marca.urlLogo }}{% endblock %}
+					{% block stars %}
+						{{ hated.getMediaValoraciones|default(0) }}
+					{% endblock %}
+				{% endembed %}
+			{% else %}
+				<p class="text-center">There are no most hated cars</p>
+			{% endfor %}
+			</div>
+			<div class="d-flex d-md-none justify-content-around">
+			<button class="nav-btn btn-atras"><i class="arrow left"></i></button>
+			<button class="nav-btn btn-adelante"><i class="arrow right"></i></button>
+			</div>
+		{% else %}
+			<p class="text-center">There has been an error. We're trying hard to fix it!</p>
+		{% endif %}
+	</div>
+{% endblock %}

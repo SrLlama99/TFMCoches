@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Motor
 {
     #[ORM\Id]
+    #[ORM\GeneratedValue]
     #[ORM\Column(type:'integer', name:'id')]
     private $idMotor;
 
