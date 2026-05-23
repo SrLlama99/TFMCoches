@@ -1,20 +1,24 @@
 <nav class="customnav navbar navbar-expand-md m-1 p-2" data-bs-theme="dark">
     <div class="container">
         <span class="navbar-brand">
+        <a href="{{path('home')}}">
             <img class="navBarLogo" draggable="false" src="{{ asset('logo.png') }}" />
+        </a>
         </span>
         <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div id="navbarCollapse" class="collapse navbar-collapse">
            <ul class="navbar-nav gap-3 w-100 flex-row justify-content-center my-2 my-md-0">
-            <li class="nav-item">
-               <form class="navForm" method="get" action="{{ path('home') }}"> {# TODO: Change to search path here #}
-                    <input type="text" name="query" class="navSearchBar form-control" placeholder="Busca un modelo..."/>
+            <li class="nav-item position-relative">
+               <form id="navForm" method="POST"> {# TODO: Change to search path here #}
+                    <input type="hidden" value="{{ path('search_virpath') }}" name="queryEndpoint">
+                    <input type="text" id="navFormQuery" name="query" class="navSearchBar form-control" placeholder="Busca un modelo..."/>
                     <button type="submit" class="h-100 d-flex justify-content-center align-items-center searchButton customNavBtn btn">
                         <i class="bi bi-search"></i>
                     </button>
                </form>
+                <div id="navFormSuggestionPanel" class="customnav searchDropdown position-absolute w-100" style="display: none;"></div>
             </li>
 
             {% if not app.user %} {# ANONYMOUS USER #}

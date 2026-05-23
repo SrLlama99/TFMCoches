@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Modelo;
+use App\Entity\Marca;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -13,11 +14,11 @@ class ModeloRepository extends ServiceEntityRepository
         parent::__construct($registry, Modelo::class);
     }
 
-    public function findByWorst(int $limit = 1, \App\Entity\Marca $brand = null, string $order = 'ASC')
+    public function findByWorst(int $limit = 1, Marca $brand = null, string $order = 'ASC')
     {
         return $this->findByBest($limit, $brand, $order);
     }
-    public function findByBest(int $limit = 1, \App\Entity\Marca $brand = null, string $order = 'DESC')
+    public function findByBest(int $limit = 1, Marca $brand = null, string $order = 'DESC')
     {
         if ($brand) { //This bs returns the best from the brand provided
             return $this->getEntityManager()->createQueryBuilder()
@@ -52,5 +53,16 @@ class ModeloRepository extends ServiceEntityRepository
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
+    }
+
+    public function findBySimilarity(string $query, $limit = 7){
+        return $this->getEntityManager()->createQueryBuilder()
+                ->select('m', 'similarity(m.modeloNombre, :query) as HIDDEN sim')
+                ->from(\App\Entity\Modelo::class, 'm')
+                ->where('similarity(m.modeloNombre, :query) > 0')
+                ->orderBy('sim', 'DESC')
+                ->setParameter('query', $query)
+                ->setMaxResults($limit)
+                ->getQuery()->getResult();
     }
 }

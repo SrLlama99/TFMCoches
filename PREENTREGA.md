@@ -1,0 +1,1 @@
+* idx modelo.nombre trgm
