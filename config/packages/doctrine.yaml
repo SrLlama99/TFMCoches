@@ -26,6 +26,9 @@ doctrine:
                 alias: App
         controller_resolver:
             auto_mapping: false
+        dql:
+            string_functions:
+                SIMILARITY: MartinGeorgiev\Doctrine\ORM\Query\AST\Functions\Trgm\Similarity
 
 when@test:
     doctrine:
