@@ -381,6 +381,55 @@ final class ProfilesController extends AbstractController
 
         return new JsonResponse(['success' => true, 'deleted' => $id]);
     }
+    #[Route('/marca/{id}/update', name: 'marca_update', methods: ['POST'])]
+    public function updateMarca(EntityManagerInterface $em, Request $request, int $id): JsonResponse
+    {
+        if (! $this->isGranted('ROLE_ADMIN')) {
+            return new JsonResponse(['success' => false, 'error' => 'Forbidden'], 403);
+        }
+
+        $repo = $em->getRepository(Marca::class);
+        $marca = $repo->find($id);
+        if (! $marca) {
+            return new JsonResponse(['success' => false, 'error' => 'Not found'], 404);
+        }
+
+        $nombre = trim((string) $request->request->get('nombre', ''));
+        $url = trim((string) $request->request->get('url', ''));
+
+        if ($nombre !== '') $marca->setnombreMarca($nombre);
+        if ($url !== '') $marca->seturlMarca($url);
+
+        $uploaded = $request->files->get('logo');
+        if ($uploaded && $uploaded->isValid()) {
+            try {
+                $extension = strtolower($uploaded->getClientOriginalExtension());
+                $allowed = ['png','jpg','jpeg','webp'];
+                if (in_array($extension, $allowed, true)) {
+                    $uploadDir = $this->getParameter('kernel.project_dir') . '/public/assets/images/brands/';
+                    if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+                    $newName = sprintf('brand_%s_%s.%s', $id, time(), $extension);
+                    $uploaded->move($uploadDir, $newName);
+                    $marca->seturlLogo($newName);
+                }
+            } catch (\Exception $e) {
+                
+            }
+        }
+
+        try {
+            $em->persist($marca);
+            $em->flush();
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+
+        return new JsonResponse(['success' => true, 'data' => [
+            'nombre' => $marca->getnombreMarca(),
+            'url' => $marca->geturlMarca(),
+            'logo' => $marca->geturlLogo(),
+        ]]);
+    }
     #[Route('/profile/{name}', name: 'profile')]
     public function profile(EntityManagerInterface $em, string $name): Response
     {
@@ -567,6 +616,7 @@ final class ProfilesController extends AbstractController
                 'modelo' => $vmodelo,
                 'marca' => $vmarca,
                 'valoracion' => [
+                    'id' => $v->getIdValoracion(),
                     'estrellas' => $v->getEstrellas(),
                     'comentario' => $v->getComentario(),
                     'fecha' => $v->getFecha(),

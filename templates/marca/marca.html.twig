@@ -1,273 +1,12 @@
 {% extends "skeleton.html.twig" %}
 
 {% block stylesheets %}
-	<style>
-	/* REMINDER: CHANGE COMMENTS TO ENGLISH AND DOCUMENT THE REST OF THE CODE */
-		.gallery-section {
-			max-width: 1000px;
-			margin: 0 auto;
-		}
+	<link rel="stylesheet" href="{{ asset('styles/marca.css') }}">
+{% endblock %}
 
-		.carousel-flex-layout {
-			display: flex;
-			align-items: center;
-			gap: 15px;
-		}
 
-		/* CAROUSEL ENGINE */
-		.custom-scroll-container {
-			display: flex !important;
-			overflow: hidden;
-			scroll-behavior: smooth;
-			width: 100%;
-			padding: 20px 0;
-		}
-
-		.no-smooth {
-			scroll-behavior: auto !important;
-		}
-
-		.custom-item {
-			flex: 0 0 100%;
-			min-width: 100%;
-			padding: 0 10px;
-			box-sizing: border-box;
-		}
-
-		@media(min-width: 768px) {
-			.custom-item {
-				flex: 0 0 33.333%;
-				min-width: 33.333%;
-			}
-		}
-
-		/* PROFILE AND COMMENTS */
-		.profile-card-custom {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			text-align: center;
-		}
-
-		.comments-section {
-			background: #f8f9fa;
-			border-radius: 18px;
-			padding: 20px;
-			max-height: 400px;
-			overflow-y: auto;
-		}
-
-		.comment-bubble {
-			background: white;
-			padding: 12px 15px;
-			border-radius: 12px;
-			margin-bottom: 12px;
-			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-			border-left: 4px solid #007bff;
-		}
-
-		.comment-author {
-			font-weight: bold;
-			font-size: 0.85rem;
-			display: block;
-			margin-bottom: 3px;
-		}
-
-		.comment-text {
-			font-size: 0.9rem;
-			color: #555;
-			margin: 0;
-		}
-
-		/* GALLERY CARDS */
-		.card-gallery {
-			background: #fff;
-			border-radius: 18px;
-			overflow: hidden;
-			box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-			display: flex;
-			flex-direction: column;
-			height: 100%;
-			transition: transform 0.3s ease;
-		}
-
-		.img-container-rel {
-			position: relative;
-			width: 100%;
-			aspect-ratio: 1 / 1;
-		}
-
-		.img-square {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			display: block;
-		}
-
-		.texto-traslucido {
-			position: absolute;
-			bottom: 0;
-			width: 100%;
-			background: rgba(0, 0, 0, 0.7);
-			color: white;
-			padding: 10px 15px;
-			backdrop-filter: blur(8px);
-			font-size: 0.85rem;
-			font-weight: 600;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
-
-		.img-mini-overlay {
-			width: 22px;
-			height: 22px;
-			object-fit: contain;
-		}
-
-		.banda-inferior {
-			background: #ffffff;
-			color: #333;
-			padding: 15px;
-			border-top: 1px solid #eee;
-			text-align: center;
-		}
-
-		.texto-detalle {
-			font-size: 0.85rem;
-			line-height: 1.4;
-			margin: 0;
-		}
-
-		/* NAVIGATION BUTTONS */
-		.nav-btn {
-			background: #222;
-			color: white;
-			border: none;
-			width: 48px;
-			height: 48px;
-			border-radius: 50%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			cursor: pointer;
-			transition: all 0.2s;
-			flex-shrink: 0;
-		}
-
-		.nav-btn:hover {
-			background: #000;
-			transform: scale(1.1);
-		}
-
-		.arrow {
-			border: solid white;
-			border-width: 0 3px 3px 0;
-			display: inline-block;
-			padding: 4px;
-		}
-		.right {
-			transform: rotate(-45deg);
-		}
-		.left {
-			transform: rotate(135deg);
-		}
-
-		.comments-section {
-			background: #ffffff;
-			border-radius: 18px;
-			max-height: 450px;
-			overflow-y: auto;
-			padding-right: 5px;
-		}
-
-		/* Comment container */
-		.comment-item {
-			display: flex;
-			align-items: flex-start;
-			gap: 12px;
-			padding: 15px;
-			margin-bottom: 15px;
-			background: #fdfdfd;
-			border-radius: 15px;
-			border: 1px solid #eee;
-			transition: all 0.3s ease;
-		}
-
-		.comment-item:hover {
-			background: #fafafa;
-		}
-
-		/* Text body */
-		.comment-body {
-			flex-grow: 1;
-		}
-
-		.comment-author {
-			font-weight: 700;
-			font-size: 0.9rem;
-			color: #222;
-			margin-bottom: 2px;
-			display: block;
-		}
-
-		.comment-text {
-			font-size: 0.88rem;
-			color: #555;
-			margin: 0;
-			line-height: 1.4;
-		}
-
-		/* Scrollbar customization */
-		.comments-section::-webkit-scrollbar {
-			width: 6px;
-		}
-		.comments-section::-webkit-scrollbar-thumb {
-			background: #ccc;
-			border-radius: 10px;
-		}
-
-		/* Read-only Stars Component */
-		.rating-static {
-			display: flex;
-			justify-content: center; /* Centered in the carousel */
-			gap: 0.2rem;
-			margin: 5px 0;
-		}
-
-		.rating-static svg {
-			width: 1.1rem;
-			height: 1.1rem;
-			fill: #e8e8e8; /* Gray for empty stars */
-		}
-
-		.rating-static .gold {
-			fill: #ffca08; /* Gold for filled stars */
-			filter: drop-shadow(0 0 2px rgba(255, 202, 8, 0.3));
-		}
-
-		/* Bottom band adjustment for better star display */
-		.banda-inferior {
-			background: #ffffff;
-			padding: 12px;
-			border-top: 1px solid #eee;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-
-		.comment-avatar {
-			width: 50px;
-			height: 50px;
-			object-fit: contain; /* Keeps the image from being cropped */
-			background-color: #f8f9fa;
-			flex-shrink: 0;
-			border-radius: 8px;
-			border: 1px solid #eee;
-			padding: 4px; /* Small inner padding for logos */
-		}
-	</style>
+{% block importmap %}{{ importmap('app') }}
+<script src="{{ asset('marca.js') }}"></script>
 {% endblock %}
 
 {% block main %}
@@ -279,16 +18,15 @@
 						<img src="{{ marca.urlLogo }}" class="rounded-circle object-fit-cover shadow-sm">
 					</div>
 					<a href="{{ marca.urlMarca }}">
-						<h3 class="fw-bold bi bi-globe2 fs-2 d-flex align-items-center">{{ marca.nombreMarca }}</h3>
+						<h3 class="fw-bold bi bi-globe2 fs-2 d-flex align-items-center text-white">{{ marca.nombreMarca }}</h3>
 					</a>
 					{% if is_granted('ROLE_ADMIN') %}
-					<div class="d-flex gap-2 w-100 mt-2" style="max-width: 360px;">
-						<button class="btn btn-primary flex-grow-1">Edit Brand</button>
-						<!-- Botón que abre el modal de confirmación -->
-						<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteMarcaModal">
-							Borrar marca
-						</button>
-					</div>
+						<div class="d-flex gap-2 w-100 mt-2" style="max-width: 360px;">
+							<button class="btn btn-light flex-grow-1 text-danger" data-bs-toggle="modal" data-bs-target="#editBrandModal">Edit Brand</button>
+							<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteMarcaModal">
+								Delete Brand
+							</button>
+						</div>
 					{% endif %}
 				</div>
 
@@ -304,11 +42,21 @@
 						<div class="custom-scroll-container scroll-contenedor">
 							{% for model in modelos %}
 								{% embed 'profile/carousel_card.html.twig' %}
-									{% block link %}{{ path('marca', { name: marca.nombreMarca, id: model.modeloId }) }}{% endblock %}
-									{% block image %}{{ model.fotoModelo }}{% endblock %}
-									{% block title %}{{ model.modeloNombre }}{% endblock %}
-									{% block logo %}{{ marca.urlLogo }}{% endblock %}
-									{% block stars %}{{ model.mediaValoraciones|default(0) }}{% endblock %}
+									{% block link %}
+										{{ path('marca', { name: marca.nombreMarca, id: model.modeloId }) }}
+									{% endblock %}
+									{% block image %}
+										{{ model.fotoModelo }}
+									{% endblock %}
+									{% block title %}
+										{{ model.modeloNombre }}
+									{% endblock %}
+									{% block logo %}
+										{{ marca.urlLogo }}
+									{% endblock %}
+									{% block stars %}
+										{{ model.mediaValoraciones|default(0) }}
+									{% endblock %}
 								{% endembed %}
 							{% endfor %}
 						</div>
@@ -321,70 +69,51 @@
 		</div>
 
 		<div class="modal fade" id="confirmDeleteMarcaModal" tabindex="-1" aria-labelledby="confirmDeleteMarcaLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="confirmDeleteMarcaLabel">Confirmar borrado</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					Are you sure you want to delete "{{ marca.nombreMarca }}"?
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-					<a href="#" class="btn btn-danger" id="confirm-delete-marca" data-bs-dismiss="modal" role="button">Yes</a>
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="confirmDeleteMarcaLabel">Are you sure?</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						Are you sure you want to delete "{{ marca.nombreMarca }}"?
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-light" data-bs-dismiss="modal">No</button>
+						<a href="#" class="btn btn-danger" id="confirm-delete-marca" data-bs-dismiss="modal" role="button">Yes</a>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<script>
-		document.addEventListener('DOMContentLoaded', () => {
-const galerias = document.querySelectorAll('.gallery-wrapper');
-galerias.forEach(galeria => {
-const contenedor = galeria.querySelector('.scroll-contenedor');
-const btnAdelante = galeria.querySelector('.btn-adelante');
-const btnAtras = galeria.querySelector('.btn-atras');
-
-btnAdelante.addEventListener('click', () => {
-const item = contenedor.querySelector('.custom-item');
-if (! item) 
-return;
-
-
-
-const itemWidth = item.offsetWidth;
-contenedor.scrollBy({left: itemWidth, behavior: 'smooth'});
-setTimeout(() => {
-const primero = contenedor.firstElementChild;
-contenedor.appendChild(primero);
-contenedor.classList.add('no-smooth');
-contenedor.scrollLeft -= itemWidth;
-contenedor.classList.remove('no-smooth');
-}, 500);
-});
-
-btnAtras.addEventListener('click', () => {
-const item = contenedor.querySelector('.custom-item');
-if (! item) 
-return;
-
-
-
-const itemWidth = item.offsetWidth;
-const ultimo = contenedor.lastElementChild;
-contenedor.classList.add('no-smooth');
-contenedor.prepend(ultimo);
-contenedor.scrollLeft += itemWidth;
-contenedor.classList.remove('no-smooth');
-setTimeout(() => {
-contenedor.scrollBy({
-left: - itemWidth,
-behavior: 'smooth'
-});
-}, 10);
-});
-});
-});
-	</script>
-{% endblock %}
+		<!-- Edit Brand Modal -->
+		<div class="modal fade" id="editBrandModal" tabindex="-1" aria-labelledby="editBrandModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="editBrandModalLabel">Edit brand</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form id="ajax-editBrand-form" enctype="multipart/form-data" data-update-url="{{ path('marca_update', {'id': marca.idMarca}) }}">
+							<div class="mb-3">
+								<label class="form-label small fw-bold">Brand name</label>
+								<input type="text" name="nombre" class="form-control" value="{{ marca.nombreMarca }}" required>
+							</div>
+							<div class="mb-3">
+								<label class="form-label small fw-bold">Website URL</label>
+								<input type="url" name="url" class="form-control" value="{{ marca.urlMarca }}">
+							</div>
+							<div class="mb-3">
+								<label class="form-label small fw-bold">Logo (optional)</label>
+								<input type="file" name="logo" class="form-control" accept="image/*">
+							</div>
+							<div class="mb-3 text-end">
+								<button type="submit" id="submit-edit-brand" class="btn btn-light">Save changes</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endblock %}

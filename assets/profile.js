@@ -40,7 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!contenedor) return;
 
-        btnAdelante.addEventListener('click', () => {
+        if (btnAdelante) {
+            btnAdelante.addEventListener('click', () => {
             const item = contenedor.querySelector('.custom-item');
             if (!item) return;
 
@@ -53,9 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 contenedor.scrollLeft -= itemWidth;
                 contenedor.classList.remove('no-smooth');
             }, 500);
-        });
+            });
+        }
 
-        btnAtras.addEventListener('click', () => {
+        if (btnAtras) {
+            btnAtras.addEventListener('click', () => {
             const item = contenedor.querySelector('.custom-item');
             if (!item) return;
 
@@ -68,7 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 contenedor.scrollBy({ left: -itemWidth, behavior: 'smooth' });
             }, 10);
-        });
+            });
+        }
     });
 
     // Edit profile form submit via AJAX
@@ -177,6 +181,66 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // Delete comment 
+    let currentDeleteCommentTarget = null;
+    const confirmCommentModalEl = document.getElementById('confirmDeleteCommentModal');
+    const confirmCommentYes = document.getElementById('confirm-delete-comment-yes');
+    const confirmCommentNo = document.getElementById('confirm-delete-comment-no');
+
+    if (confirmCommentNo && !confirmCommentNo.dataset.handlerAttached) {
+        confirmCommentNo.addEventListener('click', (e) => { e.preventDefault(); /* bootstrap will hide modal */ });
+        confirmCommentNo.dataset.handlerAttached = '1';
+    }
+
+    if (confirmCommentYes && !confirmCommentYes.dataset.handlerAttached) {
+        confirmCommentYes.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const deleteUrl = confirmCommentYes.dataset.deleteUrl;
+            console.debug('[profile.js] confirm delete clicked, url=', deleteUrl);
+            if (!deleteUrl || deleteUrl === '#') return;
+            confirmCommentYes.classList.add('disabled');
+            try {
+                const resp = await fetch(deleteUrl, { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+                const json = await resp.json();
+                console.debug('[profile.js] delete response:', json);
+                if (json.success) {
+                    if (currentDeleteCommentTarget && currentDeleteCommentTarget.parentNode) currentDeleteCommentTarget.parentNode.removeChild(currentDeleteCommentTarget);
+                    const modalInst = bootstrap.Modal.getInstance(confirmCommentModalEl) || new bootstrap.Modal(confirmCommentModalEl);
+                    modalInst.hide();
+                } else {
+                    alert(json.error || 'Error deleting comment');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error deleting comment');
+            } finally {
+                confirmCommentYes.classList.remove('disabled');
+            }
+        });
+        confirmCommentYes.dataset.handlerAttached = '1';
+    }
+
+    document.addEventListener('click', (ev) => {
+        let node = ev.target; let btn = null;
+        while (node && node !== document) {
+            if (node.nodeType === 1 && node.classList && node.classList.contains('delete-comment-btn')) { btn = node; break; }
+            node = node.parentNode;
+        }
+        if (!btn) return;
+        ev.preventDefault();
+        ev.stopPropagation();
+        const deleteUrl = btn.getAttribute('data-delete-url') || btn.dataset.deleteUrl;
+        currentDeleteCommentTarget = btn.closest ? btn.closest('.comment-item') : (function(){ let n=btn; while(n && n.classList && !n.classList.contains('comment-item')) n = n.parentNode; return n; })();
+        if (confirmCommentYes) {
+            confirmCommentYes.dataset.deleteUrl = deleteUrl || '';
+            console.debug('[profile.js] delete button clicked, set confirm url=', confirmCommentYes.dataset.deleteUrl);
+        }
+        if (confirmCommentModalEl) {
+            const modal = bootstrap.Modal.getInstance(confirmCommentModalEl) || new bootstrap.Modal(confirmCommentModalEl);
+            modal.show();
+        }
+    });
 
     // Garage card modal handling
     const garageModalEl = document.getElementById('garageModal');
