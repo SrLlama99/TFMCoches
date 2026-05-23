@@ -1,7 +1,7 @@
 <nav class="customnav navbar navbar-expand-md m-1 p-2" data-bs-theme="dark">
     <div class="container">
         <span class="navbar-brand">
-            <img class="navBarLogo" draggable="false" src={{ asset('logo.png') }} />
+            <img class="navBarLogo" draggable="false" src="{{ asset('logo.png') }}" />
         </span>
         <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
@@ -9,8 +9,8 @@
         <div id="navbarCollapse" class="collapse navbar-collapse">
            <ul class="navbar-nav gap-3 w-100 flex-row justify-content-center my-2 my-md-0">
             <li class="nav-item">
-               <form class="navForm" method="get" action={{ path('home') }}> {# TODO: Change to search path here #}
-                    <input type="text" name="q" class="navSearchBar form-control"/>
+               <form class="navForm" method="get" action="{{ path('home') }}"> {# TODO: Change to search path here #}
+                    <input type="text" name="query" class="navSearchBar form-control" placeholder="Busca un modelo..."/>
                     <button type="submit" class="h-100 d-flex justify-content-center align-items-center searchButton customNavBtn btn">
                         <i class="bi bi-search"></i>
                     </button>
@@ -19,14 +19,14 @@
 
             {% if not app.user %} {# ANONYMOUS USER #}
             <li class="nav-item ms-md-auto">
-                <a class="h-100 d-flex justify-content-center align-items-center gap-1 nav-link logIOButton customNavBtn btn" title="Log in" href={{ path('home') }}> {# TODO: Change login path #}
+                <a class="h-100 d-flex justify-content-center align-items-center gap-1 nav-link logIOButton customNavBtn btn" title="Log in" href="{{ path('app_login') }}">
                     <i class="bi bi-box-arrow-in-right px-2 px-md-0"></i>
                     <span class="d-none d-md-inline">Login</span>
                 </a>
             </li>
             {% else %} {# USER IS LOGGED IN #}
             <li class="nav-item ms-md-auto">
-                <a class="h-100 d-flex justify-content-center align-items-center gap-1 garageButton customNavBtn btn" title="My garage">
+                <a class="h-100 d-flex justify-content-center align-items-center gap-1 garageButton customNavBtn btn" title="My garage" href="{{ path('profile', {'name':app.user.UserName}) }}">
                     <i class="bi bi-car-front-fill"></i>
                     <span class="d-none d-md-inline">Garage</span>
                 </a>
