@@ -69,12 +69,12 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserPassword()
     {
-        return $this->userPassword;
+        return $this->UserPassword;
     }
 
     public function setUserPassword($userPassword)
     {
-        $this->userPassword = $userPassword;
+        $this->UserPassword = $userPassword;
     }
 
     public function getAdmin()
