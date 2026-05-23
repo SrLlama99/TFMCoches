@@ -101,6 +101,6 @@ body {
     padding-inline-start: 20px;
 }
 
-.searchDropdownResult:hover{
+a.searchDropdownResult:hover{
     background: grey;
 }

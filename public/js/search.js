@@ -25,8 +25,9 @@ function search(query) {
             resultsHTML = []
 
             if (res.ok == false) {
-                error = document.createElement('p')
+                error = document.createElement('span')
                 error.innerText = res.errorReason;
+                error.classList.add("searchDropdownResult");
                 resultsHTML.push(error)
             } else {
                 res.data.forEach(car => {
