@@ -52,11 +52,11 @@
     text-align: center;
     background: #0A100D !important; /* requested profile card color */
     color: #D6D5C9;
+    border: var(--border) !important;
     border-radius: 18px;
     padding: 1rem;
 }
 
-/* Remove link decoration for brand name inside the profile card */
 .profile-card-custom a {
     text-decoration: none !important;
     color: inherit !important;
@@ -178,7 +178,7 @@
 .modal-content {
     background: #0A100D !important;
     color: #D6D5C9 !important;
-    border: 1px solid rgba(214, 213, 201, 0.06) !important;
+    border: var(--border) !important;
     border-radius: 18px !important;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4) !important;
 }
