@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const loadMoreBtn = document.getElementById('load-more-comments');
   const wrapper = document.getElementById('comments-wrapper');
 
-  // Handle delete-model-link (from assets/model.js) — show confirm modal and attach URL
+  // Handle delete-model-link 
   const deleteLinks = document.querySelectorAll('.delete-model-link');
   if (deleteLinks && deleteLinks.length) {
     deleteLinks.forEach(link => {

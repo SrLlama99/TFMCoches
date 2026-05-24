@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmCommentNo = document.getElementById('confirm-delete-comment-no');
 
     if (confirmCommentNo && !confirmCommentNo.dataset.handlerAttached) {
-        confirmCommentNo.addEventListener('click', (e) => { e.preventDefault(); /* bootstrap will hide modal */ });
+        confirmCommentNo.addEventListener('click', (e) => { e.preventDefault(); });
         confirmCommentNo.dataset.handlerAttached = '1';
     }
 

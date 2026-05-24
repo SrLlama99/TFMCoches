@@ -1,7 +1,5 @@
-// marca.js - JS para la página de marca
-
 document.addEventListener('DOMContentLoaded', () => {
-    // Carousel gallery handlers (can be multiple galleries)
+    // Carousel gallery handlers
     const galerias = document.querySelectorAll('.gallery-wrapper');
     galerias.forEach(galeria => {
         const contenedor = galeria.querySelector('.scroll-contenedor');

@@ -1,6 +1,4 @@
-/* Profile page styles grouped by component */
-
-/* Component: Gallery (carousel layout and cards) */
+/* carousel layout and cards */
 .gallery-section {
     max-width: 1000px;
     margin: 0 auto;
@@ -39,7 +37,7 @@
     }
 }
 
-/* Component: Profile card & comments */
+/* Profile card & comments */
 .profile-card-custom {
     display: flex;
     flex-direction: column;
@@ -159,7 +157,7 @@
 }
 .delete-comment-btn:hover { transform:scale(1.05); box-shadow:0 4px 10px rgba(0,0,0,0.12); }
 
-/* Component: Gallery cards appearance */
+/* Gallery cards appearance */
 .card-gallery {
     background: #0A100D;
     border-radius: 18px;
@@ -221,7 +219,7 @@
     margin: 0;
 }
 
-/* Component: Navigation buttons (carousel controls) */
+/* Navigation buttons (carousel controls) */
 .nav-btn {
     background: #222;
     color: white;
@@ -249,7 +247,7 @@
 .right { transform: rotate(-45deg); }
 .left { transform: rotate(135deg); }
 
-/* Component: Modal & form buttons */
+/* Modal & form buttons */
 .modal-dialog { max-width: 600px; }
 .modal-content {
     background: #0A100D !important;
@@ -272,7 +270,6 @@
 #submit-form-btn { background: #D6D5C9 !important; color: #902923 !important; border: 1px solid #902923 !important; font-weight: 700; box-shadow: none !important; border-radius: var(--bs-border-radius) !important; }
 #submit-form-btn:hover, #submit-form-btn:focus { background: #d2d1cc !important; color: #902923 !important; transform: translateY(-1px); }
 
-/* Make modal buttons consistent in size */
 .modal .btn, .modal .btn.btn-primary, .modal .btn.btn-secondary {
     padding: 0.5rem 1rem !important;
     height: 42px !important;
@@ -319,7 +316,7 @@
 .delete-account-link2:active { transform: translateY(0) !important; }
 
 
-/* Component: Rating stars */
+/* Rating stars */
 .rating-static { display: flex; justify-content: center; gap: 0.2rem; margin: 5px 0; }
 .rating-static svg { width: 1.1rem; height: 1.1rem; fill: #e8e8e8; }
 .rating-static .gold { fill: #ffca08; filter: drop-shadow(0 0 2px rgba(255, 202, 8, 0.3)); }
@@ -329,7 +326,6 @@
 
 .card { background-color: #0A100D }
 
-/* Small circular delete button for photos */
 .photo-delete-btn {
     width: 20px !important;
     height: 20px !important;
@@ -346,5 +342,3 @@
 .photo-delete-btn:hover {
     transform: scale(1.05);
 }
-
-

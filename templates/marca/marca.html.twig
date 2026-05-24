@@ -1,5 +1,5 @@
 {% extends "skeleton.html.twig" %}
-
+{% block title %}{{ marca.nombreMarca }}{% endblock %} 
 {% block stylesheets %}
 	<link rel="stylesheet" href="{{ asset('styles/marca.css') }}">
 {% endblock %}
@@ -68,6 +68,7 @@
 			</div>
 		</div>
 
+		<!-- Confirm delete modal -->
 		<div class="modal fade" id="confirmDeleteMarcaModal" tabindex="-1" aria-labelledby="confirmDeleteMarcaLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
