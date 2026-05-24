@@ -790,4 +790,30 @@ final class ProfilesController extends AbstractController
         }
         return $this->redirectToRoute('app_login');
     }
+
+    #[Route('/deleteMarca/{id}', name: 'app_borrarMarca')]
+    public function deleteMarca(EntityManagerInterface $em, int $id)
+    {
+        $marcaRepo = $em->getRepository(Marca::class);
+        $cocheRepo = $em->getRepository(Coche::class);
+        $valorRepo = $em->getRepository(Valoracion::class);
+        $marca = $marcaRepo->find($id);
+        if ($marca) {
+            $modelos = $marca->getModelos(); 
+            foreach ($modelos as $modelo) {
+                $coches = $cocheRepo->findBy(['modelo' => $modelo]);
+                foreach ($coches as $coche) {
+                    $valoraciones = $valorRepo->findBy(['idCoche' => $coche]);
+                    foreach ($valoraciones as $v) {
+                        $em->remove($v);
+                    }
+                    $em->remove($coche);
+                }
+                $em->remove($modelo);
+            }
+            $em->remove($marca);
+            $em->flush();
+        }
+        return $this->redirectToRoute('home');
+    }
 }
