@@ -795,11 +795,12 @@ final class ProfilesController extends AbstractController
     public function deleteMarca(EntityManagerInterface $em, int $id)
     {
         $marcaRepo = $em->getRepository(Marca::class);
+        $modeloRepo = $em->getRepository(Modelo::class);
         $cocheRepo = $em->getRepository(Coche::class);
         $valorRepo = $em->getRepository(Valoracion::class);
         $marca = $marcaRepo->find($id);
         if ($marca) {
-            $modelos = $marca->getModelos(); 
+            $modelos = $modeloRepo->findBy(['marca' => $marca->getIdMarca()]);
             foreach ($modelos as $modelo) {
                 $coches = $cocheRepo->findBy(['modelo' => $modelo]);
                 foreach ($coches as $coche) {
