@@ -28,5 +28,11 @@ final class LoginController extends AbstractController
         // Renderizar el formulario de login
         return $this->render('login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
+
+    #[Route('/logout', name: 'app_logout')]
+    public function logout(): void
+    {
+        throw new \LogicException('This should never be reached');
+    }
 	
 }

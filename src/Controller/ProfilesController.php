@@ -16,6 +16,8 @@ use App\Entity\Users;
 use App\Entity\FotoGaraje;
 use App\Entity\cocheGaraje;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
 
 final class ProfilesController extends AbstractController
 {
@@ -773,5 +775,19 @@ final class ProfilesController extends AbstractController
         }
 
         return new JsonResponse($response);
+    }
+
+    #[Route('/deleteAccount', name: 'app_borrarCuenta')]
+    public function delete(EntityManagerInterface $em, TokenStorageInterface $tokenStorage){
+        $user = $this->getUser();
+        $currentUser = $user?->getUserId();
+        $entityRepo = $em->getRepository(Users::class);
+        $user = $entityRepo->findOneBy(['UserId'=> $currentUser]);
+        if($user){
+            $em->remove($user);
+            $em->flush();
+            $tokenStorage->setToken(null); 
+        }
+        return $this->redirectToRoute('app_login');
     }
 }

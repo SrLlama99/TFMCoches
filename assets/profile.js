@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Delete account confirmation modal handling
-    const deleteLinks = document.querySelectorAll('.delete-account-link');
+    const deleteLinks = document.querySelectorAll('.delete-account-link:not(#confirm-delete-yes)');
     if (deleteLinks.length) {
         deleteLinks.forEach(link => {
             link.addEventListener('click', (e) => {
@@ -167,12 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         yesBtn.setAttribute('href', deleteUrl);
                         // let the link navigate when clicked
                     } else {
-                        yesBtn.setAttribute('href', '#');
-                        yesBtn.onclick = function(ev) {
-                            ev.preventDefault();
-                            const modalInst = bootstrap.Modal.getInstance(confirmModalEl) || new bootstrap.Modal(confirmModalEl);
-                            modalInst.hide();
-                        };
+                        yesBtn.setAttribute('href', '/deleteAccount');
                     }
                 }
 
