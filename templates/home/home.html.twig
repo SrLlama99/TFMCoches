@@ -41,7 +41,7 @@
 		<h1 class="bi bi-star"> Most Liked</h1>
 		{% if mostLiked is defined %}
 			<div class="custom-scroll-container scroll-contenedor">
-			{% for liked in mostRated %}
+			{% for liked in mostLiked %}
 				{% embed 'profile/carousel_card.html.twig' %}
 					{% block link %}{{ path('marca', {name: liked.modelo.marca.nombreMarca, id: liked.modelo.modeloId}) }}" class=""{% endblock %}
 					{% block image %}{{ liked.modelo.fotoModelo }}{% endblock %}
