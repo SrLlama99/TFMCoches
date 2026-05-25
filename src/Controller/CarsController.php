@@ -16,7 +16,7 @@ use App\Entity\Users;
 use App\Entity\FotoGaraje;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-final class MainController extends AbstractController
+final class CarsController extends AbstractController
 {
 #[Route('/marca/{name}/{id}', name: 'marca')]
     public function home(EntityManagerInterface $em, string $name, ?int $id = null): Response
