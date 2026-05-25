@@ -139,6 +139,12 @@ final class LoginController extends AbstractController
             return $this->render('login.html.twig',["registerError"=>6, "loginError" => null, 'checked2' => true, 'checked' => false]);
         }
     }
+
+    #[Route('/logout', name: 'app_logout')]
+    public function logout(): void
+    {
+        throw new \LogicException('This should never be reached');
+    }
 	
     #[Route('/codeVery', name:'codeVery')]
     public function veriCode(Request $request){

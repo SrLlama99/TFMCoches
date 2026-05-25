@@ -40,7 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!contenedor) return;
 
-        btnAdelante.addEventListener('click', () => {
+        if (btnAdelante) {
+            btnAdelante.addEventListener('click', () => {
             const item = contenedor.querySelector('.custom-item');
             if (!item) return;
 
@@ -53,9 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 contenedor.scrollLeft -= itemWidth;
                 contenedor.classList.remove('no-smooth');
             }, 500);
-        });
+            });
+        }
 
-        btnAtras.addEventListener('click', () => {
+        if (btnAtras) {
+            btnAtras.addEventListener('click', () => {
             const item = contenedor.querySelector('.custom-item');
             if (!item) return;
 
@@ -68,7 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 contenedor.scrollBy({ left: -itemWidth, behavior: 'smooth' });
             }, 10);
-        });
+            });
+        }
     });
 
     // Edit profile form submit via AJAX
@@ -138,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Delete account confirmation modal handling
-    const deleteLinks = document.querySelectorAll('.delete-account-link');
+    const deleteLinks = document.querySelectorAll('.delete-account-link:not(#confirm-delete-yes)');
     if (deleteLinks.length) {
         deleteLinks.forEach(link => {
             link.addEventListener('click', (e) => {
@@ -163,12 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         yesBtn.setAttribute('href', deleteUrl);
                         // let the link navigate when clicked
                     } else {
-                        yesBtn.setAttribute('href', '#');
-                        yesBtn.onclick = function(ev) {
-                            ev.preventDefault();
-                            const modalInst = bootstrap.Modal.getInstance(confirmModalEl) || new bootstrap.Modal(confirmModalEl);
-                            modalInst.hide();
-                        };
+                        yesBtn.setAttribute('href', '/deleteAccount');
                     }
                 }
 
@@ -177,6 +176,66 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // Delete comment 
+    let currentDeleteCommentTarget = null;
+    const confirmCommentModalEl = document.getElementById('confirmDeleteCommentModal');
+    const confirmCommentYes = document.getElementById('confirm-delete-comment-yes');
+    const confirmCommentNo = document.getElementById('confirm-delete-comment-no');
+
+    if (confirmCommentNo && !confirmCommentNo.dataset.handlerAttached) {
+        confirmCommentNo.addEventListener('click', (e) => { e.preventDefault(); });
+        confirmCommentNo.dataset.handlerAttached = '1';
+    }
+
+    if (confirmCommentYes && !confirmCommentYes.dataset.handlerAttached) {
+        confirmCommentYes.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const deleteUrl = confirmCommentYes.dataset.deleteUrl;
+            console.debug('[profile.js] confirm delete clicked, url=', deleteUrl);
+            if (!deleteUrl || deleteUrl === '#') return;
+            confirmCommentYes.classList.add('disabled');
+            try {
+                const resp = await fetch(deleteUrl, { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+                const json = await resp.json();
+                console.debug('[profile.js] delete response:', json);
+                if (json.success) {
+                    if (currentDeleteCommentTarget && currentDeleteCommentTarget.parentNode) currentDeleteCommentTarget.parentNode.removeChild(currentDeleteCommentTarget);
+                    const modalInst = bootstrap.Modal.getInstance(confirmCommentModalEl) || new bootstrap.Modal(confirmCommentModalEl);
+                    modalInst.hide();
+                } else {
+                    alert(json.error || 'Error deleting comment');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error deleting comment');
+            } finally {
+                confirmCommentYes.classList.remove('disabled');
+            }
+        });
+        confirmCommentYes.dataset.handlerAttached = '1';
+    }
+
+    document.addEventListener('click', (ev) => {
+        let node = ev.target; let btn = null;
+        while (node && node !== document) {
+            if (node.nodeType === 1 && node.classList && node.classList.contains('delete-comment-btn')) { btn = node; break; }
+            node = node.parentNode;
+        }
+        if (!btn) return;
+        ev.preventDefault();
+        ev.stopPropagation();
+        const deleteUrl = btn.getAttribute('data-delete-url') || btn.dataset.deleteUrl;
+        currentDeleteCommentTarget = btn.closest ? btn.closest('.comment-item') : (function(){ let n=btn; while(n && n.classList && !n.classList.contains('comment-item')) n = n.parentNode; return n; })();
+        if (confirmCommentYes) {
+            confirmCommentYes.dataset.deleteUrl = deleteUrl || '';
+            console.debug('[profile.js] delete button clicked, set confirm url=', confirmCommentYes.dataset.deleteUrl);
+        }
+        if (confirmCommentModalEl) {
+            const modal = bootstrap.Modal.getInstance(confirmCommentModalEl) || new bootstrap.Modal(confirmCommentModalEl);
+            modal.show();
+        }
+    });
 
     // Garage card modal handling
     const garageModalEl = document.getElementById('garageModal');
@@ -219,16 +278,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         wrapper.appendChild(img);
                         if (canEdit) {
                             const del = document.createElement('button');
-                            del.className = 'btn btn-sm btn-danger position-absolute';
+                            del.className = 'btn-danger position-absolute photo-delete-btn';
                             del.style.top = '6px';
                             del.style.right = '6px';
-                            del.textContent = 'Delete';
+                            del.style.width = '28px';
+                            del.style.height = '28px';
+                            del.style.padding = '0';
+                            del.style.borderRadius = '50%';
+                            del.style.display = 'flex';
+                            del.style.alignItems = 'center';
+                            del.style.justifyContent = 'center';
+                            del.style.fontSize = '0.85rem';
+                            del.textContent = '✕';
                             del.dataset.photoId = p.id || '';
                             del.addEventListener('click', async (ev) => {
                                 ev.stopPropagation();
                                 const pid = del.dataset.photoId;
                                 if (!pid) return;
-                                if (!confirm('Delete this photo?')) return;
                                 try {
                                     const resp = await fetch('/garaje/photo/' + pid + '/delete', { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' } });
                                     const json = await resp.json();
@@ -250,7 +316,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             });
                             wrapper.appendChild(del);
                         }
-                        photosContainer.appendChild(wrapper);
                         photosContainer.appendChild(wrapper);
                     });
                 }
@@ -295,14 +360,21 @@ document.addEventListener('DOMContentLoaded', () => {
                             const canEditNow = garageModalEl.dataset.canEdit === '1';
                             if (canEditNow) {
                                 const del = document.createElement('button');
-                                del.className = 'btn btn-sm btn-danger position-absolute';
+                                del.className = 'btn-danger position-absolute photo-delete-btn';
                                 del.style.top = '6px';
                                 del.style.right = '6px';
-                                del.textContent = 'Delete';
+                                del.style.width = '28px';
+                                del.style.height = '28px';
+                                del.style.padding = '0';
+                                del.style.borderRadius = '50%';
+                                del.style.display = 'flex';
+                                del.style.alignItems = 'center';
+                                del.style.justifyContent = 'center';
+                                del.style.fontSize = '0.85rem';
+                                del.textContent = '✕';
                                 del.dataset.photoId = u.id;
                                 del.addEventListener('click', async (ev) => {
                                     ev.stopPropagation();
-                                    if (!confirm('Delete this photo?')) return;
                                     try {
                                             const r2 = await fetch('/garaje/photo/' + u.id + '/delete', { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' } });
                                             const j2 = await r2.json();

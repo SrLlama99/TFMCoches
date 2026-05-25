@@ -1,0 +1,101 @@
+/* --------------------- Modals --------------------- */
+.modal.fade .modal-dialog .modal-content,
+.modal-content {
+  background-color: #0A100D;
+  color: #d6ddda;
+  border-radius: 16px;
+  border: var(--border);
+}
+
+#confirmDeleteModal .modal-content .btn,
+#confirmDeleteModal .modal-content .btn.btn-primary,
+#confirmDeleteModal .modal-content .btn.btn-secondary {
+  min-width: 180px;
+  padding: 0.5rem 1rem;
+  height: auto;
+  font-size: 0.95rem;
+}
+
+.modal-content .modal-header,
+.modal-content .modal-body,
+.modal-content .modal-footer {
+  background-color: transparent;
+  color: inherit;
+}
+.modal-backdrop.show { background-color: rgba(10,16,13,0.6); }
+.modal .btn-close { filter: invert(1) grayscale(1) contrast(200%); }
+
+.modal-content .form-control,
+.modal-content .form-select,
+.modal-content textarea,
+.modal-content input[type="file"] {
+  background-color: #d6ddda;
+  color: #0A100D;
+  border: none;
+  box-shadow: none;
+}
+.modal-content .form-select option { color: #0A100D; }
+.modal-content .btn.btn-primary { background-color: #d6ddda; color: #0A100D; border: none; }
+.modal-content .btn-outline-primary { background: transparent; color: #d6ddda; border-color: rgba(214,221,218,0.2); }
+.modal-content .form-check-input { background-color: #d6ddda; border-color: #d6ddda; }
+
+#submit-form-btn { background-color: #D6D5C9; color: #902923; }
+
+/* --------------------- Layout --------------------- */
+.main-grid { display: grid; grid-template-columns: 1fr 300px; gap: 30px; align-items: start; }
+.content-main { display:flex; flex-direction:column; gap:25px; }
+.featured-photo-container { width:100%; border:1px solid #eee; position:relative; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.1); }
+.featured-photo { width:100%; height:500px; object-fit:cover; display:block; }
+
+/* --------------------- Sidebar / Profile --------------------- */
+.profile-sidebar {
+  background:#0A100D; border-radius:20px; padding:30px 20px; box-shadow:0 4px 20px rgba(0,0,0,0.08);
+  display:flex; flex-direction:column; align-items:center; min-height:80vh; color:#d6ddda; border:var(--border);
+}
+.profile-avatar { width:150px; height:150px; border-radius:50%; object-fit:cover; border:4px solid #d6ddda; margin-bottom:20px; background:#d6ddda; }
+
+/* --------------------- Comments --------------------- */
+.comments-container { background:#0A100D; border-radius:20px; padding:25px; box-shadow:0 2px 10px rgba(0,0,0,0.05); color:#d6ddda; border:var(--border); }
+.comments-list { max-height:600px; overflow-y:auto; }
+.comment-item { display:flex; gap:15px; padding:15px; border-bottom:1px solid #f0f0f0; transition:background .2s; position:relative; }
+.comment-item:hover { background:#902923; }
+.comment-avatar { width:45px; height:45px; border-radius:8px; object-fit:contain; background:#eee; }
+.comments-list a, .comments-list a:hover { text-decoration:none; color:inherit; }
+.comments-list a.username-link { display:inline-block; text-decoration:none; color:inherit; border-bottom:2px solid transparent; padding-bottom:2px; transition:border-color .12s; }
+.comments-list a.username-link:hover { border-bottom-color:#fff; }
+.delete-comment-btn {
+  position:absolute; right:10px; top:10px; width:28px; height:28px; border-radius:50%; padding:0; display:inline-flex; align-items:center; justify-content:center;
+  font-size:12px; background:#fff; border:1px solid rgba(144,34,35,0.12); color:#902923; box-shadow:0 2px 6px rgba(0,0,0,0.08); z-index:20; cursor:pointer; line-height:1;
+}
+.delete-comment-btn:hover { transform:scale(1.05); box-shadow:0 4px 10px rgba(0,0,0,0.12); }
+
+.rating-static { display:flex; gap:2px; }
+.rating-static svg { width:14px; fill:#e8e8e8; }
+.rating-static .gold { fill:#ffca08; }
+
+.load-more-btn { display:block; width:100%; padding:12px; margin-top:15px; border:none; background:#D6D5C9; color:#902923; font-weight:600; border-radius:10px; cursor:pointer; }
+.load-more-btn:hover { background-color:#902923; color:#fff; border:1px solid #fff; }
+.comments-list::-webkit-scrollbar { width:6px; }
+.comments-list::-webkit-scrollbar-thumb { background:rgba(214,213,201,0.18); border-radius:10px; }
+
+/* --------------------- Rating form --------------------- */
+.rating-form-container { background:#0A100D; border-radius:30px; padding:35px; margin-bottom:40px; border:1px solid #f0f0f0; box-shadow:0 4px 20px rgba(0,0,0,0.02); }
+.star-rating-form { display:flex; flex-direction:row-reverse; justify-content:flex-end; gap:5px; }
+.star-rating-form input { display:none; }
+.star-rating-form label { cursor:pointer; width:30px; fill:#e9ecef; transition:.2s; }
+.star-rating-form label:hover, .star-rating-form label:hover ~ label, .star-rating-form input:checked ~ label { fill:#ffca08; }
+
+/* --------------------- Buttons / small tweaks --------------------- */
+.btn-outline-danger.btn-light.text-danger[data-bs-toggle="modal"][data-bs-target="#ratingModal"]:hover,
+.btn-outline-danger.btn-light.text-danger[data-bs-toggle="modal"][data-bs-target="#ratingModal"]:focus {
+  background-color: rgba(237,189,189,0.95);
+  color: white;
+  border-color: rgba(144,34,35,0.12);
+}
+
+/* --------------------- Responsive --------------------- */
+@media(max-width:992px) {
+  .main-grid { grid-template-columns: 1fr; }
+  .profile-sidebar { order:-1; min-height:auto; }
+  .featured-photo { height: 320px; }
+}
