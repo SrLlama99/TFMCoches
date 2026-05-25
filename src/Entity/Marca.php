@@ -10,10 +10,11 @@ use Doctrine\Common\Collections\Collection;
 class Marca
 {
     #[ORM\Id]
+    #[ORM\GeneratedValue]
     #[ORM\Column(type:'integer', name:'id')]
     private $idMarca;
 
-    #[ORM\Column(type:'string', name:'nombre')]
+    #[ORM\Column(type:'string', name:'nombre', unique: true)]
     private $nombreMarca;
 
     #[ORM\Column(type: 'string', name: 'url')]

@@ -432,7 +432,7 @@ final class ProfilesController extends AbstractController
             'logo' => $marca->geturlLogo(),
         ]]);
     }
-    #[Route('/profile/{name}', name: 'profile')]
+    #[Route('/garage/{name}', name: 'garage')]
     public function profile(EntityManagerInterface $em, string $name): Response
     {
         $usersRepo = $em->getRepository(Users::class);
@@ -712,7 +712,7 @@ final class ProfilesController extends AbstractController
         return new JsonResponse(['success' => true, 'deleted' => $photoId]);
     }
 
-    #[Route('/profile/{name}/update', name: 'profile_update', methods: ['POST'])]
+    #[Route('/garage/{name}/update', name: 'profile_update', methods: ['POST'])]
     public function updateProfile(EntityManagerInterface $em, string $name, Request $request): JsonResponse
     {
         $user = $this->getUser();
@@ -771,7 +771,7 @@ final class ProfilesController extends AbstractController
         $response['profilePicUrl'] = $response['profilePic'] ? '/assets/images/avatar/' . $response['profilePic'] : null;
         // If username changed, instruct client to redirect to the new profile URL
         if ($oldName !== $usuario->getUserName()) {
-            $response['redirect'] = $this->generateUrl('profile', ['name' => strtolower($usuario->getUserName())]);
+            $response['redirect'] = $this->generateUrl('garage', ['name' => strtolower($usuario->getUserName())]);
         }
 
         return new JsonResponse($response);

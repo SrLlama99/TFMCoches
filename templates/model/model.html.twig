@@ -8,7 +8,7 @@
 	{% block importmap %}{{ importmap('app') }}{% endblock %}
 	<script>
 	window.modelPageConfig = {
-		profilePathTemplate: "{{ path('profile', {'name': '__USERNAME__'}) }}",
+		profilePathTemplate: "{{ path('garage', {'name': '__USERNAME__'}) }}",
 		isAdmin: {{ is_granted('ROLE_ADMIN') ? '1' : '0' }},
 		initialCommentOffset: {{ (valoraciones is defined) ? valoraciones|length : 0 }},
 		addRatingUrl: "{{ path('model_add_rating', {'modelId': model.modeloId}) }}",
@@ -27,6 +27,7 @@
 			<div class="content-main">
 				<div
 					class="featured-photo-container">
+					{# <img src="{{ asset(model.fotoModelo) }}" alt="Coche destacado" class="featured-photo"> #}
 					<img src="{{ model.fotoModelo }}" alt="Coche destacado" class="featured-photo">
 				</div>
 
@@ -40,7 +41,7 @@
 								<div class="comment-item">
 									<img src="{{ asset('assets/images/avatar/' ~ v.profilePic) }}" class="comment-avatar">
 									<div class="comment-content">
-										<h6 class="mb-0 fw-bold"><a href="{{ path('profile', {name: v.username}) }}" class="username-link">{{ v.username }}</a> <small class="text-white small ms-2 time-ago" data-timestamp="{{ v.fecha|date('U') }}"></small></h6>
+										<h6 class="mb-0 fw-bold"><a href="{{ path('garage', {name: v.username}) }}" class="username-link">{{ v.username }}</a> <small class="text-white small ms-2 time-ago" data-timestamp="{{ v.fecha|date('U') }}"></small></h6>
 										<p class="text-white small mb-1">{{ v.comentario }}</p>
 										<div class="rating-static">
 											{% for i in 1..5 %}

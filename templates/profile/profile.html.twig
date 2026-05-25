@@ -1,5 +1,7 @@
 {% extends "skeleton.html.twig" %}
-{% block title %}{{usuario.UserName}}'s garage{% endblock %}
+{% block title %}
+	{{usuario.UserName}}'s garage
+{% endblock %}
 {% block stylesheets %}
 	<link rel="stylesheet" href="{{ asset('styles/profile.css') }}">
 {% endblock %}
@@ -134,7 +136,7 @@
 
 			<div class="col-lg-8">
 				<div class="gallery-section mb-5 cars-in-garage-section">
-					<h2 class="mb-4 fw-bold text-center">Cars in garage</h2>
+					<h2 class="mb-4 fw-bold text-center text-white">Cars in garage</h2>
 					<div class="carousel-flex-layout gallery-wrapper">
 						{% if coches %}
 							<button class="nav-btn btn-atras">
@@ -144,10 +146,7 @@
 							<div class="custom-scroll-container scroll-contenedor">
 								{% for car in coches %}
 									{% embed 'profile/carousel_card.html.twig' %}
-										{% block link %}#" class="garage-card"
-																																											data-coche-id="{{ car.coche.getcocheId() }}"
-																																											data-notas="{{ car.garaje.getNotas()|e('html_attr') }}"
-																																											data-photos="{{ (car.photos|default([]))|json_encode()|e('html_attr') }}
+										{% block link %}#" class="garage-card" data-coche-id="{{ car.coche.getcocheId() }}" data-notas="{{ car.garaje.getNotas()|e('html_attr') }}" data-photos="{{ (car.photos|default([]))|json_encode()|e('html_attr') }}
 										{% endblock %}
 										{% block image %}
 											{{ car.modelo.fotoModelo }}
@@ -175,7 +174,7 @@
 				</div>
 
 				<div class="gallery-section mb-5 most-rated-section">
-					<h2 class="mb-4 fw-bold text-center">Most rated by
+					<h2 class="mb-4 fw-bold text-center text-white">Most rated by
 						{{usuario.UserName}}</h2>
 					<div class="carousel-flex-layout gallery-wrapper">
 						{% if valorados %}

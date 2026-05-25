@@ -30,7 +30,7 @@
             </li>
             {% else %} {# USER IS LOGGED IN #}
             <li class="nav-item ms-md-auto">
-                <a class="h-100 d-flex justify-content-center align-items-center gap-1 garageButton customNavBtn btn" title="My garage" href="{{ path('profile', {'name':app.user.UserName}) }}">
+                <a class="h-100 d-flex justify-content-center align-items-center gap-1 garageButton customNavBtn btn" title="My garage" href="{{ path('garage', {'name':app.user.UserName}) }}">
                     <i class="bi bi-car-front-fill"></i>
                     <span class="d-none d-md-inline">Garage</span>
                 </a>

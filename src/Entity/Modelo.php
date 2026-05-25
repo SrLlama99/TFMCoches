@@ -19,7 +19,7 @@ class Modelo
     #[ORM\JoinColumn(name: 'marca', referencedColumnName: 'id')]
     private Marca $marca;
     
-    #[ORM\Column(type: "string", name: "nombre")]
+    #[ORM\Column(type: "string", name: "nombre", unique: true)]
     private $modeloNombre;
 
     #[ORM\Column(type: "string", name: "foto")]
@@ -84,8 +84,9 @@ class Modelo
         $this->modeloNombre = $modeloNombre; 
     }
 
+    // TODO: Return assets
     public function getfotoModelo(): ?string{
-        return $this->fotoModelo;
+        return '/assets/images/models/'.$this->fotoModelo;
     }
 
     public function setfotoModelo(string $fotoModelo){
