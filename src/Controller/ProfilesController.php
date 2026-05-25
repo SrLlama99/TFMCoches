@@ -382,16 +382,19 @@ final class ProfilesController extends AbstractController
         return new JsonResponse($response);
     }
 
-    #[Route('/deleteAccount', name: 'app_borrarCuenta')]
-    public function delete(EntityManagerInterface $em, TokenStorageInterface $tokenStorage){
-        $user = $this->getUser();
-        $currentUser = $user?->getUserId();
-        $entityRepo = $em->getRepository(Users::class);
-        $user = $entityRepo->findOneBy(['UserId'=> $currentUser]);
-        if($user){
-            $em->remove($user);
+   #[Route('/deleteAccount/{id}', name: 'app_borrarCuenta')]
+    public function delete(EntityManagerInterface $em,TokenStorageInterface $tokenStorage,int $id){
+        $userRepo = $em->getRepository(Users::class);
+        $valorRepo = $em->getRepository(Valoracion::class);
+        $currentUser = $userRepo->findOneBy(['UserId' => $id]);
+        if ($currentUser) {
+            $valoraciones = $valorRepo->findBy(['idUsuario' => $currentUser]);
+            foreach ($valoraciones as $v) {
+                $em->remove($v);
+            }
+            $em->remove($currentUser);
             $em->flush();
-            $tokenStorage->setToken(null); 
+            $tokenStorage->setToken(null);
         }
         return $this->redirectToRoute('app_login');
     }

@@ -148,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const deleteUrl = link.dataset.deleteUrl || link.getAttribute('href');
+                const idUsu = document.getElementById("idBorrar");
 
                 // hide any open modal first
                 const openModalEl = document.querySelector('.modal.show');
@@ -167,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         yesBtn.setAttribute('href', deleteUrl);
                         // let the link navigate when clicked
                     } else {
-                        yesBtn.setAttribute('href', '/deleteAccount');
+                        yesBtn.setAttribute('href', '/deleteAccount/' + idUsu.value);
                     }
                 }
 
