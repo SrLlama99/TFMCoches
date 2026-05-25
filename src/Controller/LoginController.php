@@ -183,11 +183,4 @@ final class LoginController extends AbstractController
             return $this->render('cambiarPass/cambiarPass2.html.twig', ["registerError"=>1]);
         }
     }
-
-    #[Route('/logout', name: 'app_logout')]
-    public function logout(): void
-    {
-        throw new \LogicException('This should never be reached');
-    }
-
 }
