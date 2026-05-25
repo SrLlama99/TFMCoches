@@ -20,7 +20,7 @@ class ModeloRepository extends ServiceEntityRepository
     }
     public function findByBest(int $limit = 1, Marca $brand = null, string $order = 'DESC')
     {
-        if ($brand) { //This bs returns the best from the brand provided
+        if ($brand) { //This returns the best from the brand provided
             return $this->getEntityManager()->createQueryBuilder()
                 ->select('m as modelo', 'AVG(v.estrellas) as media')
                 ->from(\App\Entity\Modelo::class, 'm')

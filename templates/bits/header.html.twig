@@ -13,7 +13,7 @@
             <li class="nav-item position-relative">
                <form id="navForm" method="POST"> {# TODO: Change to search path here #}
                     <input type="hidden" value="{{ path('search_virpath') }}" name="queryEndpoint">
-                    <input type="text" id="navFormQuery" name="query" class="navSearchBar form-control" placeholder="Busca un modelo..."/>
+                    <input type="text" id="navFormQuery" name="query" class="navSearchBar form-control" placeholder="Search for a model..."/>
                     <button type="submit" class="h-100 d-flex justify-content-center align-items-center searchButton customNavBtn btn">
                         <i class="bi bi-search"></i>
                     </button>
@@ -36,7 +36,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="logIOButton customNavBtn btn" title="Log out" href="/logout"> {# TODO: Add logout path #}
+                <a class="logIOButton customNavBtn btn" title="Log out" href="/logout">
                     <i class="bi bi-box-arrow-right"></i>
                 </a>
             </li>

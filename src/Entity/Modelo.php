@@ -91,4 +91,11 @@ class Modelo
     public function setfotoModelo(string $fotoModelo){
         $this->fotoModelo = $fotoModelo;
     }
+
+    public function getId(): int { 
+        return $this->modeloId; 
+    }
+    public function setId(int $id) { 
+        return $this->modeloId = $id; 
+    }
 }

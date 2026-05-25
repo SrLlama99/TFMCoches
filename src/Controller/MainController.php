@@ -13,21 +13,21 @@ final class MainController extends AbstractController
     #[Route('/home', name: 'home')]
     public function home(EntityManagerInterface $em): Response
     {
-        // $this->denyAccessUnlessGranted("ROLE_USER");
-
         $modelosEM = $em->getRepository(Modelo::class);
 
-        $mostRated = $modelosEM->findByMostRated(10);
-        $mostLiked = $modelosEM->findByBest(3);
+        $mostRated = $modelosEM->findByMostRated();
+        
+        $mostLikedLookup = $modelosEM->findByBest(3);
+        $mostLiked = [$mostLikedLookup[1], $mostLikedLookup[0], $mostLikedLookup[2]];
+
         $mostHated = $modelosEM->findByWorst(3);
-        // $topFromBrands= $modelos->findBestOfBrands();
 
         return $this->render(
             'home/home.html.twig',
             [
                 "mostRated" => $mostRated,
                 "mostLiked" => $mostLiked,
-                "mostHated"=>$mostHated
+                "mostHated" => $mostHated
                 // "topFromBrands"=>$topFromBrands
             ]
         );

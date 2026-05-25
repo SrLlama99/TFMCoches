@@ -25,7 +25,7 @@ final class SearchController extends AbstractController
         $modelos = $modelosEM->findBySimilarity($sanQuery);
 
         if (is_null($modelos) | count($modelos) <= 0) {
-            $error['errorReason'] = "The model you searched for doesn't exist.";
+            $error['errorReason'] = "No models found for your search.";
             return $this->json($error);
         }
 

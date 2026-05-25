@@ -63,9 +63,21 @@ class Marca
 
     public function geturlLogo() { 
         return $this->urlLogo; 
-    }
+    }   
 
     public function seturlLogo($urlLogo) { 
         $this->urlLogo = $urlLogo; 
+    }
+    public function getId(): int { 
+        return $this->idMarca; 
+    }
+    public function setId(int $id) { 
+        return $this->idMarca = $id; 
+    }
+    public function getImage(): string { 
+        return $this->urlLogo; 
+    }
+    public function setImage(string $urlLogo) { 
+        return $this->urlLogo = $urlLogo; 
     }
 }

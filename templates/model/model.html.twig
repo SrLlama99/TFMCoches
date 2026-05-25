@@ -1,5 +1,5 @@
 {% extends "skeleton.html.twig" %}
-
+{% block title %}{{model.modeloNombre}}, {{model.marca.nombreMarca}}{% endblock %}
 {% block stylesheets %}
 	<style>
 		/* Modal custom background (use high specificity and !important to override Bootstrap) */
