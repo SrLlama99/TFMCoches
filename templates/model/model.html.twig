@@ -28,7 +28,7 @@
 				<div
 					class="featured-photo-container">
 					{# <img src="{{ asset(model.fotoModelo) }}" alt="Coche destacado" class="featured-photo"> #}
-					<img src="{{ model.fotoModelo }}" alt="Coche destacado" class="featured-photo">
+					<img src="{{ asset(model.fotoModelo) }}" alt="Coche destacado" class="featured-photo">
 				</div>
 
 				<div class="comments-container">
@@ -39,7 +39,7 @@
 						{% if valoraciones is defined and valoraciones|length > 0 %}
 							{% for v in valoraciones %}
 								<div class="comment-item">
-									<img src="{{ asset('assets/images/avatar/' ~ v.profilePic) }}" class="comment-avatar">
+									<img src="{{ asset(v.profilePic) }}" class="comment-avatar">
 									<div class="comment-content">
 										<h6 class="mb-0 fw-bold"><a href="{{ path('garage', {name: v.username}) }}" class="username-link">{{ v.username }}</a> <small class="text-white small ms-2 time-ago" data-timestamp="{{ v.fecha|date('U') }}"></small></h6>
 										<p class="text-white small mb-1">{{ v.comentario }}</p>
@@ -94,7 +94,7 @@
 
 			<aside class="profile-sidebar">
 				<a href="{{ path('marca', {'name': marca.nombreMarca, 'id': null}) }}">
-					<img src="{{ marca.urlLogo }}" alt="Avatar" class="profile-avatar">
+					<img src="{{ asset(marca.urlLogo) }}" alt="Avatar" class="profile-avatar">
 				</a>
 				<h3 class="fw-bold mb-1">{{model.modeloNombre}}</h3>
 				<p class="small text-white">{{marca.nombreMarca}}</p>

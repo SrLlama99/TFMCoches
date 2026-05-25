@@ -17,7 +17,7 @@
 			<div class="col-lg-4 mb-4">
 				<div class="card shadow-sm border-0 profile-card-custom p-4 mb-4">
 					<div class="ratio ratio-1x1 mb-3" style="width: 120px;">
-						<img src="{{ asset('assets/images/avatar/' ~ usuario.profilePic) }}" class="rounded-circle object-fit-cover shadow-sm" alt="Profile picture">
+						<img src="{{ asset(usuario.profilePic) }}" class="rounded-circle object-fit-cover shadow-sm" alt="Profile picture">
 					</div>
 					<h3 class="fw-bold">{{ usuario.UserName }}</h3>
 
@@ -49,9 +49,9 @@
 								<div class="modal-footer">
 									<input type="hidden" id="garage-coche-id" value="">
 									{% if canEditGarage %}
-										<button type="button" id="garage-upload-btn" class="btn btn-primary py-3 fw-bold" style="border-radius: 18px;">Upload</button>
+										<button type="button" id="garage-upload-btn" class="btn btn-light py-3 fw-bold" style="border-radius: 18px;">Upload</button>
 									{% endif %}
-									<button type="button" class="btn btn-secondary py-3 fw-bold" data-bs-dismiss="modal" style="border-radius: 18px;">Close</button>
+									<button type="button" class="btn btn-danger py-3 fw-bold" data-bs-dismiss="modal" style="border-radius: 18px;">Close</button>
 								</div>
 							</div>
 						</div>
@@ -72,7 +72,7 @@
 							{% for last in ultimos %}
 								<a href="{{ path('marca', {name: last.marca.nombreMarca, id: last.modelo.modeloId}) }}">
 									<div class="comment-item">
-										<img src="{{ last.marca.urlLogo }}" class="comment-avatar" alt="Avatar">
+										<img src="{{ asset(last.marca.urlLogo) }}" class="comment-avatar" alt="Avatar">
 										<div class="comment-body">
 											<span class="comment-author">{{ last.modelo.modeloNombre }}<small class="text-muted small ms-2 time-ago" data-timestamp="{{ last.valoracion.fecha|date('U') }}"></small>
 											</span>
@@ -149,13 +149,13 @@
 										{% block link %}#" class="garage-card" data-coche-id="{{ car.coche.getcocheId() }}" data-notas="{{ car.garaje.getNotas()|e('html_attr') }}" data-photos="{{ (car.photos|default([]))|json_encode()|e('html_attr') }}
 										{% endblock %}
 										{% block image %}
-											{{ car.modelo.fotoModelo }}
+											{{ asset(car.modelo.fotoModelo) }}
 										{% endblock %}
 										{% block title %}
 											{{ car.modelo.modeloNombre }}
 										{% endblock %}
 										{% block logo %}
-											{{ car.marca.urlLogo }}
+											{{ asset(car.marca.urlLogo) }}
 										{% endblock %}
 										{% block stars %}
 											{{ car.valoracion.estrellas|default(0) }}
@@ -189,13 +189,13 @@
 											{{ path('marca', {name: value.marca.nombreMarca, id: value.modelo.modeloId}) }}
 										{% endblock %}
 										{% block image %}
-											{{ value.modelo.fotoModelo }}
+											{{ asset(value.modelo.fotoModelo) }}
 										{% endblock %}
 										{% block title %}
 											{{ value.modelo.modeloNombre }}
 										{% endblock %}
 										{% block logo %}
-											{{ value.marca.urlLogo }}
+											{{ asset(value.marca.urlLogo) }}
 										{% endblock %}
 										{% block stars %}
 											{{ value.valoracion.estrellas|default(0) }}
