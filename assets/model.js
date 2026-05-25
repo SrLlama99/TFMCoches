@@ -14,6 +14,13 @@ document.addEventListener('DOMContentLoaded', () => {
     return `<button class="delete-comment-btn" data-delete-url="${valoracionDeleteUrlTemplate.replace('__ID__', id)}">✕</button>`;
   };
 
+  const getAvatarSrc = (item) => {
+    if (item && item.avatar) return item.avatar;
+    const name = (item && item.username) ? String(item.username).trim() : '';
+    const initial = name ? name.charAt(0).toUpperCase() : '';
+    return `https://via.placeholder.com/45?text=${encodeURIComponent(initial)}`;
+  };
+
   let commentOffset = Number(cfg.initialCommentOffset || 0);
   const loadMoreBtn = document.getElementById('load-more-comments');
   const wrapper = document.getElementById('comments-wrapper');
@@ -132,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const timeAgo = item.timeAgo || formatTimeAgo(_ts);
             const html = `
               <div class="comment-item">
-                <img src="https://via.placeholder.com/45" class="comment-avatar">
+                <img src="${getAvatarSrc(item)}" class="comment-avatar">
                 <div class="comment-content">
                   <h6 class="mb-0 fw-bold"><a href="${userHref}" class="username-link">${item.username}</a> <small class="text-white small ms-2 time-ago" data-timestamp="${_ts || ''}">${timeAgo}</small></h6>
                   <p class="text-white small mb-1">${item.comentario}</p>
@@ -218,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const userHref = profilePathTemplate.replace('__USERNAME__', encodeURIComponent(item.username));
           const html = `
             <div class="comment-item" style="opacity:0; transform:translateY(10px); transition:all .3s">
-              <img src="https://via.placeholder.com/45" class="comment-avatar">
+              <img src="${getAvatarSrc(item)}" class="comment-avatar">
               <div class="comment-content">
                 <h6 class="mb-0 fw-bold"><a href="${userHref}" class="username-link">${item.username}</a> <small class="text-white small ms-2 time-ago" data-timestamp="${_ts || ''}">${timeAgo}</small></h6>
                 <p class="text-white small mb-1">${item.comentario}</p>

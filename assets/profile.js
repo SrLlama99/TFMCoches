@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         wrapper.style.margin = '4px';
 
                         const img = document.createElement('img');
-                        img.src = '/assets/images/' + (p.url || p);
+                        img.src = '/assets/images/cars/' + (p.url || p);
                         img.style.objectFit = 'cover';
                         img.style.width = '100%';
                         img.style.height = '100%';
@@ -348,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             wrapper.style.margin = '4px';
 
                             const img = document.createElement('img');
-                            img.src = u.urlPublic || ('/assets/images/' + u.url);
+                            img.src = u.urlPublic || ('/assets/images/cars/' + u.url);
                             img.style.objectFit = 'cover';
                             img.style.width = '100%';
                             img.style.height = '100%';
