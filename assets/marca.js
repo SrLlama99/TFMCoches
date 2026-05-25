@@ -49,23 +49,54 @@ document.addEventListener('DOMContentLoaded', () => {
             const fd = new FormData(form);
             try {
                 const resp = await fetch(url, { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' } });
-                const json = await resp.json();
-                if (json.success) {
-                    const data = json.data || {};
+                let json = null;
+                try { json = await resp.json(); } catch (e) { console.error('Invalid JSON response', e); }
+
+                console.debug('marca update response', resp.status, json);
+
+                // Consider success if HTTP status is OK and the server didn't explicitly mark success=false
+                const wasSuccessful = resp.ok && !(json && json.success === false);
+
+                if (wasSuccessful) {
+                    const data = (json && json.data) ? json.data : {};
                     const title = document.querySelector('.profile-card-custom h3');
                     if (title && data.nombre) title.textContent = data.nombre;
                     const anchor = document.querySelector('.profile-card-custom a');
                     if (anchor && data.url) anchor.setAttribute('href', data.url);
                     const img = document.querySelector('.profile-card-custom img');
                     if (img && data.logo) img.setAttribute('src', data.logo);
+
                     // hide modal
                     const modalEl = document.getElementById('editBrandModal');
                     if (modalEl) {
-                        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-                        modal.hide();
+                        try {
+                            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                                const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                                modal.hide();
+                            } else if (window.jQuery && typeof jQuery(modalEl).modal === 'function') {
+                                jQuery(modalEl).modal('hide');
+                            } else {
+                                // Fallback: hide modal manually
+                                modalEl.classList.remove('show');
+                                modalEl.style.display = 'none';
+                                document.body.classList.remove('modal-open');
+                                const backdrops = document.querySelectorAll('.modal-backdrop');
+                                backdrops.forEach(b => b.parentNode && b.parentNode.removeChild(b));
+                            }
+                        } catch (e) {
+                            console.warn('Could not hide modal via bootstrap/jQuery, fallback applied', e);
+                            modalEl.classList.remove('show');
+                            modalEl.style.display = 'none';
+                        }
+                    }
+
+                    // If server returned a redirect URL, follow it
+                    if (json && json.redirect) {
+                        window.location.href = json.redirect;
+                        return;
                     }
                 } else {
-                    alert(json.error || 'Error updating brand');
+                    alert((json && json.error) ? json.error : 'Error updating brand');
                 }
             } catch (err) {
                 console.error(err);

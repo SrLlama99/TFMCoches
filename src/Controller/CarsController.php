@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 final class CarsController extends AbstractController
 {
-#[Route('/marca/{name}/{id}', name: 'marca')]
+#[Route('/marca/{name}/{id}', name: 'marca', requirements: ['id' => '\\d+'])]
     public function home(EntityManagerInterface $em, string $name, ?int $id = null): Response
     {
         // Define repositories to use
@@ -354,7 +354,7 @@ final class CarsController extends AbstractController
     }
 
     #[Route('/marca/{id}/update', name: 'marca_update', methods: ['POST'])]
-    public function updateMarca(EntityManagerInterface $em, Request $request, int $id): JsonResponse
+    public function updateMarca(EntityManagerInterface $em, Request $request, int $id): Response
     {
         if (! $this->isGranted('ROLE_ADMIN')) {
             return new JsonResponse(['success' => false, 'error' => 'Forbidden'], 403);
@@ -395,11 +395,22 @@ final class CarsController extends AbstractController
             return new JsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
         }
 
-        return new JsonResponse(['success' => true, 'data' => [
-            'nombre' => $marca->getnombreMarca(),
-            'url' => $marca->geturlMarca(),
-            'logo' => $marca->geturlLogo(),
-        ]]);
+        // Build redirect URL to the brand page with the (possibly) new name
+        $redirectUrl = $this->generateUrl('marca', [
+            'name' => $marca->getnombreMarca(),
+        ]);
+
+        // If the request is AJAX, return JSON including the redirect URL
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse(['success' => true, 'data' => [
+                'nombre' => $marca->getnombreMarca(),
+                'url' => $marca->geturlMarca(),
+                'logo' => $marca->geturlLogo(),
+            ], 'redirect' => $redirectUrl]);
+        }
+
+        // Otherwise perform a normal redirect to the new brand URL
+        return $this->redirect($redirectUrl);
     }
 
     #[Route('/deleteMarca/{id}', name: 'app_borrarMarca')]
