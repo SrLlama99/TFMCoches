@@ -1,0 +1,37 @@
+{% extends "skeleton.html.twig" %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/newObjects.css') }}">
+{% endblock %}
+{% block title %}New {{type}}{% endblock %}
+{% block main %}
+	{% if error is defined %}
+		<div id="newThingError">{{error}}</div>
+	{% endif %}
+	<div class="customnav d-flex align-items-center flex-column justify-content-center p-2">
+		<h1 class="my-1">New
+			{{ type }}</h1>
+		<form class="container text-center p-4" enctype='multipart/form-data' method="post">
+			<div class="row align-items-center justify-content-around flex-column flex-lg-row gap-3" data-bs-theme="dark">
+				<div class="col-auto d-flex flex-column align-items-center">
+					<img>
+					<label for="imageUpload" class="form-label pt-3">📷 Choose a picture</label>
+					<input type="file" class="form-control" name="pic" id="imageUpload" placeholder="Picture to be uploaded"/>
+				</div>
+				<div class="col">
+					<div class="input-group mb-3">
+						<input class="form-control my-1" type="text" name="name" placeholder="Name of the {{ type }}" required>
+					</div>
+					{% if type == 'brand' %}
+						<div class="input-group mb-3">
+							<span class="input-group-text bi bi-globe2" id="pagWeb"></span>
+							<input type="text" class="form-control" placeholder="Website of the {{ type }} (optional)">
+						</div>
+					{% endif %}
+				</div>
+			</div>
+			<button type="submit" class="my-1 bg-success text-white customNavBtn btn">
+				<span class="bi bi-plus-circle">&nbsp;</span>Create
+				{{ type }}</button>
+		</form>
+	</div>
+{% endblock %}
