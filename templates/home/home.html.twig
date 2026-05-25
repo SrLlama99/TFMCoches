@@ -12,6 +12,15 @@
 	<script type="module" src="{{ asset('home.js') }}"></script>
 {% endblock %}
 {% block main %}
+	<div class="customnav p-3 my-2 d-flex flex-column align-items-center text-center">
+		<h1>Brands by initial</h1>
+		<div class="letters-bar">
+			{% for ch in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'|split('') %}
+				<a class="letter-link px-1 text-white text-decoration-none" href="{{ path('marca_index', {letter: ch}) }}">{{ ch }}</a>
+			{% endfor %}
+			<a class="letter-link px-1 text-white text-decoration-none" href="{{ path('marca_index') }}">All</a>
+		</div>
+	</div>
 	<div class="customnav p-3 gallery-wrapper">
 		<h1 class="h1 bi bi-bar-chart-line">
 			Most rated</h1>
@@ -131,4 +140,5 @@
 			<p class="text-center">There has been an error. We're trying hard to fix it!</p>
 		{% endif %}
 	</div>
+
 {% endblock %}

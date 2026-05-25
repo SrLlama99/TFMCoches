@@ -36,6 +36,7 @@
 				<div class="gallery-section mb-5">
 					<h2 class="mb-4 fw-bold text-center text-white">Models of the brand:</h2>
 					<div class="carousel-flex-layout gallery-wrapper">
+						{% if modelos %}
 						<button class="nav-btn btn-atras">
 							<i class="arrow left"></i>
 						</button>
@@ -63,6 +64,9 @@
 						<button class="nav-btn btn-adelante">
 							<i class="arrow right"></i>
 						</button>
+						{% else %}
+						<h2 class="text-white text-center">This brands don't have models</h2>
+						{% endif %}
 					</div>
 				</div>
 			</div>
