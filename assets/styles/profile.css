@@ -1,6 +1,4 @@
-/* Profile page styles grouped by component */
-
-/* Component: Gallery (carousel layout and cards) */
+/* carousel layout and cards */
 .gallery-section {
     max-width: 1000px;
     margin: 0 auto;
@@ -39,7 +37,7 @@
     }
 }
 
-/* Component: Profile card & comments */
+/* Profile card & comments */
 .profile-card-custom {
     display: flex;
     flex-direction: column;
@@ -50,6 +48,12 @@
     border-radius: 18px;
     color: #D6D5C9 !important;
     padding: 1rem;
+    border: var(--border) !important;
+}
+
+.card.profile-card-custom,
+.card.card-comments {
+    border: var(--border) !important;
 }
 
 .card-comments {
@@ -58,7 +62,27 @@
     border-radius: 18px;
     padding: 1rem;
     box-shadow: none !important;
-    border: 1px solid rgba(214,213,201,0.04);
+    border: var(--border) !important;
+}
+
+.comments-section > a,
+.comments-section a {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+.comments-section > a:hover,
+.comments-section a:hover {
+    text-decoration: none !important;
+}
+
+.comments-section > a {
+    display: block;
+    border-radius: 15px;
+}
+
+.comment-item:hover,
+.comment-item:focus-within {
+    background: #902923;
 }
 
 .comments-section {
@@ -72,6 +96,7 @@
 
 .comment-item {
     display: flex;
+    position: relative;
     align-items: flex-start;
     gap: 12px;
     padding: 15px;
@@ -80,10 +105,6 @@
     border-radius: 15px;
     border: 1px solid #902923;
     transition: all 0.3s ease;
-}
-
-.comment-item:hover {
-    background: rgba(255,255,255,0.02);
 }
 
 .comment-body {
@@ -130,7 +151,13 @@
     padding: 4px;
 }
 
-/* Component: Gallery cards appearance */
+.delete-comment-btn {
+  position:absolute; right:10px; top:10px; width:28px; height:28px; border-radius:50%; padding:0; display:inline-flex; align-items:center; justify-content:center;
+  font-size:12px; background:#fff; border:1px solid rgba(144,34,35,0.12); color:#902923; box-shadow:0 2px 6px rgba(0,0,0,0.08); z-index:20; cursor:pointer; line-height:1;
+}
+.delete-comment-btn:hover { transform:scale(1.05); box-shadow:0 4px 10px rgba(0,0,0,0.12); }
+
+/* Gallery cards appearance */
 .card-gallery {
     background: #0A100D;
     border-radius: 18px;
@@ -192,7 +219,7 @@
     margin: 0;
 }
 
-/* Component: Navigation buttons (carousel controls) */
+/* Navigation buttons (carousel controls) */
 .nav-btn {
     background: #222;
     color: white;
@@ -220,12 +247,12 @@
 .right { transform: rotate(-45deg); }
 .left { transform: rotate(135deg); }
 
-/* Component: Modal & form buttons */
+/* Modal & form buttons */
 .modal-dialog { max-width: 600px; }
 .modal-content {
     background: #0A100D !important;
     color: #D6D5C9 !important;
-    border: none !important;
+    border: var(--border) !important;
     border-radius: 18px !important;
     box-shadow: 0 8px 30px rgba(0,0,0,0.4) !important;
 }
@@ -243,7 +270,6 @@
 #submit-form-btn { background: #D6D5C9 !important; color: #902923 !important; border: 1px solid #902923 !important; font-weight: 700; box-shadow: none !important; border-radius: var(--bs-border-radius) !important; }
 #submit-form-btn:hover, #submit-form-btn:focus { background: #d2d1cc !important; color: #902923 !important; transform: translateY(-1px); }
 
-/* Make modal buttons consistent in size */
 .modal .btn, .modal .btn.btn-primary, .modal .btn.btn-secondary {
     padding: 0.5rem 1rem !important;
     height: 42px !important;
@@ -290,7 +316,7 @@
 .delete-account-link2:active { transform: translateY(0) !important; }
 
 
-/* Component: Rating stars */
+/* Rating stars */
 .rating-static { display: flex; justify-content: center; gap: 0.2rem; margin: 5px 0; }
 .rating-static svg { width: 1.1rem; height: 1.1rem; fill: #e8e8e8; }
 .rating-static .gold { fill: #ffca08; filter: drop-shadow(0 0 2px rgba(255, 202, 8, 0.3)); }
@@ -300,4 +326,19 @@
 
 .card { background-color: #0A100D }
 
-
+.photo-delete-btn {
+    width: 20px !important;
+    height: 20px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+    border-width: 1px !important;
+    box-shadow: none !important;
+}
+.photo-delete-btn:hover {
+    transform: scale(1.05);
+}

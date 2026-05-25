@@ -1,223 +1,21 @@
 {% extends "skeleton.html.twig" %}
-
+{% block title %}{{ model.modeloNombre }}{% endblock %}
 {% block stylesheets %}
-	<style>
-		/* Modal custom background (use high specificity and !important to override Bootstrap) */
-		.modal.fade .modal-dialog .modal-content,
-		.modal-content {
-			background-color: #0A100D !important;
-			color: #d6ddda !important;
-			border-radius: 16px !important;
-		}
-		.modal-content .modal-header,
-		.modal-content .modal-body,
-		.modal-content .modal-footer {
-			background-color: transparent !important;
-			color: inherit !important;
-		}
-		.modal-backdrop.show {
-			background-color: rgba(10, 16, 13, 0.6) !important;
-		}
-		/* Ensure close button is visible */
-		.modal .btn-close {
-			filter: invert(1) grayscale(1) contrast(200%);
-		}
-
-		/* Form fields and buttons inside modal */
-		.modal-content .form-control,
-		.modal-content .form-select,
-		.modal-content textarea,
-		.modal-content input[type="file"] {
-			background-color: #d6ddda !important;
-			color: #0A100D !important;
-			border: none !important;
-			box-shadow: none !important;
-		}
-
-		.modal-content .form-select option {
-			color: #0A100D !important;
-		}
-
-		.modal-content .btn.btn-primary,
-		.modal-content {
-			background-color: #d6ddda !important;
-			color: #0A100D !important;
-			border: none !important;
-		}
-
-		#submit-form-btn{
-			background-color: #D6D5C9 !important;
-			color: #902923 !important;
-		}
-
-		.modal-content .btn-outline-primary {
-			background-color: transparent !important;
-			color: #d6ddda !important;
-			border-color: rgba(214,221,218,0.2) !important;
-		}
-
-		.modal-content .form-check-input {
-			background-color: #d6ddda !important;
-			border-color: #d6ddda !important;
-		}
-
-		/* Main layout */
-		.main-grid {
-			display: grid;
-			grid-template-columns: 1fr 300px; /* Narrow sidebar on the right */
-			gap: 30px;
-			align-items: start;
-		}
-
-		/* Sidebar profile (tall and narrow) */
-		.profile-sidebar {
-			background: #0A100D;
-			border-radius: 20px;
-			padding: 30px 20px;
-			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			min-height: 80vh;
-			color: #d6ddda;
-		}
-
-		.profile-avatar {
-			width: 150px;
-			height: 150px;
-			border-radius: 50%;
-			object-fit: cover;
-			border: 4px solid #d6ddda;
-			margin-bottom: 20px;
-			background-color: #d6ddda;
-		}
-
-		/* Main section (left) */
-		.content-main {
-			display: flex;
-			flex-direction: column;
-			gap: 25px;
-		}
-
-		.featured-photo-container {
-			width: 100%;
-			border-radius: 20px;
-			overflow: hidden;
-			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-		}
-
-		.featured-photo {
-			width: 100%;
-			height: 500px; /* Fixed height for featured photo */
-			object-fit: cover;
-			display: block;
-		}
-
-		/* Comments section */
-		.comments-container {
-			background: #0A100D;
-			border-radius: 20px;
-			padding: 25px;
-			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-			color: #d6ddda;
-		}
-
-		.comments-list {
-			max-height: 600px;
-			overflow-y: auto;
-		}
-
-		.comment-item {
-			display: flex;
-			gap: 15px;
-			padding: 15px;
-			border-bottom: 1px solid #f0f0f0;
-			transition: background 0.2s;
-		}
-
-		.comment-item:hover {
-			background: #902923;
-		}
-
-		.comment-avatar {
-			width: 45px;
-			height: 45px;
-			border-radius: 8px;
-			object-fit: contain;
-			background: #eee;
-		}
-
-		/* Star rating */
-		.rating-static {
-			display: flex;
-			gap: 2px;
-		}
-		.rating-static svg {
-			width: 14px;
-			fill: #e8e8e8;
-		}
-		.rating-static .gold {
-			fill: #ffca08;
-		}
-
-		/* Load more button (AJAX) */
-		.load-more-btn {
-			display: block;
-			width: 100%;
-			padding: 12px;
-			margin-top: 15px;
-			border: none;
-			background: #D6D5C9;
-			color: #902923;
-			font-weight: 600;
-			border-radius: 10px;
-			cursor: pointer;
-		}
-		/* --- STAR RATING FORM --- */
-		.rating-form-container {
-			background: #0A100D;
-			border-radius: 30px;
-			padding: 35px;
-			margin-bottom: 40px;
-			border: 1px solid #f0f0f0;
-			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-		}
-
-		.star-rating-form {
-			display: flex;
-			flex-direction: row-reverse;
-			justify-content: flex-end;
-			gap: 5px;
-		}
-		.star-rating-form input {
-			display: none;
-		}
-		.star-rating-form label {
-			cursor: pointer;
-			width: 30px;
-			fill: #e9ecef;
-			transition: 0.2s;
-		}
-		.star-rating-form label:hover,
-		.star-rating-form label:hover ~ label,
-		.star-rating-form input:checked ~ label {
-			fill: #ffca08;
-		}
-
-		@media(max-width: 992px) {
-			.main-grid {
-				grid-template-columns: 1fr;
-			}
-			.profile-sidebar {
-				order: -1;
-				min-height: auto;
-			}
-		}
-	</style>
+	<link rel="stylesheet" href="{{ asset('styles/model.css') }}">
 {% endblock %}
 
 {% block javascripts %}
 	{% block importmap %}{{ importmap('app') }}{% endblock %}
+	<script>
+	window.modelPageConfig = {
+		profilePathTemplate: "{{ path('profile', {'name': '__USERNAME__'}) }}",
+		isAdmin: {{ is_granted('ROLE_ADMIN') ? '1' : '0' }},
+		initialCommentOffset: {{ (valoraciones is defined) ? valoraciones|length : 0 }},
+		addRatingUrl: "{{ path('model_add_rating', {'modelId': model.modeloId}) }}",
+		commentsUrl: "{{ path('model_comments', {'modelId': model.modeloId}) }}",
+		valoracionDeleteUrlTemplate: "{{ path('valoracion_delete', {'id': '__ID__'}) }}",
+	};
+	</script>
 	<script type="module" src="{{ asset('model.js') }}"></script>
 {% endblock %}
 
@@ -240,13 +38,10 @@
 						{% if valoraciones is defined and valoraciones|length > 0 %}
 							{% for v in valoraciones %}
 								<div class="comment-item">
-									<a href="{{ path('profile', {name: v.username}) }}">
 									<img src="{{ asset('assets/images/avatar/' ~ v.profilePic) }}" class="comment-avatar">
-									</a>
 									<div class="comment-content">
-										<a href="{{ path('profile', {name: v.username}) }}">
-										<h6 class="mb-0 fw-bold">{{ v.username }} <small class="text-muted small ms-2 time-ago" data-timestamp="{{ v.fecha|date('U') }}"></small></h6></a>
-										<p class="text-muted small mb-1">{{ v.comentario }}</p>
+										<h6 class="mb-0 fw-bold"><a href="{{ path('profile', {name: v.username}) }}" class="username-link">{{ v.username }}</a> <small class="text-white small ms-2 time-ago" data-timestamp="{{ v.fecha|date('U') }}"></small></h6>
+										<p class="text-white small mb-1">{{ v.comentario }}</p>
 										<div class="rating-static">
 											{% for i in 1..5 %}
 												<svg class="{{ i <= v.estrellas ? 'gold' : '' }}" viewbox="0 0 24 24">
@@ -254,17 +49,20 @@
 												</svg>
 											{% endfor %}
 										</div>
-										<div class="small text-muted mt-1">
+										<div class="small text-white mt-1">
 											{% if v.motor %}<span class="me-2"><strong>Engine:</strong> {{ v.motor }}</span>{% endif %}
 											{% if v.color %}<span class="me-2"><strong>Color:</strong> {{ v.color }}</span>{% endif %}
 											{% if v.anio %}<span class="me-2"><strong>Year:</strong> {{ v.anio }}</span>{% endif %}
 											{% if v.transmision %}<span class="me-2"><strong>Transmission:</strong> {{ v.transmision }}</span>{% endif %}
 										</div>
 									</div>
+									{% if is_granted('ROLE_ADMIN') %}
+										<button class="delete-comment-btn" data-delete-url="{{ path('valoracion_delete', {'id': v.id}) }}" aria-label="Delete comment">✕</button>
+									{% endif %}
 								</div>
 							{% endfor %}
 						{% else %}
-							<p class="text-muted small">There are no comments yet.</p>
+							<p class="text-white small">There are no comments yet.</p>
 						{% endif %}
 					</div>
 
@@ -283,10 +81,10 @@
 			 	 	 	 	 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			 	 	 	 </div>
 			 	 	 	 <div class="modal-body text-center">
-			 	 	 	 	 <p class="mb-4">Are you sure?</p>
+			 	 	 	 	 <p class="mb-4">Are you sure you want to delete this model?</p>
 			 	 	 	 	 <div class="d-flex justify-content-center gap-2">
-			 	 	 	 	 	 <a href="#" id="confirm-delete-yes" class="btn btn-primary py-3 fw-bold" style="border-radius:18px;">Si</a>
-			 	 	 	 	 	 <a href="#" id="confirm-delete-no" class="btn btn-secondary py-3 fw-bold" data-bs-dismiss="modal" style="border-radius:18px;">No</a>
+			 	 	 	 	 	 <a href="#" id="confirm-delete-yes" class="btn btn-danger py-3 fw-bold" style="border-radius:18px;">Yes</a>
+			 	 	 	 	 	 <a href="#" id="confirm-delete-no" class="btn btn-light py-3 fw-bold" data-bs-dismiss="modal" style="border-radius:18px;">No</a>
 			 	 	 	 	 </div>
 			 	 	 	 </div>
 			 	 	 </div>
@@ -298,11 +96,11 @@
 					<img src="{{ marca.urlLogo }}" alt="Avatar" class="profile-avatar">
 				</a>
 				<h3 class="fw-bold mb-1">{{model.modeloNombre}}</h3>
-				<p class="text-muted small">{{marca.nombreMarca}}</p>
+				<p class="small text-white">{{marca.nombreMarca}}</p>
 
 				<div class="w-100 mt-4">
 					<div class="mb-3 border-bottom pb-2">
-						<span class="d-block fw-bold small text-primary text-uppercase">Average rating</span>
+						<span class="d-block fw-bold small text-white text-uppercase">Average rating</span>
 						<div class="rating-static">
 							{% set estrellasMedia = model.mediaValoraciones %}
 
@@ -316,7 +114,7 @@
 
 							{% if estrellasMedia < 5 %}
 								{% for i in (estrellasMedia + 1)..5 %}
-									<svg class="grey" viewbox="0 0 24 24" style="fill: #e8e8e8;">
+									<svg class="grey" viewbox="0 0 24 24">
 										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
 									</svg>
 								{% endfor %}
@@ -324,25 +122,25 @@
 						</div>
 					</div>
 					<div class="mb-3 border-bottom pb-2">
-						<span class="d-block fw-bold small text-primary text-uppercase">Engines</span>
+						<span class="d-block fw-bold small text-white text-uppercase">Engines</span>
 						{% for nombre in listaMotores %}
 							<span>{{ nombre }}</span><br>
 						{% endfor %}
 					</div>
 					<div class="mb-3 border-bottom pb-2">
-						<span class="d-block fw-bold small text-primary text-uppercase">Colors</span>
+						<span class="d-block fw-bold small text-white text-uppercase">Colors</span>
                         {% for color in listaColores %}
 						<span>{{color}}</span><br>
                         {% endfor %}
 					</div>
 					<div class="mb-3 border-bottom pb-2">
-						<span class="d-block fw-bold small text-primary text-uppercase">Years</span>
+						<span class="d-block fw-bold small text-white text-uppercase">Years</span>
                         {% for year in listaAnios %}
 						<span>{{year}}</span><br>
                         {% endfor %}
 					</div>
                     <div class="mb-3 border-bottom pb-2">
-						<span class="d-block fw-bold small text-primary text-uppercase">Transmission</span>
+						<span class="d-block fw-bold small text-white text-uppercase">Transmission</span>
                         {% for transmission in listaTransmisiones %}
 						<span>{{transmission}}</span><br>
                         {% endfor %}
@@ -350,10 +148,10 @@
 				</div>
 
 				{% if is_granted('ROLE_ADMIN') %}
-				<a href="#" class="btn btn-primary w-100 mt-auto delete-model-link">Delete model</a>
+				<a href="#" class="btn btn-danger w-100 mt-auto delete-model-link">Delete model</a>
 				{% endif %}
 				{% if app.user %}
-				<button type="button" class="btn btn-outline-primary w-100 mt-3" data-bs-toggle="modal" data-bs-target="#ratingModal">Add Review</button>
+				<button type="button" class="btn btn-outline-danger btn-light text-danger w-100 mt-3" data-bs-toggle="modal" data-bs-target="#ratingModal">Add Review</button>
 				{% endif %}
 			</aside>
 
@@ -427,7 +225,7 @@
 								<div class="mt-3">
 									<label class="form-label small fw-bold">Images of your car (optional)</label>
 									<input type="file" id="garajeImage" name="garaje_image[]" class="form-control" accept="image/*" multiple>
-									<div class="form-text small text-muted">You can upload multiple images (jpg, png...).</div>
+									<div class="form-text small text-white">You can upload multiple images (jpg, png...).</div>
 								</div>
 							</div>
 							<div class="col-12">
@@ -438,224 +236,5 @@
 				</div>
 			</div>
 		</div>
-	</div>
-
-	<script>
-		document.addEventListener('DOMContentLoaded', () => {
-		let commentOffset = {{ (valoraciones is defined) ? valoraciones|length : 0 }};
-		const loadMoreBtn = document.getElementById('load-more-comments');
-		const wrapper = document.getElementById('comments-wrapper');
-
-    	/**
-     * Parse server date formats like "YYYY-MM-DD HH:MM:SS" into UNIX seconds.
-     * Returns integer seconds or null if parsing fails.
-     */
-    	const parseServerDateToUnix = (dateStr) => {
-    		if (!dateStr) return null;
-    		// If it's already a number (string of digits), treat as UNIX seconds
-    		if (/^\d+$/.test(String(dateStr).trim())) {
-    			return parseInt(dateStr, 10);
-    		}
-    		// Try YYYY-MM-DD HH:MM:SS
-    		const m = String(dateStr).trim().match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2}):(\d{2})$/);
-    		if (m) {
-    			const year = parseInt(m[1], 10);
-    			const month = parseInt(m[2], 10) - 1;
-    			const day = parseInt(m[3], 10);
-    			const hour = parseInt(m[4], 10);
-    			const minute = parseInt(m[5], 10);
-    			const second = parseInt(m[6], 10);
-    			// Use UTC to avoid timezone inconsistencies
-    			return Math.floor(Date.UTC(year, month, day, hour, minute, second) / 1000);
-    		}
-    		// Fallback to Date parsing
-    		const d = new Date(dateStr);
-    		if (!isNaN(d.getTime())) return Math.floor(d.getTime() / 1000);
-    		return null;
-    	};
-
-		const formatTimeAgo = (timestamp) => {
-        	const now = Math.floor(Date.now() / 1000);
-        	const diff = now - timestamp;
-
-        	if (diff < 0) return 'right now';
-        	if (diff < 60) return `${diff} seconds ago`;
-
-        	const min = Math.floor(diff / 60);
-        	if (min < 60) return `${min} minutes ago`;
-
-        	const hours = Math.floor(diff / 3600);
-        	if (hours < 24) return `${hours} hours ago`;
-
-        	const days = Math.floor(diff / 86400);
-        	if (days < 7) return `${days} days ago`;
-
-        	const weeks = Math.floor(days / 7);
-        	if (weeks < 5) return `${weeks} weeks ago`;
-
-        	const months = Math.floor(days / 30);
-        	if (months < 12) return `${months} months ago`;
-
-        	const years = Math.floor(days / 365);
-        	return `${years} years ago`;
-    	};
-
-    	
-		document.querySelectorAll('.time-ago').forEach(el => {
-			let timestamp = parseInt(el.getAttribute('data-timestamp'), 10);
-			if (!timestamp || isNaN(timestamp)) {
-				// attempt to parse as server date string from data attribute
-				const raw = el.getAttribute('data-timestamp');
-				const parsed = parseServerDateToUnix(raw);
-				timestamp = parsed;
-			}
-			if (timestamp && !isNaN(timestamp)) {
-				el.textContent = formatTimeAgo(timestamp);
-			} else {
-				el.textContent = '';
-			}
-		});
-
-		// Toggle show Notas if the add to garage is active
-		const anadirGarajeCheckbox = document.getElementById('anadirGaraje');
-		const notasContainer = document.getElementById('notas-propietario-container');
-		if (anadirGarajeCheckbox && notasContainer) {
-			const setNotasVisibility = () => {
-				notasContainer.style.display = anadirGarajeCheckbox.checked ? 'block' : 'none';
-			};
-			anadirGarajeCheckbox.addEventListener('change', setNotasVisibility);
-			// original state
-			setNotasVisibility();
-		}
-
-		// Send AJAX of the form
-		const ratingForm = document.getElementById('ajax-rating-form');
-		if (ratingForm) {
-			ratingForm.addEventListener('submit', (e) => {
-				e.preventDefault();
-				const submitBtn = document.getElementById('submit-form-btn');
-				submitBtn.disabled = true;
-				submitBtn.innerText = 'Sending...';
-
-				const formData = new FormData(ratingForm);
-
-				fetch('{{ path('model_add_rating', {'modelId': model.modeloId}) }}', {
-					method: 'POST',
-					body: formData,
-					headers: {
-						'X-Requested-With': 'XMLHttpRequest'
-					}
-				})
-				.then(res => res.json())
-				.then(json => {
-					if (json.success) {
-						// Close modal
-						const modalEl = document.getElementById('ratingModal');
-						if (typeof bootstrap !== 'undefined') {
-							const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-							modalInstance.hide();
-						}
-
-						// Add ratings to DOM
-						const item = json.data;
-						// If server returns a fecha use it, otherwise use client's current time
-						const _ts = parseServerDateToUnix(item.fecha) || Math.floor(Date.now()/1000);
-						const timeAgo = item.timeAgo || formatTimeAgo(_ts);
-						const html = `\
-							<div class="comment-item">\
-								<img src="https://via.placeholder.com/45" class="comment-avatar">\
-								<div class="comment-content">\
-									<h6 class="mb-0 fw-bold">${item.username} <small class="text-muted small ms-2 time-ago" data-timestamp="${_ts || ''}">${timeAgo}</small></h6>\
-									<p class="text-muted small mb-1">${item.comentario}</p>\
-									<div class="rating-static">\
-										${[1,2,3,4,5].map(i => `<svg class="${i <= item.estrellas ? 'gold' : ''}" viewbox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>`).join('')}\
-									</div>\
-									<div class="small text-muted mt-1">\
-										${item.motor ? `<span class="me-2"><strong>Engine:</strong> ${item.motor}</span>` : ''}\
-										${item.color ? `<span class="me-2"><strong>Color:</strong> ${item.color}</span>` : ''}\
-										${item.anio ? `<span class="me-2"><strong>Year:</strong> ${item.anio}</span>` : ''}\
-										${item.transmision ? `<span class="me-2"><strong>Transmission:</strong> ${item.transmision}</span>` : ''}\
-									</div>\
-								</div>\
-							</div>`;
-
-						wrapper.insertAdjacentHTML('afterbegin', html);
-
-						// clean form
-						ratingForm.reset();
-						// clean image input
-						const fileInput = document.getElementById('garajeImage');
-						if (fileInput) fileInput.value = '';
-					} else {
-						alert(json.error || 'Error procesando valoración');
-					}
-				})
-				.catch(err => {
-					console.error(err);
-					alert('Error enviando la valoración');
-				})
-				.finally(() => {
-					submitBtn.disabled = false;
-					submitBtn.innerText = 'Post review';
-				});
-			});
-		}
-
-loadMoreBtn.addEventListener('click', () => {
-loadMoreBtn.innerText = 'Loading...';
-			// Fetch from the endpoint that gives JSON
-			fetch('{{ path('model_comments', {'modelId': model.modeloId}) }}?offset=' + commentOffset + '&limit=10')
-				.then(res => res.json())
-				.then(json => {
-					const items = (json.data || []);
-					if (items.length === 0) {
-						loadMoreBtn.innerText = 'There are no more comments';
-						loadMoreBtn.disabled = true;
-						return;
-					}
-
-					items.forEach(item => {
-						const _ts = parseServerDateToUnix(item.fecha);
-						const timeAgo = item.timeAgo || (_ts ? formatTimeAgo(_ts) : '');
-						const html = `\
-							<div class="comment-item" style="opacity: 0; transform: translateY(10px); transition: all 0.3s">\
-								<img src="https://via.placeholder.com/45" class="comment-avatar">\
-								<div class="comment-content">\
-									<h6 class="mb-0 fw-bold">${item.username} <small class="text-muted small ms-2 time-ago" data-timestamp="${_ts || ''}">${timeAgo}</small></h6>\
-									<p class="text-muted small mb-1">${item.comentario}</p>\
-									<div class="rating-static">\
-										${[1,2,3,4,5].map(i => `<svg class="${i <= item.estrellas ? 'gold' : ''}" viewbox="0 0 24 24"><path d=\"M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\"></path></svg>`).join('')}\
-									</div>\
-									<div class="small text-muted mt-1">\
-										${item.motor ? `<span class="me-2"><strong>Engine:</strong> ${item.motor}</span>` : ''}\
-										${item.color ? `<span class="me-2"><strong>Color:</strong> ${item.color}</span>` : ''}\
-										${item.anio ? `<span class="me-2"><strong>Year:</strong> ${item.anio}</span>` : ''}\
-										${item.transmision ? `<span class="me-2"><strong>Transmission:</strong> ${item.transmision}</span>` : ''}\
-									</div>\
-								</div>\
-							</div>`;
-
-						wrapper.insertAdjacentHTML('beforeend', html);
-						const el = wrapper.lastElementChild;
-						setTimeout(() => {
-							el.style.opacity = '1';
-							el.style.transform = 'translateY(0)';
-						}, 50);
-					});
-
-					commentOffset += items.length;
-					loadMoreBtn.innerText = 'Load more comments';
-
-					if (items.length < 10) {
-						loadMoreBtn.innerText = 'There are no more comments';
-						loadMoreBtn.disabled = true;
-					}
-				})
-				.catch(err => {
-					console.error(err);
-					loadMoreBtn.innerText = 'Error cargando';
-				});
-});
-});
-	</script>
+	  </div>
 {% endblock %}

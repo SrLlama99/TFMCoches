@@ -16,6 +16,8 @@ use App\Entity\Users;
 use App\Entity\FotoGaraje;
 use App\Entity\cocheGaraje;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
 
 final class ProfilesController extends AbstractController
 {
@@ -104,6 +106,7 @@ final class ProfilesController extends AbstractController
                 }
 
                 return [
+                    'id' => $v->getIdValoracion(),
                     'username' => $username,
                     'profilePic' => $profilePic,
                     'comentario' => $v->getComentario(),
@@ -192,6 +195,7 @@ final class ProfilesController extends AbstractController
             }
 
             return [
+                'id' => $v->getIdValoracion(),
                 'username' => $username,
                 'comentario' => $v->getComentario(),
                 'estrellas' => $v->getEstrellas(),
@@ -341,7 +345,7 @@ final class ProfilesController extends AbstractController
         $response = [
             'success' => true,
             'data' => [
-                'username' => $user?->getUserName(),
+                'id' => $valoracion->getIdValoracion(),
                 'comentario' => $comentario,
                 'estrellas' => $puntuacion,
                 'timeAgo' => 'just now',
@@ -355,6 +359,79 @@ final class ProfilesController extends AbstractController
         return new JsonResponse($response);
     }
 
+    #[Route('/valoracion/{id}/delete', name: 'valoracion_delete', methods: ['POST'])]
+    public function deleteValoracion(EntityManagerInterface $em, int $id): JsonResponse
+    {
+        $user = $this->getUser();
+        // Only admins may delete valoraciones
+        if (! $this->isGranted('ROLE_ADMIN')) {
+            return new JsonResponse(['success' => false, 'error' => 'Forbidden'], 403);
+        }
+
+        $repo = $em->getRepository(Valoracion::class);
+        $v = $repo->find($id);
+        if (! $v) {
+            return new JsonResponse(['success' => false, 'error' => 'Not found'], 404);
+        }
+
+        try {
+            $em->remove($v);
+            $em->flush();
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+
+        return new JsonResponse(['success' => true, 'deleted' => $id]);
+    }
+    #[Route('/marca/{id}/update', name: 'marca_update', methods: ['POST'])]
+    public function updateMarca(EntityManagerInterface $em, Request $request, int $id): JsonResponse
+    {
+        if (! $this->isGranted('ROLE_ADMIN')) {
+            return new JsonResponse(['success' => false, 'error' => 'Forbidden'], 403);
+        }
+
+        $repo = $em->getRepository(Marca::class);
+        $marca = $repo->find($id);
+        if (! $marca) {
+            return new JsonResponse(['success' => false, 'error' => 'Not found'], 404);
+        }
+
+        $nombre = trim((string) $request->request->get('nombre', ''));
+        $url = trim((string) $request->request->get('url', ''));
+
+        if ($nombre !== '') $marca->setnombreMarca($nombre);
+        if ($url !== '') $marca->seturlMarca($url);
+
+        $uploaded = $request->files->get('logo');
+        if ($uploaded && $uploaded->isValid()) {
+            try {
+                $extension = strtolower($uploaded->getClientOriginalExtension());
+                $allowed = ['png','jpg','jpeg','webp'];
+                if (in_array($extension, $allowed, true)) {
+                    $uploadDir = $this->getParameter('kernel.project_dir') . '/public/assets/images/brands/';
+                    if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+                    $newName = sprintf('brand_%s_%s.%s', $id, time(), $extension);
+                    $uploaded->move($uploadDir, $newName);
+                    $marca->seturlLogo($newName);
+                }
+            } catch (\Exception $e) {
+                
+            }
+        }
+
+        try {
+            $em->persist($marca);
+            $em->flush();
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+
+        return new JsonResponse(['success' => true, 'data' => [
+            'nombre' => $marca->getnombreMarca(),
+            'url' => $marca->geturlMarca(),
+            'logo' => $marca->geturlLogo(),
+        ]]);
+    }
     #[Route('/profile/{name}', name: 'profile')]
     public function profile(EntityManagerInterface $em, string $name): Response
     {
@@ -541,6 +618,7 @@ final class ProfilesController extends AbstractController
                 'modelo' => $vmodelo,
                 'marca' => $vmarca,
                 'valoracion' => [
+                    'id' => $v->getIdValoracion(),
                     'estrellas' => $v->getEstrellas(),
                     'comentario' => $v->getComentario(),
                     'fecha' => $v->getFecha(),
@@ -697,5 +775,46 @@ final class ProfilesController extends AbstractController
         }
 
         return new JsonResponse($response);
+    }
+
+    #[Route('/deleteAccount', name: 'app_borrarCuenta')]
+    public function delete(EntityManagerInterface $em, TokenStorageInterface $tokenStorage){
+        $user = $this->getUser();
+        $currentUser = $user?->getUserId();
+        $entityRepo = $em->getRepository(Users::class);
+        $user = $entityRepo->findOneBy(['UserId'=> $currentUser]);
+        if($user){
+            $em->remove($user);
+            $em->flush();
+            $tokenStorage->setToken(null); 
+        }
+        return $this->redirectToRoute('app_login');
+    }
+
+    #[Route('/deleteMarca/{id}', name: 'app_borrarMarca')]
+    public function deleteMarca(EntityManagerInterface $em, int $id)
+    {
+        $marcaRepo = $em->getRepository(Marca::class);
+        $modeloRepo = $em->getRepository(Modelo::class);
+        $cocheRepo = $em->getRepository(Coche::class);
+        $valorRepo = $em->getRepository(Valoracion::class);
+        $marca = $marcaRepo->find($id);
+        if ($marca) {
+            $modelos = $modeloRepo->findBy(['marca' => $marca->getIdMarca()]);
+            foreach ($modelos as $modelo) {
+                $coches = $cocheRepo->findBy(['modelo' => $modelo]);
+                foreach ($coches as $coche) {
+                    $valoraciones = $valorRepo->findBy(['idCoche' => $coche]);
+                    foreach ($valoraciones as $v) {
+                        $em->remove($v);
+                    }
+                    $em->remove($coche);
+                }
+                $em->remove($modelo);
+            }
+            $em->remove($marca);
+            $em->flush();
+        }
+        return $this->redirectToRoute('home');
     }
 }

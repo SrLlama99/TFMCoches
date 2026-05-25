@@ -19,7 +19,7 @@
 					</div>
 					<h3 class="fw-bold">{{ usuario.UserName }}</h3>
 
-					<!-- Garage item modal: show notes and photos, allow upload/delete -->
+					<!-- Garage cars modal -->
 					{% set canEditGarage = (app.user and usuario.userId is defined and app.user.UserId is defined and usuario.userId == app.user.UserId) or is_granted('ROLE_ADMIN') %}
 					<div class="modal fade" id="garageModal" tabindex="-1" aria-labelledby="garageModalLabel" aria-hidden="true" data-can-edit="{{ canEditGarage ? '1' : '0' }}">
 						<div class="modal-dialog modal-dialog-centered modal-lg">
@@ -38,10 +38,10 @@
 										<div id="garage-photos" class="d-flex flex-wrap gap-2"></div>
 									</div>
 									{% if canEditGarage %}
-									<div class="mb-3">
-										<label class="form-label small fw-bold">Upload more photos</label>
-										<input type="file" id="garage-photos-input" name="photos[]" multiple class="form-control">
-									</div>
+										<div class="mb-3">
+											<label class="form-label small fw-bold">Upload more photos</label>
+											<input type="file" id="garage-photos-input" name="photos[]" multiple class="form-control">
+										</div>
 									{% endif %}
 								</div>
 								<div class="modal-footer">
@@ -68,55 +68,62 @@
 					<div class="comments-section">
 						{% if ultimos %}
 							{% for last in ultimos %}
-								<div class="comment-item">
-									<img src="{{ last.marca.urlLogo }}" class="comment-avatar" alt="Avatar">
-									<div class="comment-body">
-										<span class="comment-author">{{ last.modelo.modeloNombre }}<small class="text-muted small ms-2 time-ago" data-timestamp="{{ last.valoracion.fecha|date('U') }}"></small>
-										</span>
-										{% if last.valoracion.comentario is not null or last.valoracion.comentario != "" %}
-											<p class="comment-text">{{ last.valoracion.comentario }}</p>
-										{% endif %}
-										<div class="rating-static">
-											{% if last.valoracion.estrellas > 0 %}
-												{% for i in 1..last.valoracion.estrellas %}
-													<svg class="gold" viewbox="0 0 24 24">
-														<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-													</svg>
-												{% endfor %}
+								<a href="{{ path('marca', {name: last.marca.nombreMarca, id: last.modelo.modeloId}) }}">
+									<div class="comment-item">
+										<img src="{{ last.marca.urlLogo }}" class="comment-avatar" alt="Avatar">
+										<div class="comment-body">
+											<span class="comment-author">{{ last.modelo.modeloNombre }}<small class="text-muted small ms-2 time-ago" data-timestamp="{{ last.valoracion.fecha|date('U') }}"></small>
+											</span>
+											{% if last.valoracion.comentario is not null or last.valoracion.comentario != "" %}
+												<p class="comment-text">{{ last.valoracion.comentario }}</p>
 											{% endif %}
+											<div class="rating-static">
+												{% if last.valoracion.estrellas > 0 %}
+													{% for i in 1..last.valoracion.estrellas %}
+														<svg class="gold" viewbox="0 0 24 24">
+															<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+														</svg>
+													{% endfor %}
+												{% endif %}
 
-											{% if last.valoracion.estrellas < 5 %}
-												{% for i in (last.valoracion.estrellas + 1)..5 %}
-													<svg class="grey" viewbox="0 0 24 24" style="fill: #e8e8e8;">
-														<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
-													</svg>
-												{% endfor %}
-											{% endif %}
+												{% if last.valoracion.estrellas < 5 %}
+													{% for i in (last.valoracion.estrellas + 1)..5 %}
+														<svg class="grey" viewbox="0 0 24 24" style="fill: #e8e8e8;">
+															<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+														</svg>
+													{% endfor %}
+												{% endif %}
+											</div>
+											<div class="small text-muted mt-1">
+												{% if last.coche.motor.nombreMotor %}
+													<span class="me-2">
+														<strong>Engine:</strong>
+														{{ last.coche.motor.nombreMotor }}</span>
+												{% endif %}
+												{% if last.coche.cocheColor %}
+													<span class="me-2">
+														<strong>Color:</strong>
+														{{ last.coche.cocheColor }}</span>
+												{% endif %}
+												{% if last.coche.cocheAnio %}
+													<span class="me-2">
+														<strong>Year:</strong>
+														{{ last.coche.cocheAnio }}</span>
+												{% endif %}
+												{% if last.coche.cocheTransmision %}
+													<span class="me-2">
+														<strong>Transmission:</strong>
+														{{ last.coche.cocheTransmision }}</span>
+												{% endif %}
+											</div>
 										</div>
-										<div class="small text-muted mt-1">
-											{% if last.coche.motor.nombreMotor %}
-												<span class="me-2">
-													<strong>Engine:</strong>
-													{{ last.coche.motor.nombreMotor }}</span>
-											{% endif %}
-											{% if last.coche.cocheColor %}
-												<span class="me-2">
-													<strong>Color:</strong>
-													{{ last.coche.cocheColor }}</span>
-											{% endif %}
-											{% if last.coche.cocheAnio %}
-												<span class="me-2">
-													<strong>Year:</strong>
-													{{ last.coche.cocheAnio }}</span>
-											{% endif %}
-											{% if last.coche.cocheTransmision %}
-												<span class="me-2">
-													<strong>Transmission:</strong>
-													{{ last.coche.cocheTransmision }}</span>
-											{% endif %}
-										</div>
+										{% if is_granted('ROLE_ADMIN') %}
+											<div class="ms-2 d-flex align-items-start">
+												<button type="button" class="delete-comment-btn" data-delete-url="{{ path('valoracion_delete', {'id': last.valoracion.id}) }}" aria-label="Delete comment">✕</button>
+											</div>
+										{% endif %}
 									</div>
-								</div>
+								</a>
 							{% endfor %}
 						{% else %}
 							<p>The user has not posted any reviews</p>
@@ -138,11 +145,12 @@
 								{% for car in coches %}
 									{% embed 'profile/carousel_card.html.twig' %}
 										{% block link %}#" class="garage-card"
-										data-coche-id="{{ car.coche.getcocheId() }}"
-										data-notas="{{ car.garaje.getNotas()|e('html_attr') }}"
-										data-photos="{{ (car.photos|default([]))|json_encode()|e('html_attr') }}
+																																											data-coche-id="{{ car.coche.getcocheId() }}"
+																																											data-notas="{{ car.garaje.getNotas()|e('html_attr') }}"
+																																											data-photos="{{ (car.photos|default([]))|json_encode()|e('html_attr') }}
 										{% endblock %}
-										{% block image %}{{ car.modelo.fotoModelo }}
+										{% block image %}
+											{{ car.modelo.fotoModelo }}
 										{% endblock %}
 										{% block title %}
 											{{ car.modelo.modeloNombre }}
@@ -156,8 +164,10 @@
 									{% endembed %}
 								{% endfor %}
 							</div>
+							<button class="nav-btn btn-adelante">
+								<i class="arrow right"></i>
+							</button>
 
-							
 						{% else %}
 							<p class="text-center">The user has not stored any cars in the garage.</p>
 						{% endif %}
@@ -176,11 +186,21 @@
 							<div class="custom-scroll-container scroll-contenedor">
 								{% for value in valorados %}
 									{% embed 'profile/carousel_card.html.twig' %}
-										{% block link %}{{ path('marca', {name: value.marca.nombreMarca, id: value.modelo.modeloId}) }}{% endblock %}
-										{% block image %}{{ value.modelo.fotoModelo }}{% endblock %}
-										{% block title %}{{ value.modelo.modeloNombre }}{% endblock %}
-										{% block logo %}{{ value.marca.urlLogo }}{% endblock %}
-										{% block stars %}{{ value.valoracion.estrellas|default(0) }}{% endblock %}
+										{% block link %}
+											{{ path('marca', {name: value.marca.nombreMarca, id: value.modelo.modeloId}) }}
+										{% endblock %}
+										{% block image %}
+											{{ value.modelo.fotoModelo }}
+										{% endblock %}
+										{% block title %}
+											{{ value.modelo.modeloNombre }}
+										{% endblock %}
+										{% block logo %}
+											{{ value.marca.urlLogo }}
+										{% endblock %}
+										{% block stars %}
+											{{ value.valoracion.estrellas|default(0) }}
+										{% endblock %}
 									{% endembed %}
 								{% endfor %}
 							</div>
@@ -196,6 +216,23 @@
 			</div>
 		</div>
 
+		<div class="modal fade" id="confirmDeleteCommentModal" tabindex="-1" aria-labelledby="confirmDeleteCommentModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="confirmDeleteCommentModalLabel">Are you sure?</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						Are you sure you want to delete this comment?
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="confirm-delete-comment-no" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+						<a href="#" id="confirm-delete-comment-yes" class="btn btn-danger">Yes</a>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
@@ -239,7 +276,7 @@
 					<div class="modal-body text-center">
 						<p class="mb-4">Are you sure you want to delete the account?</p>
 						<div class="d-flex justify-content-center gap-2">
-							<a href="#" id="confirm-delete-yes" class="btn btn-primary py-3 fw-bold delete-account-link">Yes</a>
+							<a href="{{ path('app_borrarCuenta') }}" id="confirm-delete-yes" class="btn btn-primary py-3 fw-bold delete-account-link">Yes</a>
 							<a href="#" id="confirm-delete-no" class="btn btn-secondary py-3 fw-bold delete-account-link2" data-bs-dismiss="modal">No</a>
 						</div>
 					</div>
