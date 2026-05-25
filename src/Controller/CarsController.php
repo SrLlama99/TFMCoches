@@ -366,7 +366,7 @@ final class CarsController extends AbstractController
             return new JsonResponse(['success' => false, 'error' => 'Not found'], 404);
         }
 
-        $nombre = trim((string) $request->request->get('nombre', ''));
+        $nombre = strtoupper(trim((string) $request->request->get('nombre', '')));
         $url = trim((string) $request->request->get('url', ''));
 
         if ($nombre !== '') $marca->setnombreMarca($nombre);
