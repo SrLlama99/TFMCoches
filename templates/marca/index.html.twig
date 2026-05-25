@@ -1,0 +1,31 @@
+{% extends "skeleton.html.twig" %}
+{% block title %}Brands{% endblock %}
+{% block main %}
+<div class="customnav p-3 d-flex flex-column align-items-center text-center">
+    <h1>Brands by initial</h1>
+
+    <div class="letters-bar mb-3">
+        {% for ch in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'|split('') %}
+            <a class="letter-link px-1 text-white text-decoration-none" href="{{ path('marca_index', {letter: ch}) }}">{{ ch }}</a>
+        {% endfor %}
+        <a class="letter-link px-1 text-white text-decoration-none" href="{{ path('marca_index') }}">All</a>
+    </div>
+
+    <div class="brands-list row">
+        {% if brands is empty %}
+            <p class="text-center">No brands found.</p>
+        {% else %}
+            {% for brand in brands %}
+                <div class="col-6 col-md-3 mb-3 text-center">
+                    <a href="{{ path('marca', {name: brand.getnombreMarca(), id: brand.getId()}) }}" class="d-block text-white text-decoration-none">
+                        {% if brand.geturlLogo is not empty %}
+                            <img src="{{ asset(brand.geturlLogo) }}" alt="{{ brand.getnombreMarca() }}" class="img-fluid mb-1">
+                        {% endif %}
+                        <div>{{ brand.getnombreMarca() }}</div>
+                    </a>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
