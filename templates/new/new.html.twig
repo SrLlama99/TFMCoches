@@ -8,8 +8,13 @@
 		<div id="customnav newThingError">{{error}}</div>
 	{% endif %}
 	<div class="customnav d-flex align-items-center flex-column justify-content-center p-2">
-		<h1 class="my-1">New
-			{{ type }}</h1>
+		{% if type == "model" %}
+			{% set opposite = "brand" %}
+		{% else %}
+			{% set opposite = "model" %}
+		{% endif %}
+		<a class="text-white customNavBtn btn-secondary btn" href="{{ path('newItemGet', {"type": opposite})}}">Create a {{opposite}} instead</a>
+		<h1 class="my-1">New {{ type }}</h1>
 		<form class="container text-center p-4" enctype='multipart/form-data' method="post">
 			<div class="row align-items-center justify-content-around flex-column flex-lg-row gap-3" data-bs-theme="dark">
 				<div class="col-auto d-flex flex-column align-items-center">
@@ -28,7 +33,7 @@
 						</div>
 					{% endif %}
 					{% if type == 'model' and brands is defined %}
-						<select name="brand" class="form-select">
+						<select name="brand" class="form-select mb-3">
 							<option value="errorDefault">Select a brand...</option>
 							{% for brand in brands %}
 								<option value="{{brand.Id}}">{{brand.nombreMarca}}</option>

@@ -1,0 +1,18 @@
+{% extends "skeleton.html.twig" %}
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('styles/newObjects.css') }}">
+{% endblock %}
+{% block title %}Create new...
+{% endblock %}
+{% block main %}
+	<div class="customnav p-3 d-flex justify-content-center flex-column container text-center">
+		<h1>Create new...</h1>
+		<div class="row">
+		<div class="col m-1">
+			<a class="text-white customNavBtn btn-secondary btn w-100" href="{{ path('newItemGet',{"type":"brand"}) }}">Brand</a>
+		</div>
+		<div class="col m-1">
+			<a class="text-white customNavBtn btn-secondary btn w-100" href="{{ path('newItemGet',{"type":"model"}) }}">Model</a>
+		</div>
+	</div>
+{% endblock %}

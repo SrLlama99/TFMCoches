@@ -1,7 +1,7 @@
 <nav class="customnav navbar navbar-expand-md m-1 p-2" data-bs-theme="dark">
     <div class="container">
         <span class="navbar-brand">
-        <a href="{{path('home')}}">
+        <a href="{{ path('home')}}">
             <img class="navBarLogo" draggable="false" src="{{ asset('logo.png') }}" />
         </a>
         </span>
@@ -30,9 +30,15 @@
             </li>
             {% else %} {# USER IS LOGGED IN #}
             <li class="nav-item ms-md-auto">
+                <a class="h-100 d-flex justify-content-center align-items-center gap-1 nav-link customNavBtn btn createNew" title="Create" href="{{ path('new') }}">
+                    <i class="bi bi-plus-circle"></i>
+                    <span class="d-none d-xl-inline">Create</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="h-100 d-flex justify-content-center align-items-center gap-1 garageButton customNavBtn btn" title="My garage" href="{{ path('garage', {'name':app.user.UserName}) }}">
                     <i class="bi bi-car-front-fill"></i>
-                    <span class="d-none d-md-inline">Garage</span>
+                    <span class="d-none d-xl-inline">Garage</span>
                 </a>
             </li>
             <li class="nav-item">

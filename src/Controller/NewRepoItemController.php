@@ -13,6 +13,13 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 final class NewRepoItemController extends AbstractController
 {
+
+    #[Route('/new/', name: 'new', methods: 'GET')]
+    public function newIndex()
+    {
+        return $this->render('new/index.html.twig');
+    }
+
     #[Route('/new/{type}', name: 'newItemGet', methods: 'GET')]
     public function GET(EntityManagerInterface $em, Request $request, string $type)
     {
@@ -22,9 +29,11 @@ final class NewRepoItemController extends AbstractController
         switch ($type) {
             case 'brand':
                 $returnParams["type"] = 'brand';
+                $returnParams["opposite"] = 'model';
                 break;
             case 'model':
                 $returnParams["type"] = 'model';
+                $returnParams["opposite"] = 'brand';
                 $brands = $em->getRepository(Marca::class)->findAll();
                 $returnParams['brands'] = $brands;
                 break;
@@ -80,13 +89,13 @@ final class NewRepoItemController extends AbstractController
             $paramet = strip_tags(strtolower(trim($request->request->get($k))));
 
             if (!$paramet || strlen($paramet) <= 0) {
-                return $this->errorOut($type, "The $k field is missing content.");
+                return $this->errorOut($returnParams, "The $k field is missing content.");
             }
             if (isset($v['length']) && strlen($paramet) > $v['length']) {
-                return $this->errorOut($type, "The $k field is over " . $v['length'] . " characters .");
+                return $this->errorOut($returnParams, "The $k field is over " . $v['length'] . " characters .");
             }
             if (isset($v['default']) && $v['default'] == $paramet) {
-                return $this->errorOut($type, "Choose an option for the $k field.");
+                return $this->errorOut($returnParams, "Choose an option for the $k field.");
             }
 
             $args[$k] = $paramet;
@@ -110,19 +119,19 @@ final class NewRepoItemController extends AbstractController
         if ($photo != null) {
             if (!$photo->isValid()) {
                 if (in_array($photo->getError(), [1, 2])) { //photo is too big for current config
-                    return $this->errorOut($type, "Selected photo is too big. Please select a lighter photo.");
+                    return $this->errorOut($returnParams, "Selected photo is too big. Please select a lighter photo.");
                 }
-                return $this->errorOut($type);
+                return $this->errorOut($returnParams);
             }
             //check if uploaded file matches mime type image/*, regardless of case
             try {
                 if (!preg_match("/^image\/.+$/i", $photo->getMimeType())) {
-                    return $this->errorOut($type, "Uploaded file is not a photo.");
+                    return $this->errorOut($returnParams, "Uploaded file is not a photo.");
                 }
             } catch (LogicException) {
                 // Se necesitan extensiones para adivinar el mime de ciertos archivos: error si no se sabe
                 // SI ESTÁS AQUÍ PORQUE FALLA ESTO TIENES QUE DESCOMENTAR O AÑADIR "extension=fileinfo" en php.ini
-                return $this->errorOut($type, "CONFIGERR: Internal error.");
+                return $this->errorOut($returnParams, "CONFIGERR: Internal error.");
             }
         }
         /* END photo */
@@ -179,7 +188,7 @@ final class NewRepoItemController extends AbstractController
             $entityManager->detach($newObject);
             $entityManager->flush();
 
-            return $this->errorOut($type);
+            return $this->errorOut($returnParams);
         }
 
         $entityManager->flush();
@@ -191,8 +200,8 @@ final class NewRepoItemController extends AbstractController
         }
     }
 
-    private function errorOut(string $type, string $error = "Someting went wrong. We're trying hard to fix it!")
+    private function errorOut(Array $returnParams, string $error = "Someting went wrong. We're trying hard to fix it!")
     {
-        return $this->redirectToRoute('newItemGet', ['type' => $type, 'error' => $error]);
+        return $this->redirectToRoute('newItemGet', ['type' => $returnParams['type'], 'opposite' => $returnParams['opposite'], 'error' => $error]);
     }
 }

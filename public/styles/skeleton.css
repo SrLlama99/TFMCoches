@@ -65,6 +65,10 @@ body {
     top: 0;
 }
 
+.createNew{
+    background-color: var(--searchColor) !important;
+}
+
 .customNavBtn.searchButton:active{
     transform: scale(1.08);
 }
