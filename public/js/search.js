@@ -5,6 +5,7 @@ let url = '/marca'
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('navFormQuery').addEventListener('input', (e) => handle(e.target.value));
+    document.getElementById('navForm').addEventListener('submit', (e) => handle(e.preventDefault()));
     endpoint = document.getElementsByName('queryEndpoint')[0].value;
     suggestionsPanel = document.getElementById('navFormSuggestionPanel');
 });
