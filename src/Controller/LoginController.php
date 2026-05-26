@@ -97,7 +97,7 @@ final class LoginController extends AbstractController
             $user->setUserName($usuName);
             $user->setUserMail($correo);
             $user->setAdmin('false');
-            $user->setProfilePic('missingPicture.jpg');
+            $user->setProfilePic('');
             $user->setUserPassword($hashedPassword);
             $entityManager->persist($user);
             $entityManager->flush();
