@@ -20,7 +20,7 @@ class Marca
     #[ORM\Column(type: 'string', name: 'url')]
     private string $urlMarca;
 
-    #[ORM\Column(type: 'string', name: 'logourl', options: ["default" => "defaultBrandImage.png"])]
+    #[ORM\Column(type: 'string', name: 'logourl')]
     private string $urlLogo;
 
     #[ORM\OneToMany(targetEntity: Modelo::class, mappedBy: 'marca')]
@@ -65,7 +65,13 @@ class Marca
     public function geturlLogo() { 
         return $this->urlLogo;
     }   
-
+    public function getAsset(): string{
+        if($this->getImage() == null || $this->getImage() == ""){
+            return '/assets/images/missingPicture.jpg';
+        } else {
+            return '/assets/images/brands/'.$this->getImage();
+        }
+    }
     public function seturlLogo(string $urlLogo) { 
         $this->urlLogo = $urlLogo; 
     }

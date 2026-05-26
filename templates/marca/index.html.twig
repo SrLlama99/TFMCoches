@@ -13,13 +13,13 @@
 
     <div class="brands-list row">
         {% if brands is empty %}
-            <p class="text-center">No brands found.</p>
+            <p class="text-center">No brands found with initial {{letter}}.</p>
         {% else %}
             {% for brand in brands %}
                 <div class="col-6 col-md-3 mb-3 text-center">
-                    <a href="{{ path('marca', {name: brand.getnombreMarca(), id: brand.getId()}) }}" class="d-block text-white text-decoration-none">
-                        {% if brand.geturlLogo is not empty %}
-                            <img src="{{ asset(brand.geturlLogo) }}" alt="{{ brand.getnombreMarca() }}" class="img-fluid mb-1">
+                    <a href="{{ path('marca', {name: brand.getnombreMarca()}) }}" class="d-block text-white text-decoration-none">
+                        {% if brand.Asset is not empty %}
+                            <img src="{{ asset(brand.Asset ) }}" alt="{{ brand.getnombreMarca() }}" class="img-fluid mb-1">
                         {% endif %}
                         <div>{{ brand.getnombreMarca() }}</div>
                     </a>

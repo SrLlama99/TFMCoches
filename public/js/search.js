@@ -27,8 +27,14 @@ function search(query) {
             if (res.ok == false) {
                 error = document.createElement('span')
                 error.innerText = res.errorReason;
-                error.classList.add("searchDropdownResult");
+                error.classList.add("searchDropdownResult","d-inline");
                 resultsHTML.push(error)
+
+                createButton = document.createElement('a')
+                createButton.innerText = "Create the model instead?";
+                createButton.href = "/new/model"
+                createButton.classList.add("btn", "btn-success", "customNavBtn", "text-white");
+                resultsHTML.push(createButton)
             } else {
                 res.data.forEach(car => {
                     carEl = document.createElement('a');

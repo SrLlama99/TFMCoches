@@ -28,6 +28,9 @@ final class CarsController extends AbstractController
         $engineRepo = $em->getRepository(Motor::class);
 
         $marca = $marcaRepo->findOneBy(['nombreMarca' => strtoupper($name)]);
+        if($marca == null){
+            return $this->redirectToRoute('home');
+        }
 
         if ($id) {
             $model = $modelRepo->findOneBy(['modeloId' => $id]);

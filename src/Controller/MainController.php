@@ -17,8 +17,7 @@ final class MainController extends AbstractController
 
         $mostRated = $modelosEM->findByMostRated();
         
-        $mostLikedLookup = $modelosEM->findByBest(3);
-        $mostLiked = [$mostLikedLookup[1], $mostLikedLookup[0], $mostLikedLookup[2]];
+        $mostLiked = $modelosEM->findByBest(3);
 
         $mostHated = $modelosEM->findByWorst(3);
 

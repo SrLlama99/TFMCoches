@@ -7,13 +7,15 @@
 	{% if error is defined %}
 		<div id="customnav newThingError">{{error}}</div>
 	{% endif %}
-	<div class="customnav d-flex align-items-center flex-column justify-content-center p-2">
+	<div class="customnav d-flex align-items-center flex-column justify-content-center p-2 position-relative">
 		{% if type == "model" %}
 			{% set opposite = "brand" %}
 		{% else %}
 			{% set opposite = "model" %}
 		{% endif %}
-		<a class="text-white customNavBtn btn-secondary btn" href="{{ path('newItemGet', {"type": opposite})}}">Create a {{opposite}} instead</a>
+		<a class="d-none d-md-block text-white customNavBtn btn-secondary btn
+		position-absolute top-0 start-0 m-3" href="{{ path('newItemGet', {"type": opposite})}}">Create a {{opposite}} instead</a>
+		<a class="d-block d-md-none  text-white customNavBtn btn-secondary btn" href="{{ path('newItemGet', {"type": opposite})}}">Create a {{opposite}} instead</a>
 		<h1 class="my-1">New {{ type }}</h1>
 		<form class="container text-center p-4" enctype='multipart/form-data' method="post">
 			<div class="row align-items-center justify-content-around flex-column flex-lg-row gap-3" data-bs-theme="dark">

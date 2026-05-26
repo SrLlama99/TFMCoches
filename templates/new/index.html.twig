@@ -14,7 +14,7 @@
 					<em>for example...</em>
 					<div class="d-flex flex-column align-items-center m-3">
 						<h3>{{brand.nombreMarca}}</h3>
-						<img class="w-50" src="{{ brand.urlLogo }}"/>
+						<img class="w-50" src="{{ asset(brand.Asset) }}"/>
 					</div>
 				{% endif %}
 			</a>
@@ -25,7 +25,7 @@
 					<em>for example...</em>
 					<div class="d-flex flex-column align-items-center m-3">
 						<h3>{{model.modeloNombre}}</h3>
-						<img class="w-50" src="{{ model.fotoModelo }}"/>
+						<img class="w-50" src="{{ asset(model.Asset) }}"/>
 					</div>
 				{% endif %}
 			</a>

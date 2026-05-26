@@ -17,6 +17,7 @@ final class NewRepoItemController extends AbstractController
     #[Route('/new/', name: 'new', methods: 'GET')]
     public function newIndex(EntityManagerInterface $em)
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
         $model = $em->getRepository(Modelo::class)->findOneBy([]);
         $brand = $em->getRepository(Marca::class)->findOneBy([]);
 
@@ -27,16 +28,15 @@ final class NewRepoItemController extends AbstractController
     public function GET(EntityManagerInterface $em, Request $request, string $type)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
+
         $returnParams = [];
         $type = strtolower(trim($type));
         switch ($type) {
             case 'brand':
                 $returnParams["type"] = 'brand';
-                $returnParams["opposite"] = 'model';
                 break;
             case 'model':
                 $returnParams["type"] = 'model';
-                $returnParams["opposite"] = 'brand';
                 $brands = $em->getRepository(Marca::class)->findAll();
                 $returnParams['brands'] = $brands;
                 break;
@@ -67,7 +67,7 @@ final class NewRepoItemController extends AbstractController
             ]
         ];
 
-        switch ($type) {
+        switch ($type) { // setup parameters & filter out incorrect urls
             case 'brand':
                 $returnParams["type"] = 'brand';
                 $params['url'] = [
@@ -104,8 +104,10 @@ final class NewRepoItemController extends AbstractController
             $args[$k] = $paramet;
         }
 
+        // check if the name already exists
+
         /* BEGIN photo */
-        $photo = $request->files->get('photo');
+        $photo = $request->files->get('pic');
 
         // if photo is null, no photo; if error is different than 0 it error'd out.
         if ($photo != null) {
@@ -125,6 +127,8 @@ final class NewRepoItemController extends AbstractController
                 // SI ESTÁS AQUÍ PORQUE FALLA ESTO TIENES QUE DESCOMENTAR O AÑADIR "extension=fileinfo" en php.ini
                 return $this->errorOut($returnParams, "CONFIGERR: Internal error.");
             }
+        } else {
+            return $this->errorOut($returnParams, "The photo field is missing content");
         }
         /* END photo */
 
@@ -142,6 +146,7 @@ final class NewRepoItemController extends AbstractController
             case 'brand':
                 $newObject = new Marca();
                 $newObject->setnombreMarca(strtoupper($args['name']));
+                $newObject->seturlMarca($args['url']);
                 break;
             case 'model':
                 // Lookup brand to assign to object
@@ -164,22 +169,22 @@ final class NewRepoItemController extends AbstractController
         $id = $newObject->getId();
 
         if ($photo) {
-            if (!preg_match("/^image\/.+$/i", $photo->getMimeType())) {
-                return $this->redirectToRoute('newPost', ['error' => "NAPHOTOERR"]);
-            }
             try {
+                if (!preg_match("/^image\/.+$/i", $photo->getMimeType())) {
+                    return $this->redirectToRoute('newPost', ['error' => "The uploaded file was not an image."]);
+                }
                 $uploadDir = $this->getParameter('kernel.project_dir') . '/public/assets/images/' . $returnParams['type'] . 's/';
 
+                $photoExt = $photo->guessClientExtension();
                 $newName = sprintf('%s_%s_%s.%s', $returnParams['type'], $id, time(), $photoExt);
                 $photo->move($uploadDir, $newName);
+
+                $newObject->setImage($newName);
             } catch (FileException) {
                 $entityManager->remove($newObject);
                 $entityManager->flush();
-
                 return $this->errorOut($returnParams);
             }
-
-            $newObject->setImage($photoExt);
         }
 
         $entityManager->flush();
@@ -193,6 +198,6 @@ final class NewRepoItemController extends AbstractController
 
     private function errorOut(array $returnParams, string $error = "Someting went wrong. We're trying hard to fix it!")
     {
-        return $this->redirectToRoute('newItemGet', ['type' => $returnParams['type'], 'opposite' => $returnParams['opposite'], 'error' => $error]);
+        return $this->redirectToRoute('newItemGet', ['type' => $returnParams['type'], 'error' => $error]);
     }
 }

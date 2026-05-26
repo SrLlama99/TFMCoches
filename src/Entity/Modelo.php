@@ -84,9 +84,16 @@ class Modelo
         $this->modeloNombre = $modeloNombre; 
     }
 
-    // TODO: Return assets
     public function getfotoModelo(): ?string{
-        return '/assets/images/models/'.$this->fotoModelo;
+        return $this->fotoModelo;
+    }
+
+    public function getAsset(): string{
+        if($this->getImage() == null || $this->getImage() == ""){
+            return '/assets/images/missingPicture.jpg';
+        } else {
+            return '/assets/images/models/'.$this->getImage();
+        }
     }
 
     public function setfotoModelo(string $fotoModelo){
@@ -98,5 +105,11 @@ class Modelo
     }
     public function setId(int $id) { 
         return $this->modeloId = $id; 
+    }
+    public function getImage(): string { 
+        return $this->getfotoModelo();
+    }
+    public function setImage(string $route) { 
+        return $this->setfotoModelo($route); 
     }
 }

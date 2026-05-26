@@ -27,8 +27,7 @@
 			<div class="content-main">
 				<div
 					class="featured-photo-container">
-					{# <img src="{{ asset(model.fotoModelo) }}" alt="Coche destacado" class="featured-photo"> #}
-					<img src="{{ asset(model.fotoModelo) }}" alt="Coche destacado" class="featured-photo">
+					<img src="{{ asset(model.Asset) }}" alt="Car hero" class="featured-photo">
 				</div>
 
 				<div class="comments-container">
@@ -94,7 +93,7 @@
 
 			<aside class="profile-sidebar">
 				<a href="{{ path('marca', {'name': marca.nombreMarca, 'id': null}) }}">
-					<img src="{{ asset(marca.urlLogo) }}" alt="Avatar" class="profile-avatar">
+					<img src="{{ asset(marca.Asset) }}" alt="Avatar" class="profile-avatar">
 				</a>
 				<h3 class="fw-bold mb-1">{{model.modeloNombre}}</h3>
 				<p class="small text-white">{{marca.nombreMarca}}</p>

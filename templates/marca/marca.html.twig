@@ -15,7 +15,7 @@
 			<div class="col-12 col-md-8 col-lg-6 mb-5">
 				<div class="card shadow-sm profile-card-custom p-4 mb-4">
 					<div class="ratio ratio-1x1 mb-3" style="width: 120px;">
-						<img src="{{ asset(marca.getUrlLogo()) }}" class="rounded-circle object-fit-cover shadow-sm">
+						<img src="{{ asset(marca.Asset ) }}" class="rounded-circle object-fit-cover shadow-sm">
 					</div>
 					<a href="{{ marca.urlMarca }}">
 						<h3 class="fw-bold bi bi-globe2 fs-2 d-flex align-items-center text-white">{{ marca.nombreMarca }}</h3>
@@ -47,13 +47,13 @@
 										{{ path('marca', { name: marca.nombreMarca, id: model.modeloId }) }}
 									{% endblock %}
 									{% block image %}
-										{{ asset(model.fotoModelo) }}
+										{{ asset(model.Asset) }}
 									{% endblock %}
 									{% block title %}
 										{{ model.modeloNombre }}
 									{% endblock %}
 									{% block logo %}
-										{{ asset(marca.urlLogo) }}
+										{{ asset(marca.Asset) }}
 									{% endblock %}
 									{% block stars %}
 										{{ model.mediaValoraciones|default(0) }}
@@ -65,7 +65,8 @@
 							<i class="arrow right"></i>
 						</button>
 						{% else %}
-						<h2 class="text-white text-center">This brands don't have models</h2>
+						<h2 class="text-white text-center align-self-center">This brand has no models.</h2>
+						<a class="btn btn-success customNavBtn p-2 text-decoration-none text-white" href="{{ path('newItemGet', {"type":'model'} )}}">Create a model</a>
 						{% endif %}
 					</div>
 				</div>

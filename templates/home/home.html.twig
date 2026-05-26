@@ -32,13 +32,13 @@
 							{{ path('marca', {name: rated.modelo.marca.nombreMarca, id: rated.modelo.modeloId}) }}
 						{% endblock %}
 						{% block image %}
-							{{ rated.modelo.fotoModelo }}
+							{{ asset(rated.modelo.Asset) }}
 						{% endblock %}
 						{% block title %}
 							{{ rated.modelo.modeloNombre }}
 						{% endblock %}
 						{% block logo %}
-							{{ rated.modelo.marca.urlLogo }}
+							{{ asset(rated.modelo.marca.Asset) }}
 						{% endblock %}
 						{% block stars %}
 							{{ rated.modelo.getMediaValoraciones|round(0, 'common')|default(0) }}
@@ -72,13 +72,13 @@
 							{{ path('marca', {name: liked.modelo.marca.nombreMarca, id: liked.modelo.modeloId}) }}" class=""
 						{% endblock %}
 						{% block image %}
-							{{ liked.modelo.fotoModelo }}
+							{{ asset(liked.modelo.Asset) }}
 						{% endblock %}
 						{% block title %}
 							{{ liked.modelo.modeloNombre }}
 						{% endblock %}
 						{% block logo %}
-							{{ liked.modelo.marca.urlLogo }}
+							{{ asset(liked.modelo.marca.Asset) }}
 						{% endblock %}
 						{% block stars %}
 							{{ liked.modelo.getMediaValoraciones|round(0, 'common')|default(0) }}
@@ -112,13 +112,13 @@
 							{{ path('marca', {name: hated.modelo.marca.nombreMarca, id: hated.modelo.modeloId}) }}" class=""
 						{% endblock %}
 						{% block image %}
-							{{ hated.modelo.fotoModelo }}
+							{{ asset(hated.modelo.Asset) }}
 						{% endblock %}
 						{% block title %}
 							{{ hated.modelo.modeloNombre }}
 						{% endblock %}
 						{% block logo %}
-							{{ hated.modelo.marca.urlLogo }}
+							{{ asset(hated.modelo.marca.Asset) }}
 						{% endblock %}
 						{% block stars %}
 							{{ hated.modelo.getMediaValoraciones|round(0, 'common')|default(0) }}

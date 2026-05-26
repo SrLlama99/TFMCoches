@@ -72,7 +72,7 @@
 							{% for last in ultimos %}
 								<a href="{{ path('marca', {name: last.marca.nombreMarca, id: last.modelo.modeloId}) }}">
 									<div class="comment-item">
-										<img src="{{ asset(last.marca.urlLogo) }}" class="comment-avatar" alt="Avatar">
+										<img src="{{ asset(last.marca.Asset) }}" class="comment-avatar" alt="Avatar">
 										<div class="comment-body">
 											<span class="comment-author">{{ last.modelo.modeloNombre }}<small class="text-muted small ms-2 time-ago" data-timestamp="{{ last.valoracion.fecha|date('U') }}"></small>
 											</span>
@@ -149,13 +149,13 @@
 										{% block link %}#" class="garage-card" data-coche-id="{{ car.coche.getcocheId() }}" data-notas="{{ car.garaje.getNotas()|e('html_attr') }}" data-photos="{{ (car.photos|default([]))|json_encode()|e('html_attr') }}
 										{% endblock %}
 										{% block image %}
-											{{ asset(car.modelo.fotoModelo) }}
+											{{ asset(car.modelo.Asset) }}
 										{% endblock %}
 										{% block title %}
 											{{ car.modelo.modeloNombre }}
 										{% endblock %}
 										{% block logo %}
-											{{ asset(car.marca.urlLogo) }}
+											{{ asset(car.marca.Asset) }}
 										{% endblock %}
 										{% block stars %}
 											{{ car.valoracion.estrellas|default(0) }}
@@ -189,13 +189,13 @@
 											{{ path('marca', {name: value.marca.nombreMarca, id: value.modelo.modeloId}) }}
 										{% endblock %}
 										{% block image %}
-											{{ asset(value.modelo.fotoModelo) }}
+											{{ asset(value.modelo.Asset) }}
 										{% endblock %}
 										{% block title %}
 											{{ value.modelo.modeloNombre }}
 										{% endblock %}
 										{% block logo %}
-											{{ asset(value.marca.urlLogo) }}
+											{{ asset(value.marca.Asset) }}
 										{% endblock %}
 										{% block stars %}
 											{{ value.valoracion.estrellas|default(0) }}
