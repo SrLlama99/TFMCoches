@@ -61,9 +61,9 @@ final class LoginController extends AbstractController
             $request->getSession()->set("pass", $pass1);
 
             $email = (new TemplatedEmail())
-                ->from(new Address('no-reply@VIVII.com', 'VIVII'))
+                ->from(new Address('no-reply@aloxoblack.com', 'The Fast Garage'))
                 ->to($correo)
-                ->subject('prueba de correo con Twig')
+                ->subject('The Fast Garage - Verification Code')
                 ->htmlTemplate('email/correoCrear.html.twig')
                 ->context([
                 'nombre' => $usuName, 
@@ -96,6 +96,7 @@ final class LoginController extends AbstractController
 
             $user->setUserName($usuName);
             $user->setUserMail($correo);
+            $user->setAdmin('false');
             $user->setUserPassword($hashedPassword);
             $entityManager->persist($user);
             $entityManager->flush();
@@ -119,9 +120,9 @@ final class LoginController extends AbstractController
             $request->getSession()->set("correoCambiar", $correoRecu);
 
             $email = (new TemplatedEmail())
-                ->from(new Address('no-reply@VIVII.com', 'VIVII'))
+                ->from(new Address('no-reply@aloxoblack.com', 'The Fast Garage'))
                 ->to($correoRecu)
-                ->subject('prueba de correo con Twig')
+                ->subject('The Fast Garage - Password reset')
                 ->htmlTemplate('email/correoRecuperar.html.twig')
                 ->context([
                 'nombre' => $correoRecu, 
