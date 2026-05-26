@@ -9,6 +9,6 @@ final class CarsController extends AbstractController
 {
     #[Route('/updateRepo', name: 'updateRepo')]
     public function cicdIsMyPassion(){
-        return $this->json(['rid'=>dirname(__DIR__)]);
+        return $this->json(['rid'=>dirname(__DIR__).'/../']);
     }
 }
