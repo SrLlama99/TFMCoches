@@ -83,8 +83,9 @@
 			 	 	 	 </div>
 			 	 	 	 <div class="modal-body text-center">
 			 	 	 	 	 <p class="mb-4">Are you sure you want to delete this model?</p>
+							 <input value="{{ model.modeloId }}" id="idBorrar" hidden>
 			 	 	 	 	 <div class="d-flex justify-content-center gap-2">
-			 	 	 	 	 	 <a href="{{ path('app_borrarModelo', {id: model.modeloId}) }}" id="confirm-delete-yes" class="btn btn-danger py-3 fw-bold" style="border-radius:18px;">Yes</a>
+			 	 	 	 	 	 <a href="#" id="confirm-delete-yes" class="btn btn-danger py-3 fw-bold" style="border-radius:18px;">Yes</a>
 			 	 	 	 	 	 <a href="#" id="confirm-delete-no" class="btn btn-light py-3 fw-bold" data-bs-dismiss="modal" style="border-radius:18px;">No</a>
 			 	 	 	 	 </div>
 			 	 	 	 </div>
