@@ -14,4 +14,4 @@ jobs:
     steps:
       - name: Visit URL
         run: |
-          curl -X GET "https://aloxoblack.com/updateRepo"
+          curl --fail https://aloxoblack.com/updateRepo

@@ -13,8 +13,8 @@ final class CICDController extends AbstractController
         $exitCode = null;
         exec("git pull", result_code: $exitCode);
         if ($exitCode == 0) {
-            return $this->json(['ok' => true]);
+            return $this->json(['ok' => true], 200);
         }
-        return $this->json(['ok' => false]);
+        return $this->json(['ok' => false], 500);
     }
 }
