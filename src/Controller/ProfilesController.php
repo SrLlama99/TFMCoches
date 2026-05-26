@@ -371,9 +371,9 @@ final class ProfilesController extends AbstractController
         $em->flush();
 
         $response = ['success' => true, 'username' => $usuario->getUserName(), 'email' => $usuario->getUserMail()];
-        $response['profilePic'] = $usuario?->getProfilePic() ?? null;
+        $response['profilePic'] = $usuario?->getAsset() ?? null;
         // provide a full public URL for convenience in the client
-        $response['profilePicUrl'] = $response['profilePic'] ? '/assets/images/avatar/' . $response['profilePic'] : null;
+        $response['profilePicUrl'] = $response['profilePic'] ? $response['profilePic'] : null;
         // If username changed, instruct client to redirect to the new profile URL
         if ($oldName !== $usuario->getUserName()) {
             $response['redirect'] = $this->generateUrl('garage', ['name' => strtolower($usuario->getUserName())]);

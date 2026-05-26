@@ -128,4 +128,13 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void {}
 
+    // Get prod ready image
+    public function getAsset(): string{
+        if($this->getProfilePic() == null || $this->getProfilePic() == ""){
+            return '/assets/images/missingPicture.jpg';
+        } else {
+            return '/assets/images/avatar/'.$this->getProfilePic();
+        }
+    }
+
 }

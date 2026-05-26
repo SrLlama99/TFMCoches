@@ -87,7 +87,7 @@ final class CarsController extends AbstractController
                     $user = $usersRepo->find($userId);
                     if ($user) {
                         $username = $user->getUserName();
-                        $profilePic = $user->getProfilePic();
+                        $profilePic = $user->getAsset();
                     }
                 }
 

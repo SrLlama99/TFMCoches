@@ -38,7 +38,7 @@
 						{% if valoraciones is defined and valoraciones|length > 0 %}
 							{% for v in valoraciones %}
 								<div class="comment-item">
-									<img src="{{ asset(v.profilePic) }}" class="comment-avatar">
+									<img src="{{ asset(v.Asset) }}" class="comment-avatar">
 									<div class="comment-content">
 										<h6 class="mb-0 fw-bold"><a href="{{ path('garage', {name: v.username}) }}" class="username-link">{{ v.username }}</a> <small class="text-white small ms-2 time-ago" data-timestamp="{{ v.fecha|date('U') }}"></small></h6>
 										<p class="text-white small mb-1">{{ v.comentario }}</p>
