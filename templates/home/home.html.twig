@@ -13,7 +13,7 @@
 {% endblock %}
 {% block main %}
 	<div class="customnav p-3 my-2 d-flex flex-column align-items-center text-center">
-		<h1>Brands by initial D</h1>
+		<h1>Brands by initial</h1>
 		<div class="letters-bar">
 			{% for ch in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'|split('') %}
 				<a class="letter-link px-1 text-white text-decoration-none" href="{{ path('marca_index', {letter: ch}) }}">{{ ch }}</a>
