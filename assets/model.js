@@ -32,37 +32,41 @@ document.addEventListener('DOMContentLoaded', () => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         const deleteUrl = link.dataset.deleteUrl || link.getAttribute('href');
-
-        // hide any open modal first
         const openModalEl = document.querySelector('.modal.show');
         if (openModalEl) {
           const openModal = bootstrap.Modal.getInstance(openModalEl) || new bootstrap.Modal(openModalEl);
           openModal.hide();
         }
-
         const confirmModalEl = document.getElementById('confirmDeleteModal');
         if (!confirmModalEl) return;
-
+        const idModelo = document.getElementById("idBorrar");
         const yesBtn = document.getElementById('confirm-delete-yes');
         if (yesBtn) {
           yesBtn.onclick = null;
           if (deleteUrl && deleteUrl !== '#') {
-            // set dataset so our generic handler can use it
             yesBtn.dataset.deleteUrl = deleteUrl;
             yesBtn.setAttribute('href', deleteUrl);
-          } else {
-            yesBtn.setAttribute('href', '#');
+            // CAMBIO 1: Añadido para que el primer caso también redirija al hacer click
             yesBtn.onclick = function(ev) {
-              ev.preventDefault();
+              window.location.href = deleteUrl;
+            };
+          } else {
+            const urlFinal = '/deleteModelo/' + idModelo.value; // CAMBIO 2: Guardamos la ruta en una variable
+            yesBtn.setAttribute('href', urlFinal);
+            yesBtn.onclick = function(ev) {
+              ev.preventDefault(); // CAMBIO 3: Evitamos que Bootstrap bloquee el click
               const modalInst = bootstrap.Modal.getInstance(confirmModalEl) || new bootstrap.Modal(confirmModalEl);
               modalInst.hide();
+              window.location.href = urlFinal; // CAMBIO 4: Forzamos la redirección por código
             };
             yesBtn.dataset.deleteUrl = '';
           }
         }
-
-        const modalInst = bootstrap.Modal.getInstance(confirmModalEl) || new bootstrap.Modal(confirmModalEl);
-        modalInst.show();
+        // CAMBIO 5: Retrasamos un milisegundo la apertura para que no choque con el cierre del anterior modal
+        setTimeout(() => {
+          const modalInst = bootstrap.Modal.getInstance(confirmModalEl) || new bootstrap.Modal(confirmModalEl);
+          modalInst.show();
+        }, 150); 
       });
     });
   }

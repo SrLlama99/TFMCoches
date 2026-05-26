@@ -442,4 +442,37 @@ final class CarsController extends AbstractController
         }
         return $this->redirectToRoute('home');
     }
+    
+    #[Route('/deleteModelo/{id}', name: 'app_borrarModelo')]
+    public function deleteModelo(EntityManagerInterface $em, int $id)
+    {
+        $modeloRepo = $em->getRepository(Modelo::class);
+        $cocheRepo = $em->getRepository(Coche::class);
+        $valorRepo = $em->getRepository(Valoracion::class);
+
+        $modelo = $modeloRepo->find($id);
+
+        if ($modelo) {
+
+            // coches del modelo
+            $coches = $cocheRepo->findBy(['modelo' => $modelo]);
+
+            foreach ($coches as $coche) {
+
+                // valoraciones del coche
+                $valoraciones = $valorRepo->findBy(['idCoche' => $coche]);
+
+                foreach ($valoraciones as $v) {
+                    $em->remove($v);
+                }
+
+                $em->remove($coche);
+            }
+
+            $em->remove($modelo);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('home');
+    }
 }
