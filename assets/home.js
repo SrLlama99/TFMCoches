@@ -24,7 +24,7 @@ function buildHero() {
     addToContainer.push(heading)
 
     let subtext = document.createElement('h3')
-    subtext.innerText = "The repository of all things cars."
+    subtext.innerText = "The repository for all things cars."
     subtext.classList.add("mb-4")
     addToContainer.push(subtext)
 

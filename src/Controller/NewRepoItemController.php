@@ -15,9 +15,12 @@ final class NewRepoItemController extends AbstractController
 {
 
     #[Route('/new/', name: 'new', methods: 'GET')]
-    public function newIndex()
+    public function newIndex(EntityManagerInterface $em)
     {
-        return $this->render('new/index.html.twig');
+        $model = $em->getRepository(Modelo::class)->findOneBy([]);
+        $brand = $em->getRepository(Marca::class)->findOneBy([]);
+
+        return $this->render('new/index.html.twig', ['model' => $model, 'brand' => $brand]);
     }
 
     #[Route('/new/{type}', name: 'newItemGet', methods: 'GET')]
@@ -103,17 +106,6 @@ final class NewRepoItemController extends AbstractController
 
         /* BEGIN photo */
         $photo = $request->files->get('photo');
-        /* An uploaded file looks like this: (https://github.com/symfony/symfony/blob/7.2/src/Symfony/Component/HttpFoundation/File/UploadedFile.php)
-            object(Symfony\Component\HttpFoundation\File\UploadedFile)#18 (7) {
-                ["originalName":"Symfony\Component\HttpFoundation\File\UploadedFile":private]=> string(9) "ayuda.png"
-                ["mimeType":"Symfony\Component\HttpFoundation\File\UploadedFile":private]=> string(9) "image/png"
-                ["error":"Symfony\Component\HttpFoundation\File\UploadedFile":private]=> int(0)
-                ["originalPath":"Symfony\Component\HttpFoundation\File\UploadedFile":private]=> string(9) "ayuda.png"
-                ["test":"Symfony\Component\HttpFoundation\File\UploadedFile":private]=> bool(false)
-                ["pathName":"SplFileInfo":private]=> string(45) "tempPathRedactedForPrivacyReasons\php6371.tmp"
-                ["fileName":"SplFileInfo":private]=> string(11) "php6371.tmp"
-            }
-        */
 
         // if photo is null, no photo; if error is different than 0 it error'd out.
         if ($photo != null) {
@@ -154,11 +146,13 @@ final class NewRepoItemController extends AbstractController
             case 'model':
                 // Lookup brand to assign to object
                 $selectedBrand = $entityManager->getRepository(Marca::class)->findOneBy(['idMarca' => $args['brand']]);
+                if (is_null($selectedBrand)) {
+                    return $this->redirectToRoute('home');
+                }
 
                 $newObject = new Modelo();
                 $newObject->setnombreModelo($args['name']);
                 $newObject->setMarca($selectedBrand);
-
                 break;
             default:
                 // this shouldn't trigger but the linter is SCREAMING at me
@@ -169,26 +163,23 @@ final class NewRepoItemController extends AbstractController
 
         $id = $newObject->getId();
 
-        try {
-            if ($photo) {
-                $photoExt = $photo->guessExtension();
-                if ($photoExt == null) {
-                    throw new FileException();
-                }
-
-                $photo->move($this->getParameter('kernel.project_dir') . "/assets/image/" . $returnParams['type'] . "s/", $id . "." . $photoExt);
-
-                $uploadDir = $this->getParameter('kernel.project_dir') . '/public/assets/images/brands/';
-                $newName = sprintf('brand_%s_%s.%s', $id, time(), $photoExt);
-                $photo->move($uploadDir, $newName);
-
-                $newObject->setImage($photoExt);
+        if ($photo) {
+            if (!preg_match("/^image\/.+$/i", $photo->getMimeType())) {
+                return $this->redirectToRoute('newPost', ['error' => "NAPHOTOERR"]);
             }
-        } catch (FileException) {
-            $entityManager->detach($newObject);
-            $entityManager->flush();
+            try {
+                $uploadDir = $this->getParameter('kernel.project_dir') . '/public/assets/images/' . $returnParams['type'] . 's/';
 
-            return $this->errorOut($returnParams);
+                $newName = sprintf('%s_%s_%s.%s', $returnParams['type'], $id, time(), $photoExt);
+                $photo->move($uploadDir, $newName);
+            } catch (FileException) {
+                $entityManager->remove($newObject);
+                $entityManager->flush();
+
+                return $this->errorOut($returnParams);
+            }
+
+            $newObject->setImage($photoExt);
         }
 
         $entityManager->flush();
@@ -200,7 +191,7 @@ final class NewRepoItemController extends AbstractController
         }
     }
 
-    private function errorOut(Array $returnParams, string $error = "Someting went wrong. We're trying hard to fix it!")
+    private function errorOut(array $returnParams, string $error = "Someting went wrong. We're trying hard to fix it!")
     {
         return $this->redirectToRoute('newItemGet', ['type' => $returnParams['type'], 'opposite' => $returnParams['opposite'], 'error' => $error]);
     }

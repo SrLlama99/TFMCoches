@@ -1,9 +1,5 @@
-Rodrigo
-* Botones modal notas
-
 Alonso
-* Marca & Usuario on search
-* Welcome hero message with cookie storage
+* Fix image
 
 General
 * idx {modelo marca usuario}.nombre trgm

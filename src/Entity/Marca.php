@@ -12,16 +12,16 @@ class Marca
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type:'integer', name:'id')]
-    private $idMarca;
+    private int $idMarca;
 
     #[ORM\Column(type:'string', name:'nombre', unique: true)]
-    private $nombreMarca;
+    private string $nombreMarca;
 
     #[ORM\Column(type: 'string', name: 'url')]
-    private $urlMarca;
+    private string $urlMarca;
 
-    #[ORM\Column(type: 'string', name: 'logourl')]
-    private $urlLogo;
+    #[ORM\Column(type: 'string', name: 'logourl', options: ["default" => "defaultBrandImage.png"])]
+    private string $urlLogo;
 
     #[ORM\OneToMany(targetEntity: Modelo::class, mappedBy: 'marca')]
     private Collection $modelos;
@@ -42,7 +42,7 @@ class Marca
         return $this->idMarca; 
     }
 
-    public function setidMarca($idMarca){
+    public function setidMarca(int $idMarca){
         $this->idMarca = $idMarca;
     }
 
@@ -50,7 +50,7 @@ class Marca
         return $this->nombreMarca; 
     }
 
-    public function setnombreMarca($nombreMarca) { 
+    public function setnombreMarca(string $nombreMarca) { 
         $this->nombreMarca = $nombreMarca; 
     }
 
@@ -58,15 +58,15 @@ class Marca
         return $this->urlMarca; 
     }
 
-    public function seturlMarca($urlMarca) { 
+    public function seturlMarca(string $urlMarca) { 
         $this->urlMarca = $urlMarca; 
     }
 
     public function geturlLogo() { 
-        return $this->urlLogo; 
+        return $this->urlLogo;
     }   
 
-    public function seturlLogo($urlLogo) { 
+    public function seturlLogo(string $urlLogo) { 
         $this->urlLogo = $urlLogo; 
     }
     public function getId(): int { 
@@ -76,9 +76,9 @@ class Marca
         return $this->idMarca = $id; 
     }
     public function getImage(): string { 
-        return $this->urlLogo; 
+        return $this->geturlLogo();
     }
     public function setImage(string $urlLogo) { 
-        return $this->urlLogo = $urlLogo; 
+        return $this->seturlLogo($urlLogo); 
     }
 }

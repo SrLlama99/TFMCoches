@@ -7,12 +7,28 @@
 {% block main %}
 	<div class="customnav p-3 d-flex justify-content-center flex-column container text-center">
 		<h1>Create new...</h1>
-		<div class="row">
-		<div class="col m-1">
-			<a class="text-white customNavBtn btn-secondary btn w-100" href="{{ path('newItemGet',{"type":"brand"}) }}">Brand</a>
-		</div>
-		<div class="col m-1">
-			<a class="text-white customNavBtn btn-secondary btn w-100" href="{{ path('newItemGet',{"type":"model"}) }}">Model</a>
+		<div class="row ">
+			<a class="col m-1 d-flex flex-column text-decoration-none text-white" href="{{ path('newItemGet',{"type":"brand"}) }}">
+				<span class="text-white customNavBtn btn-secondary btn w-100">Brand</span>
+				{% if brand %}
+					<em>for example...</em>
+					<div class="d-flex flex-column align-items-center m-3">
+						<h3>{{brand.nombreMarca}}</h3>
+						<img class="w-50" src="{{ brand.urlLogo }}"/>
+					</div>
+				{% endif %}
+			</a>
+
+			<a class="col m-1 d-flex flex-column text-decoration-none text-white" href="{{ path('newItemGet',{"type":"model"}) }}">
+				<span class="text-white customNavBtn btn-secondary btn w-100">Model</span>
+				{% if model %}
+					<em>for example...</em>
+					<div class="d-flex flex-column align-items-center m-3">
+						<h3>{{model.modeloNombre}}</h3>
+						<img class="w-50" src="{{ model.fotoModelo }}"/>
+					</div>
+				{% endif %}
+			</a>
 		</div>
 	</div>
 {% endblock %}
