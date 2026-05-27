@@ -135,7 +135,7 @@ final class LoginController extends AbstractController
                 );
             $mailer->send($email);
 
-            return $this->render('cambiarPass/cambiarPass1.html.twig', ["registerError" => 0]);
+            return $this->render('cambiarPass/cambiarPass1.html.twig', ["registerError"=>0]);
         }else{
             return $this->render('login.html.twig',["registerError"=>6, "loginError" => null, 'checked2' => true, 'checked' => false]);
         }
