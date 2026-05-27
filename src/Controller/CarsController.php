@@ -274,10 +274,15 @@ final class CarsController extends AbstractController
         }
 
         // Prepare response to send to the DOM
+        $usernameResp = $user?->getUserName() ?? 'Usuario';
+        $profilePicResp = $user?->getAsset() ?? '';
         $response = [
             'success' => true,
             'data' => [
                 'id' => $valoracion->getIdValoracion(),
+                'username' => $usernameResp,
+                'profilePic' => $profilePicResp,
+                'avatar' => $profilePicResp,
                 'comentario' => $comentario,
                 'estrellas' => $puntuacion,
                 'timeAgo' => 'just now',
@@ -319,11 +324,15 @@ final class CarsController extends AbstractController
 
         $data = array_map(function ($v) use ($usersRepo) {
             $username = 'Usuario';
+            $profilePic = '';
+            $avatar = '';
             $userId = $v?->getIdUsuario() ?? null;
             if ($userId) {
                 $user = $usersRepo->find($userId);
                 if ($user) {
                     $username = $user->getUserName();
+                    $profilePic = $user->getAsset() ?? '';
+                    $avatar = $profilePic;
                 }
             }
 
@@ -343,6 +352,8 @@ final class CarsController extends AbstractController
             return [
                 'id' => $v->getIdValoracion(),
                 'username' => $username,
+                'profilePic' => $profilePic,
+                'avatar' => $avatar,
                 'comentario' => $v->getComentario(),
                 'estrellas' => $v->getEstrellas(),
                 'fecha' => $v->getFecha(),

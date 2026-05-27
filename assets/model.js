@@ -46,23 +46,22 @@ document.addEventListener('DOMContentLoaded', () => {
           if (deleteUrl && deleteUrl !== '#') {
             yesBtn.dataset.deleteUrl = deleteUrl;
             yesBtn.setAttribute('href', deleteUrl);
-            // CAMBIO 1: Añadido para que el primer caso también redirija al hacer click
             yesBtn.onclick = function(ev) {
               window.location.href = deleteUrl;
             };
           } else {
-            const urlFinal = '/deleteModelo/' + idModelo.value; // CAMBIO 2: Guardamos la ruta en una variable
+            const urlFinal = '/deleteModelo/' + idModelo.value; 
             yesBtn.setAttribute('href', urlFinal);
             yesBtn.onclick = function(ev) {
-              ev.preventDefault(); // CAMBIO 3: Evitamos que Bootstrap bloquee el click
+              ev.preventDefault();
               const modalInst = bootstrap.Modal.getInstance(confirmModalEl) || new bootstrap.Modal(confirmModalEl);
               modalInst.hide();
-              window.location.href = urlFinal; // CAMBIO 4: Forzamos la redirección por código
+              window.location.href = urlFinal; 
             };
             yesBtn.dataset.deleteUrl = '';
           }
         }
-        // CAMBIO 5: Retrasamos un milisegundo la apertura para que no choque con el cierre del anterior modal
+        
         setTimeout(() => {
           const modalInst = bootstrap.Modal.getInstance(confirmModalEl) || new bootstrap.Modal(confirmModalEl);
           modalInst.show();
