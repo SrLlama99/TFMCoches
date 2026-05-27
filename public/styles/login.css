@@ -248,10 +248,10 @@ label {
 }
 
 .container4{
-    display: flex;
+    display: grid;
+    grid-template-columns: 40% 60%; 
     height: 100dvh;
     overflow: hidden;
-    flex-direction: row-reverse;
 }
 
 /* =========================
