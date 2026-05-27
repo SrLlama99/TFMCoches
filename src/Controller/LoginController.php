@@ -21,7 +21,7 @@ final class LoginController extends AbstractController
     #[Route('/', name:'app_index')]
     public function si():Response
     {
-        return $this->redirectToRoute('app_login');
+        return $this->redirectToRoute('home');
     }
     
     #[Route('/login', name: 'app_login')]
