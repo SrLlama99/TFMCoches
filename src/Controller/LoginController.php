@@ -135,7 +135,7 @@ final class LoginController extends AbstractController
                 );
             $mailer->send($email);
 
-            return $this->render('cambiarPass/cambiarPass1.html.twig', ["registerError"=>0]);
+            return $this->render('/cambiarPass/cambiarPass1.html.twig', ["registerError"=>0]);
         }else{
             return $this->render('login.html.twig',["registerError"=>6, "loginError" => null, 'checked2' => true, 'checked' => false]);
         }
@@ -153,9 +153,9 @@ final class LoginController extends AbstractController
         $recoverValiCode = $request->request->get('recoverValiNumber');
 
         if($valiCode == $recoverValiCode){
-            return $this->render('cambiarPass/cambiarPass2.html.twig', ["registerError"=>0]);
+            return $this->render('/cambiarPass/cambiarPass2.html.twig', ["registerError"=>0]);
         }else{
-            return $this->render('cambiarPass/cambiarPass1.html.twig', ["registerError"=>1]);
+            return $this->render('/cambiarPass/cambiarPass1.html.twig', ["registerError"=>1]);
         }
     }
 
@@ -181,7 +181,7 @@ final class LoginController extends AbstractController
 
             return $this->render('login.html.twig', ["registerError"=>7, "loginError" => null, 'checked' => false, 'checked2' => true]);
         }else{
-            return $this->render('cambiarPass/cambiarPass2.html.twig', ["registerError"=>1]);
+            return $this->render('/cambiarPass/cambiarPass2.html.twig', ["registerError"=>1]);
         }
     }
 }
