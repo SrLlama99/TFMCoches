@@ -15,7 +15,7 @@ Deployment
   * ;extension=pdo_pgsql
   APP_ENV=prod
   APP_DEBUG=0
-  apt install composer php8.3-{xml,dom,curl,pgsql} 
+  apt install composer php8.2-{xml,dom,curl,pgsql} 
   phpenmod xml dom curl pgsql
   composer i --no-dev
 
