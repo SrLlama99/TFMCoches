@@ -159,7 +159,7 @@ final class LoginController extends AbstractController
         }
     }
 
-    #[Route('cambiarPassProcesa3', name:'procesaPass2')]
+    #[Route('/cambiarPassProcesa3', name:'procesaPass2')]
     public function cambiarPass(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher){
         $pass1 = $request->request->get('newPass');
         $pass2 = $request->request->get('newPass2');
