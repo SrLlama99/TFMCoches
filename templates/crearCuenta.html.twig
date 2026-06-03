@@ -16,12 +16,12 @@
             <img src="{{ asset('/images/logo.png') }}" class="logo-img">
             <a href="{{ path('app_login') }}">Go back to login -></a>
             <form method="post" action="{{ path('procesaCuentaFinal') }}">
-            <label>Introduce el código mandado al mail:</label>
+            <label>Enter the code we sended to your mail:</label>
             <input type="text" name="codeValidation">
             {% if loginError == 1 %}
-                <mark>El codigo no coincide</mark>
+                <mark>The code doesn't match</mark>
             {% endif %}
-            <input class="boton-login" type="submit" value="Crear Cuenta">
+            <input class="boton-login" type="submit" value="Create Account">
         </form>
 
         </div>
